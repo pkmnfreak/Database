@@ -21,8 +21,8 @@ public class ArrayDeque<Item> {
         }
         else{
             NextFirst++;
-            Item[] temp = (Item[]) new Object[size + 1];
-            System.arraycopy(Array , 0 ,  temp ,  0 ,  Array.length);
+            Item[] temp = (Item[]) new Object[size * 10];
+            System.arraycopy(Array, 0,  temp,  0,  Array.length);
             Array = temp;
             int index = Array.length - 1;
             while (index > NextFirst) {
@@ -33,24 +33,27 @@ public class ArrayDeque<Item> {
     }
 
     private void findNextFirst() {
-        if ((NextFirst - 1) >= 0) {
-            NextFirst--;
-        }
-        else{
+        if (NextFirst - 1 < 0){
             NextFirst = Array.length - 1;
+        }
+        else {
+            NextFirst--;
         }
     }
 
     private void findNextLast() {
-        if ((NextLast + 1) < Array.length) {
-            NextLast++;
-        }
-        else{
+        if (NextLast + 1 > Array.length - 1) {
             NextLast = 0;
+        }
+        else {
+            NextLast++;
         }
     }
 
     public void addFirst(Item Item) {
+        if (isEmpty()) {
+            findNextLast();
+        }
         resize();
         Array[NextFirst] = Item;
         findNextFirst();
@@ -58,6 +61,9 @@ public class ArrayDeque<Item> {
     }
 
     public void addLast(Item Item) {
+        if (isEmpty()) {
+            findNextFirst();
+        }
         resize();
         Array[NextLast] = Item;
         findNextLast();
@@ -93,14 +99,20 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
-        int index = NextFirst + 1;
+        int index = 0;
+        if (NextFirst == Array.length - 1) {
+            index = 0;
+        }
+        else {
+            index = NextFirst + 1;
+        }
         Item f = Array[index];
         while (index < Array.length - 1) {
             Array[index] = Array[index + 1];
             index++;
         }
         Item[] temp = (Item[]) new Object[Array.length - 1];
-        System.arraycopy(Array , 0 , temp , 0 , Array.length - 1);
+        System.arraycopy(Array, 0, temp, 0, Array.length - 1);
         Array = temp;
         size--;
         NextFirst--;
@@ -112,14 +124,20 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
-        int index = NextLast - 1;
+        int index = 0;
+        if (NextLast == 0) {
+            index = Array.length - 1;
+        }
+        else {
+            index = NextLast - 1;
+        }
         Item f = Array[index];
         while (index < Array.length - 1) {
             Array[index] = Array[index + 1];
             index++;
         }
         Item[] temp = (Item[]) new Object[Array.length - 1];
-        System.arraycopy(Array , 0 , temp , 0 , Array.length - 1);
+        System.arraycopy(Array, 0, temp, 0, Array.length - 1);
         Array = temp;
         size--;
         NextLast--;
