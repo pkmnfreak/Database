@@ -1,18 +1,10 @@
-public class LinkedListDeque<Bloop> {
+public class LinkedListDeque<Item> {
 
-    public static void main(String[] args) {
-        LinkedListDeque<String> L = new LinkedListDeque<>();
-        L.addFirst("hello");
-        L.addFirst("my");
-        L.addFirst("name");
-        System.out.print(L.getRecursive(1));
-    }
-
-    public class IntNode {
-        public Bloop item;
+    private class IntNode {
+        public Item item;
         public IntNode next;
         public IntNode prev;
-        public IntNode(Bloop i, IntNode n, IntNode p) {
+        public IntNode(Item i, IntNode n, IntNode p) {
             item = i;
             next = n;
             prev = p;
@@ -22,15 +14,15 @@ public class LinkedListDeque<Bloop> {
     private IntNode FrontSentinel;
     private IntNode BackSentinel;
     private int size;
-    private Bloop Item;
+    private Item Item;
 
-    public void addFirst(Bloop Item){
+    public void addFirst(Item Item){
         FrontSentinel.next.prev = new IntNode(Item, FrontSentinel.next, FrontSentinel);
         FrontSentinel.next = FrontSentinel.next.prev;
         size ++;
     }
 
-    public void addLast(Bloop Item){
+    public void addLast(Item Item){
         BackSentinel.prev.next = new IntNode(Item, BackSentinel, BackSentinel.prev);
         BackSentinel.prev = BackSentinel.prev.next;
         size ++;
@@ -60,12 +52,12 @@ public class LinkedListDeque<Bloop> {
         }
     }
 
-    public Bloop removeFirst(){
+    public Item removeFirst(){
        if (FrontSentinel.next == BackSentinel){
            return null;
        }
        else{
-           Bloop p = FrontSentinel.next.item;
+           Item p = FrontSentinel.next.item;
            FrontSentinel.next.next.prev = FrontSentinel;
            FrontSentinel.next = FrontSentinel.next.next;
            size--;
@@ -73,12 +65,12 @@ public class LinkedListDeque<Bloop> {
        }
     }
 
-    public Bloop removeLast(){
+    public Item removeLast(){
         if (BackSentinel.prev == FrontSentinel){
             return null;
         }
         else{
-            Bloop p = BackSentinel.prev.item;
+            Item p = BackSentinel.prev.item;
             BackSentinel.prev.prev.next = BackSentinel;
             BackSentinel.prev = BackSentinel.prev.prev;
             size--;
@@ -86,7 +78,7 @@ public class LinkedListDeque<Bloop> {
         }
     }
 
-    public Bloop get(int index){
+    public Item get(int index){
         if (index == 0){
             return FrontSentinel.next.item;
         }
@@ -104,7 +96,7 @@ public class LinkedListDeque<Bloop> {
         }
     }
 
-    private Bloop getRecursiveH(IntNode first, int index){
+    private Item getRecursiveH(IntNode first, int index){
         if (first.next == null || index == 0){
             return first.item;
         }
@@ -115,7 +107,7 @@ public class LinkedListDeque<Bloop> {
         }
     }
 
-    public Bloop getRecursive(int index){
+    public Item getRecursive(int index){
         if (index >= size){
             return null;
         }
