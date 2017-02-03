@@ -1,9 +1,9 @@
 /**
  * Created by pkmnfreak on 2/2/17.
  */
-public class ArrayDeque {
+public class ArrayDeque<Bleep> {
     public static void main(String[] args) {
-        ArrayDeque a = new ArrayDeque();
+        ArrayDeque<Integer> a = new ArrayDeque<>();
         a.addFirst(5);
         a.addFirst(4);
         a.addFirst(3);
@@ -13,15 +13,20 @@ public class ArrayDeque {
         a.addFirst(2);
         a.addFirst(1);
         a.addFirst(0);
+        a.removeFirst();
+        a.removeLast();
+        a.addFirst(0);
+        a.addLast(10);
+        a.addLast(11);
     }
 
-    private int[] Array;
+    private Bleep[] Array;
     private int NextFirst;
     private int NextLast;
     private int size;
 
     public ArrayDeque(){
-        Array = new int[8];
+        Array = (Bleep[]) new Object[8];
         NextFirst = 0;
         NextLast = 1;
         size = 0;
@@ -33,7 +38,7 @@ public class ArrayDeque {
         }
         else{
             NextFirst++;
-            int[] temp = new int[size+1];
+            Bleep[] temp = (Bleep[]) new Object[size+1];
             System.arraycopy(Array,0, temp, 0, Array.length);
             Array = temp;
             int index = Array.length-1;
@@ -62,14 +67,14 @@ public class ArrayDeque {
         }
     }
 
-    public void addFirst(int Item){
+    public void addFirst(Bleep Item){
         resize();
         Array[NextFirst] = Item;
         findNextFirst();
         size++;
     }
 
-    public void addLast(int Item){
+    public void addLast(Bleep Item){
         resize();
         Array[NextLast] = Item;
         findNextLast();
@@ -79,7 +84,7 @@ public class ArrayDeque {
     public boolean isEmpty(){
         int index = 0;
         while (index < Array.length){
-            if (Array[index] != 0){
+            if (Array[index] != null){
                 return false;
             }
             index++;
@@ -101,10 +106,45 @@ public class ArrayDeque {
     }
 
     /* GNEREALIZE*/
-    public int removeFirst(){
+    public Bleep removeFirst(){
         if (size == 0){
-            return 0;
+            return null;
         }
-        return 0;
+        int index = NextFirst+1;
+        Bleep f = Array[index];
+        while (index < Array.length-1){
+            Array[index] = Array[index+1];
+            index++;
+        }
+        Bleep[] temp = (Bleep[]) new Object[Array.length-1];
+        System.arraycopy(Array,0,temp,0,Array.length-1);
+        Array = temp;
+        size--;
+        NextFirst--;
+        return f;
     }
+
+    /* GENERALIZE */
+    public Bleep removeLast(){
+        if (size == 0){
+            return null;
+        }
+        int index = NextLast-1;
+        Bleep f = Array[index];
+        while (index < Array.length-1){
+            Array[index] = Array[index+1];
+            index++;
+        }
+        Bleep[] temp = (Bleep[]) new Object[Array.length-1];
+        System.arraycopy(Array,0,temp,0,Array.length-1);
+        Array = temp;
+        size--;
+        NextLast--;
+        return f;
+    }
+
+    public Bleep get(int index){
+        return Array[index];
+    }
+
 }
