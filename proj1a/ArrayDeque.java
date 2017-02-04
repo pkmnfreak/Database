@@ -200,6 +200,8 @@ public class ArrayDeque<Item> {
             System.arraycopy(array, 0, temp, 0, i);
             System.arraycopy(array, i + 1, temp, i, temp.length - 1);
             array = temp;
+            nextLast--;
+            lastLast--;
             return f;
         }
         else if (lastFirst != array.length - 1 && nextFirst != array.length - 1){
