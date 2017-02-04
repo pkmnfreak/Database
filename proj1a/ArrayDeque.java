@@ -1,21 +1,6 @@
 
 public class ArrayDeque<Item> {
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
-        ArrayDeque.addLast(0);
-        ArrayDeque.addLast(1);
-        ArrayDeque.addLast(2);
-        ArrayDeque.removeLast();
-        ArrayDeque.addLast(4);
-        ArrayDeque.removeLast();
-        ArrayDeque.addLast(6);
-        ArrayDeque.addLast(7);
-        ArrayDeque.addLast(8);
-        ArrayDeque.removeLast();
-        ArrayDeque.addLast(10);
-    }
-
     private Item[] array;
     private int nextFirst;
     private int lastFirst;
@@ -54,11 +39,15 @@ public class ArrayDeque<Item> {
             nextFirst = temp.length - (array.length - lastFirst) - 1;
             array = temp;
         }
-        else if (nextLast == 0) {
+        /*If all is addFirst and first box was removed (nextLast = 1 even tho it should be 0)*/
+        else if (nextLast == 0 || nextFirst < nextLast) {
             Item[] temp = (Item[]) new Object[size * 2];
             System.arraycopy(array, 0, temp, temp.length - array.length, array.length);
             nextFirst = temp.length - array.length - 1;
             array = temp;
+            if (array[0] == null) {
+                nextLast = 0;
+            }
         }
         else {
             Item[] temp = (Item[]) new Object[size * 2];
@@ -184,39 +173,41 @@ public class ArrayDeque<Item> {
             return null;
         }
         size--;
-        /* If all addLast and no resizing */
         if (nextFirst == lastFirst) {
-            int i = nextLast;
-                while (array[i] == null) {
-                    if (i + 1 >= array.length) {
-                        i = 0;
-                    } else {
-                        i++;
-                    }
-                }
-            Item f = array[i];
+            Item f = array[nextFirst + 1];
             Item[] temp = (Item[]) new Object[array.length - 1];
-            System.arraycopy(array, 0, temp, 0, i);
-            System.arraycopy(array, i + 1, temp, i, temp.length - 1);
+            System.arraycopy(array, 0, temp, 0, nextFirst + 1);
+            System.arraycopy(array, nextFirst + 2, temp, nextFirst + 1, array.length - nextFirst - 2);
             array = temp;
-            nextLast--;
-            lastLast--;
+            if (!isFull() && nextLast != 0) {
+                nextLast--;
+                lastLast--;
+            }
             return f;
         }
-        else if (lastFirst != array.length - 1 && nextFirst != array.length - 1){
+        else if (lastFirst == array.length) {
+            lastFirst = 0;
             Item f = array[lastFirst];
             Item[] temp = (Item[]) new Object[array.length - 1];
             System.arraycopy(array, 0, temp, 0, lastFirst);
-            System.arraycopy(array, lastFirst + 1, temp, lastFirst, array.length - nextFirst - 2);
             array = temp;
             return f;
         }
-        Item f = array[lastFirst];
-        Item[] temp = (Item[]) new Object[array.length - 1];
-        System.arraycopy(array, 0, temp, 0, lastFirst);
-        nextFirst = lastFirst;
-        array = temp;
-        return f;
+        else if (lastFirst + 1 == array.length) {
+            Item f = array[lastFirst];
+            Item[] temp = (Item[]) new Object[array.length - 1];
+            System.arraycopy(array, 0, temp, 0, lastFirst);
+            array = temp;
+            return f;
+        }
+        else {
+            Item f = array[lastFirst];
+            Item[] temp = (Item[]) new Object[array.length - 1];
+            System.arraycopy(array, 0, temp, 0, lastFirst);
+            System.arraycopy(array, lastFirst + 1, temp, lastFirst, array.length - lastFirst - 1);
+            array = temp;
+            return f;
+        }
     }
 
     public Item removeLast() {
@@ -224,54 +215,50 @@ public class ArrayDeque<Item> {
             return null;
         }
         size--;
-        /* If all addFirst and no resizing */
-        if (nextLast == lastLast ) {
-            Item f = array[0];
+        if (nextLast == lastLast) {
             Item[] temp = (Item[]) new Object[array.length - 1];
-            if (!isFull()) {
-                if (f == null) {
-                    f = array[array.length - 1];
-                    System.arraycopy(array, 0, temp, 0, array.length - 1);
-                }
-                else {
-                    System.arraycopy(array, 1, temp, 0, array.length - 1);
-                }
+            /*array is addfirst with 0 as null*/
+            /*array is all addfirst, no null*/
+            if (lastFirst == 0 || array[0] == null){
+                Item f = array[array.length - 1];
+                System.arraycopy(array, 0, temp, 0, array.length - 1);
+                array = temp;
+                return f;
             }
+            /*array is all addfirst*/
             else {
-                f = array[lastLast];
-                System.arraycopy(array, 0, temp, 0, lastLast);
-                System.arraycopy(array, lastLast + 1, temp, lastLast, array.length - 2);
+                Item f = array[0];
+                System.arraycopy(array, 1, temp, 0, array.length - 1);
+                array = temp;
+                nextFirst--;
+                lastFirst--;
+                nextLast--;
+                lastLast--;
+                if (lastFirst < 0) {
+                    lastFirst = 0;
+                }
+                return f;
             }
-            array = temp;
-            findNextFirst();
-            nextLast--;
-            lastLast--;
-            return f;
         }
-        else if (lastLast != array.length - 1){
+        else {
+            if (lastLast < 0 || lastLast >= array.length) {
+                lastLast = array.length - 1;
+            }
             Item f = array[lastLast];
             Item[] temp = (Item[]) new Object[array.length - 1];
             System.arraycopy(array, 0, temp, 0, lastLast);
-            System.arraycopy(array, lastLast + 1, temp, lastLast, array.length - lastLast - 1);
-            array = temp;
-            if (lastLast - 1 < 0) {
-                lastLast = array.length - 1;
+            if (lastLast != array.length - 1) {
+                System.arraycopy(array, lastLast + 1, temp, lastLast, array.length - lastLast - 1);
             }
-            nextLast--;
-            return f;
-        }
-        Item f = array[array.length - 1];
-        Item[] temp = (Item[]) new Object[array.length - 1];
-        System.arraycopy(array, 0, temp, 0, lastLast);
-        array = temp;
-        findNextFirst();
-        if (nextLast - 1 < 0) {
-            nextLast = lastLast - 1;
-            return f;
-        }
-        else {
-            nextLast--;
-            lastLast--;
+            array = temp;
+            if (nextLast != 0) {
+                nextLast--;
+                lastLast--;
+            }
+            if (nextFirst >= array.length) {
+                nextFirst--;
+                lastFirst = 0;
+            }
             return f;
         }
     }
