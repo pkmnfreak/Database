@@ -3,77 +3,171 @@
  */
 public class ArrayDeque<Item> {
 
-    private Item[] Array;
-    private int NextFirst;
-    private int NextLast;
+    public static void main(String[] args) {
+        ArrayDeque<Integer> a = new ArrayDeque<>();
+        a.addFirst(1);
+        a.addFirst(8);
+        a.addFirst(6);
+        a.addFirst(5);
+        a.addLast(4);
+        a.removeLast();
+        a.addFirst(7);
+        a.addFirst(7);
+        a.addFirst(9);
+        a.addFirst(6);
+        a.addFirst(4);
+        a.addLast(2);
+        a.removeLast();
+        a.addLast(0);
+        a.addLast(10);
+        a.addLast(9);
+        a.addLast(8);
+        a.removeFirst();
+        a.addLast(7);
+        a.addLast(6);
+        a.addLast(5);
+        a.removeFirst();
+        a.addLast(4);
+        a.addLast(5);
+        a.addLast(6);
+        a.addFirst(2);
+        a.removeLast();
+        a.addFirst(3);
+        a.removeFirst();
+        a.removeFirst();
+        a.addFirst(4);
+        a.addFirst(5);
+        a.addFirst(4);
+        a.addFirst(6);
+        a.addFirst(1);
+        a.addFirst(11);
+        a.removeFirst();
+        a.addFirst(12);
+        a.addFirst(13);
+        a.addFirst(14);
+        a.removeFirst();
+        a.addFirst(15);
+        a.addLast(4);
+        a.addLast(6);
+    }
+
+    private Item[] array;
+    private int nextFirst;
+    private int lastFirst;
+    private int nextLast;
+    private int lastLast;
     private int size;
 
     public ArrayDeque() {
-        Array = (Item[]) new Object[8];
-        NextFirst = 0;
-        NextLast = 0;
+        array = (Item[]) new Object[8];
+        nextFirst = 0;
+        nextLast = 1;
+        lastFirst = nextFirst;
+        lastLast = nextLast;
         size = 0;
     }
 
-    private void resize() {
-        if (size < Array.length) {
+    private boolean isFull() {
+        int i = 0;
+        while (i < array.length - 1) {
+            if (array[i] == null) {
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+
+    private void resize(){
+        if (size <= array.length) {
             return;
         }
-        else{
-            NextFirst++;
-            Item[] temp = (Item[]) new Object[size * 10];
-            System.arraycopy(Array, 0,  temp,  0,  Array.length);
-            Array = temp;
-            int index = Array.length - 1;
-            while (index > NextFirst) {
-                Array[index] = Array[index - 1];
-                index--;
-            }
+        if (lastFirst != 0) {
+            Item[] temp = (Item[]) new Object[size * 2];
+            System.arraycopy(array, 0, temp, 0, lastFirst);
+            System.arraycopy(array, lastFirst, temp, temp.length - (array.length - lastFirst), array.length - lastFirst);
+            nextFirst = temp.length - (array.length - lastFirst) - 1;
+            array = temp;
+        }
+        else if (nextLast == 0) {
+            Item[] temp = (Item[]) new Object[size * 2];
+            System.arraycopy(array, 0, temp, temp.length - array.length, array.length);
+            nextFirst = temp.length - array.length - 1;
+            array = temp;
+        }
+        else {
+            Item[] temp = (Item[]) new Object[size * 2];
+            System.arraycopy(array, 0, temp, 0, nextLast);
+            System.arraycopy(array, nextLast, temp, temp.length - (array.length - nextLast), array.length - nextLast);
+            nextFirst = temp.length - (array.length);
+            array = temp;
         }
     }
 
     private void findNextFirst() {
-        if (NextFirst - 1 < 0){
-            NextFirst = Array.length - 1;
+        lastFirst = nextFirst;
+        if (nextFirst - 1 < 0 && array[array.length - 1] == null) {
+            nextFirst = array.length - 1;
+        }
+        else if (nextFirst - 1 < 0 && array[array.length - 1] != null) {
+            nextFirst = 0;
         }
         else {
-            NextFirst--;
+            nextFirst--;
         }
     }
 
     private void findNextLast() {
-        if (NextLast + 1 > Array.length - 1) {
-            NextLast = 0;
+        lastLast = nextLast;
+        if (nextLast + 1 > array.length - 1 && array[0] == null) {
+            nextLast = 0;
         }
         else {
-            NextLast++;
+            nextLast++;
         }
     }
 
     public void addFirst(Item Item) {
-        if (isEmpty()) {
-            findNextLast();
-        }
-        resize();
-        Array[NextFirst] = Item;
-        findNextFirst();
         size++;
+        resize();
+        if (array[nextFirst] != null) {
+            int index = nextFirst;
+            while (array[index] != null) {
+                index++;
+            }
+            while (index > nextFirst) {
+                array[index] = array[index - 1];
+                index--;
+            }
+            nextLast++;
+        }
+        array[nextFirst] = Item;
+        findNextFirst();
     }
 
+
     public void addLast(Item Item) {
-        if (isEmpty()) {
-            findNextFirst();
-        }
-        resize();
-        Array[NextLast] = Item;
-        findNextLast();
         size++;
+        resize();
+        if (array[nextLast] != null) {
+            int index = nextLast;
+            while (array[index] != null) {
+                index++;
+            }
+            while (index > nextLast) {
+                array[index] = array[index - 1];
+                index--;
+            }
+            nextFirst++;
+        }
+        array[nextLast] = Item;
+        findNextLast();
     }
 
     public boolean isEmpty() {
         int index = 0;
-        while (index < Array.length) {
-            if (Array[index] != null) {
+        while (index < array.length) {
+            if (array[index] != null) {
                 return false;
             }
             index++;
@@ -86,66 +180,148 @@ public class ArrayDeque<Item> {
     }
 
     public void printDeque() {
-        int i = 0;
-        while (i < size) {
-            System.out.print(Array[i]);
-            System.out.print(" ");
-            i++;
+        if (nextFirst != 0 && lastFirst != 0) {
+            int i = lastFirst;
+            while (i + 1 <= array.length) {
+                System.out.print(array[i]);
+                System.out.print(" ");
+                i++;
+            }
+            i = 0;
+            while (array[i] != null) {
+                System.out.print(array[i]);
+                System.out.print(" ");
+                i++;
+            }
+            return;
+        }
+        else {
+            int i = nextFirst + 1;
+            while (i + 1 <= array.length) {
+                System.out.print(array[i]);
+                System.out.print(" ");
+                i++;
+            }
+            i = 0;
+            while (array[i] != null) {
+                System.out.print(array[i]);
+                System.out.print(" ");
+                i++;
+            }
         }
     }
 
-    /* GNEREALIZE*/
     public Item removeFirst() {
         if (size == 0) {
             return null;
         }
+        size--;
+        /* If all addLast and no resizing */
+        if (nextFirst == 0 && lastFirst == 0) {
+            int i = nextLast;
+                while (array[i] == null) {
+                    if (i + 1 >= array.length) {
+                        i = 0;
+                    } else {
+                        i++;
+                    }
+                }
+            Item f = array[i];
+            Item[] temp = (Item[]) new Object[array.length - 1];
+            System.arraycopy(array, 0, temp, 0, i);
+            System.arraycopy(array, i + 1, temp, i, 6);
+            array = temp;
+            return f;
+        }
+        else if (!isFull()){
+            Item f = array[nextFirst + 1];
+            Item[] temp = (Item[]) new Object[array.length - 1];
+            System.arraycopy(array, 0, temp, 0, nextFirst + 1);
+            System.arraycopy(array, nextFirst + 2, temp, nextFirst + 1, array.length - nextFirst - 2);
+            array = temp;
+            return f;
+        }
         int index = 0;
-        if (NextFirst == Array.length - 1) {
-            index = 0;
+        if (nextFirst > array.length - 1 || lastFirst > array.length - 1) {
+            nextFirst = 0;
+            lastFirst = 0;
         }
-        else {
-            index = NextFirst + 1;
-        }
-        Item f = Array[index];
-        while (index < Array.length - 1) {
-            Array[index] = Array[index + 1];
+        index = lastFirst;
+        Item f = array[index];
+        while (index < array.length - 1) {
+            array[index] = array[index + 1];
             index++;
         }
-        Item[] temp = (Item[]) new Object[Array.length - 1];
-        System.arraycopy(Array, 0, temp, 0, Array.length - 1);
-        Array = temp;
-        size--;
-        NextFirst--;
+        Item[] temp = (Item[]) new Object[array.length - 1];
+        System.arraycopy(array, 0, temp, 0, array.length - 1);
+        array = temp;
         return f;
     }
 
-    /* GENERALIZE */
     public Item removeLast() {
         if (size == 0) {
             return null;
         }
-        int index = 0;
-        if (NextLast == 0) {
-            index = Array.length - 1;
+        size--;
+        /* If all addFirst and no resizing */
+        if (nextLast == 1 && lastLast == 1) {
+            Item f = array[0];
+            Item[] temp = (Item[]) new Object[array.length - 1];
+            System.arraycopy(array, 1, temp, 0, 7);
+            array = temp;
+            nextFirst--;
+            lastFirst--;
+            nextLast--;
+            lastLast--;
+            return f;
         }
         else {
-            index = NextLast - 1;
+            Item f = array[lastLast];
+            Item[] temp = (Item[]) new Object[array.length - 1];
+            System.arraycopy(array, 0, temp, 0, lastLast);
+            System.arraycopy(array, lastLast + 1, temp, lastLast, array.length - lastLast - 1);
+            array = temp;
+            nextFirst--;
+            lastFirst--;
+            nextLast--;
+            lastLast--;
+            return f;
         }
-        Item f = Array[index];
-        while (index < Array.length - 1) {
-            Array[index] = Array[index + 1];
-            index++;
-        }
-        Item[] temp = (Item[]) new Object[Array.length - 1];
-        System.arraycopy(Array, 0, temp, 0, Array.length - 1);
-        Array = temp;
-        size--;
-        NextLast--;
-        return f;
     }
 
     public Item get(int index) {
-        return Array[index];
+        Item[] orderedArray = (Item[]) new Object[array.length];
+        int j = 0;
+        if (nextFirst != 0 && lastFirst != 0) {
+            int i = lastFirst;
+            while (i + 1 <= array.length) {
+                orderedArray[j] = array[i];
+                i++;
+                j++;
+            }
+            i = 0;
+            while (array[i] != null) {
+                orderedArray[j] = array[i];
+                i++;
+                j++;
+            }
+            return orderedArray[index];
+        }
+        else {
+            int i = nextFirst + 1;
+            while (i + 1 <= array.length) {
+                orderedArray[j] = array[i];
+                i++;
+                j++;
+            }
+            i = 0;
+            while (array[i] != null) {
+                orderedArray[j] = array[i];
+                i++;
+                j++;
+            }
+            return orderedArray[index];
+        }
     }
 
 }

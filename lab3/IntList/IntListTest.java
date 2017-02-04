@@ -40,6 +40,12 @@ public class IntListTest {
      * Anything can happen to A.
      */
 
+    public void testReverse() {
+        IntList L = IntList.list(1, 2, 3);
+        IntList expected = IntList.list(3, 2, 1);
+        assertEquals(expected, L);
+    }
+
     @Test
     public void testSquareListRecursive() {
         IntList L = IntList.list(1, 2, 3);
