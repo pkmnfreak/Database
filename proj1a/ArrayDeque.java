@@ -170,7 +170,7 @@ public class ArrayDeque<Item> {
         }
         size--;
         /* If all addLast and no resizing */
-        if (nextFirst == 0 && lastFirst == 0) {
+        if (nextFirst == lastFirst) {
             int i = nextLast;
                 while (array[i] == null) {
                     if (i + 1 >= array.length) {
@@ -182,11 +182,11 @@ public class ArrayDeque<Item> {
             Item f = array[i];
             Item[] temp = (Item[]) new Object[array.length - 1];
             System.arraycopy(array, 0, temp, 0, i);
-            System.arraycopy(array, i + 1, temp, i, 6);
+            System.arraycopy(array, i + 1, temp, i, temp.length - 1);
             array = temp;
             return f;
         }
-        else if (lastFirst != array.length - 1){
+        else if (lastFirst != array.length - 1 && nextFirst != array.length - 1){
             Item f = array[lastFirst];
             Item[] temp = (Item[]) new Object[array.length - 1];
             System.arraycopy(array, 0, temp, 0, lastFirst);
@@ -207,12 +207,17 @@ public class ArrayDeque<Item> {
         }
         size--;
         /* If all addFirst and no resizing */
-        if (nextLast == 1 && lastLast == 1) {
+        if (nextLast == lastLast ) {
             Item f = array[0];
             Item[] temp = (Item[]) new Object[array.length - 1];
             if (!isFull()) {
-                f = array[0];
-                System.arraycopy(array, 1, temp, 0, array.length - 1);
+                if (f == null) {
+                    f = array[array.length - 1];
+                    System.arraycopy(array, 0, temp, 0, array.length - 1);
+                }
+                else {
+                    System.arraycopy(array, 1, temp, 0, array.length - 1);
+                }
             }
             else {
                 f = array[array.length - 1];
@@ -220,6 +225,8 @@ public class ArrayDeque<Item> {
             }
             array = temp;
             findNextFirst();
+            nextLast--;
+            lastLast--;
             return f;
         }
         else if (lastLast != array.length - 1){
@@ -228,8 +235,10 @@ public class ArrayDeque<Item> {
             System.arraycopy(array, 0, temp, 0, lastLast);
             System.arraycopy(array, lastLast + 1, temp, lastLast, array.length - lastLast - 1);
             array = temp;
+            if (lastLast - 1 < 0) {
+                lastLast = array.length - 1;
+            }
             nextLast--;
-            lastLast--;
             return f;
         }
         Item f = array[array.length - 1];
