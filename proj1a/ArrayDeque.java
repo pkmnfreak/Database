@@ -186,27 +186,17 @@ public class ArrayDeque<Item> {
             array = temp;
             return f;
         }
-        else if (!isFull()){
-            Item f = array[nextFirst + 1];
+        else if (lastFirst != array.length - 1){
+            Item f = array[lastFirst];
             Item[] temp = (Item[]) new Object[array.length - 1];
-            System.arraycopy(array, 0, temp, 0, nextFirst + 1);
-            System.arraycopy(array, nextFirst + 2, temp, nextFirst + 1, array.length - nextFirst - 2);
+            System.arraycopy(array, 0, temp, 0, lastFirst);
+            System.arraycopy(array, lastFirst + 1, temp, lastFirst, array.length - nextFirst - 2);
             array = temp;
             return f;
         }
-        int index = 0;
-        if (nextFirst > array.length - 1 || lastFirst > array.length - 1) {
-            nextFirst = 0;
-            lastFirst = 0;
-        }
-        index = lastFirst;
-        Item f = array[index];
-        while (index < array.length - 1) {
-            array[index] = array[index + 1];
-            index++;
-        }
+        Item f = array[0];
         Item[] temp = (Item[]) new Object[array.length - 1];
-        System.arraycopy(array, 0, temp, 0, array.length - 1);
+        System.arraycopy(array, 1, temp, 0, lastFirst);
         array = temp;
         return f;
     }
@@ -220,30 +210,36 @@ public class ArrayDeque<Item> {
         if (nextLast == 1 && lastLast == 1) {
             Item f = array[0];
             Item[] temp = (Item[]) new Object[array.length - 1];
-            System.arraycopy(array, 1, temp, 0, 7);
+            if (!isFull()) {
+                f = array[0];
+                System.arraycopy(array, 1, temp, 0, array.length - 1);
+            }
+            else {
+                f = array[array.length - 1];
+                System.arraycopy(array, 0, temp, 0, array.length - 1);
+            }
             array = temp;
-            nextFirst--;
-            lastFirst--;
-            nextLast--;
-            lastLast--;
+            findNextFirst();
             return f;
         }
-        else {
-            if (lastLast >= array.length || lastLast < 0) {
-                System.out.print("Help me");
-                return null;
-            }
+        else if (lastLast != array.length - 1){
             Item f = array[lastLast];
             Item[] temp = (Item[]) new Object[array.length - 1];
             System.arraycopy(array, 0, temp, 0, lastLast);
             System.arraycopy(array, lastLast + 1, temp, lastLast, array.length - lastLast - 1);
             array = temp;
-            nextFirst--;
-            lastFirst--;
             nextLast--;
             lastLast--;
             return f;
         }
+        Item f = array[array.length - 1];
+        Item[] temp = (Item[]) new Object[array.length - 1];
+        System.arraycopy(array, 0, temp, 0, lastLast);
+        array = temp;
+        findNextFirst();
+        nextLast--;
+        lastLast--;
+        return f;
     }
 
     public Item get(int index) {
