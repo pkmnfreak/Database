@@ -206,6 +206,9 @@ public class ArrayDeque<Item> {
             System.arraycopy(array, 0, temp, 0, lastFirst);
             System.arraycopy(array, lastFirst + 1, temp, lastFirst, array.length - lastFirst - 1);
             array = temp;
+            if (lastFirst == 0) {
+                nextFirst = array.length - 1;
+            }
             return f;
         }
     }
@@ -219,7 +222,7 @@ public class ArrayDeque<Item> {
             Item[] temp = (Item[]) new Object[array.length - 1];
             /*array is addfirst with 0 as null*/
             /*array is all addfirst, no null*/
-            if (lastFirst == 0 || array[0] == null){
+            if (lastFirst == 0 && nextFirst != array.length - 1 || array[0] == null){
                 Item f = array[array.length - 1];
                 System.arraycopy(array, 0, temp, 0, array.length - 1);
                 array = temp;
@@ -256,9 +259,10 @@ public class ArrayDeque<Item> {
                 lastLast--;
             }
             if (nextFirst >= array.length) {
-                nextFirst--;
                 lastFirst = 0;
             }
+            nextFirst--;
+            lastFirst--;
             return f;
         }
     }
