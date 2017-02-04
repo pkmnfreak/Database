@@ -32,7 +32,7 @@ public class ArrayDeque<Item> {
         if (size <= array.length) {
             return;
         }
-        if (lastFirst != 0) {
+        if (lastFirst != 0 && lastFirst > 0) {
             Item[] temp = (Item[]) new Object[size * 2];
             System.arraycopy(array, 0, temp, 0, lastFirst);
             System.arraycopy(array, lastFirst, temp, temp.length - (array.length - lastFirst), array.length - lastFirst);
@@ -42,8 +42,10 @@ public class ArrayDeque<Item> {
         /*If all is addFirst and first box was removed (nextLast = 1 even tho it should be 0)*/
         else if (nextLast == 0 || nextFirst < nextLast) {
             Item[] temp = (Item[]) new Object[size * 2];
-            System.arraycopy(array, 0, temp, temp.length - array.length, array.length);
-            nextFirst = temp.length - array.length - 1;
+            System.arraycopy(array, 0, temp, 0, nextLast);
+            System.arraycopy(array, 1, temp, temp.length - array.length + 1, array.length - nextLast);
+            nextFirst = temp.length - array.length;
+            lastFirst = nextFirst;
             array = temp;
             if (array[0] == null) {
                 nextLast = 0;
@@ -179,7 +181,7 @@ public class ArrayDeque<Item> {
             System.arraycopy(array, 0, temp, 0, nextFirst + 1);
             System.arraycopy(array, nextFirst + 2, temp, nextFirst + 1, array.length - nextFirst - 2);
             array = temp;
-            if (!isFull() && nextLast != 0) {
+            if (!isFull() && nextLast != 0 && nextFirst != lastFirst) {
                 nextLast--;
                 lastLast--;
             }
@@ -226,6 +228,10 @@ public class ArrayDeque<Item> {
                 Item f = array[array.length - 1];
                 System.arraycopy(array, 0, temp, 0, array.length - 1);
                 array = temp;
+                if (array[0] == null) {
+                    nextLast--;
+                    lastLast--;
+                }
                 return f;
             }
             /*array is all addfirst*/
