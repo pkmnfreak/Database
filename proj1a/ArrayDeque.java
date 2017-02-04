@@ -3,18 +3,17 @@ public class ArrayDeque<Item> {
 
     public static void main(String[] args) {
         ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
-        ArrayDeque.size();
+        ArrayDeque.addLast(0);
         ArrayDeque.addLast(1);
-        ArrayDeque.size();
-        ArrayDeque.removeFirst();
-        ArrayDeque.addLast(4);
-        ArrayDeque.addLast(5);
+        ArrayDeque.addLast(2);
         ArrayDeque.removeLast();
+        ArrayDeque.addLast(4);
+        ArrayDeque.removeLast();
+        ArrayDeque.addLast(6);
         ArrayDeque.addLast(7);
-        ArrayDeque.addFirst(8);
-        ArrayDeque.addLast(9);
+        ArrayDeque.addLast(8);
+        ArrayDeque.removeLast();
         ArrayDeque.addLast(10);
-        ArrayDeque.addFirst(11);
     }
 
     private Item[] array;
@@ -215,6 +214,7 @@ public class ArrayDeque<Item> {
         Item f = array[lastFirst];
         Item[] temp = (Item[]) new Object[array.length - 1];
         System.arraycopy(array, 0, temp, 0, lastFirst);
+        nextFirst = lastFirst;
         array = temp;
         return f;
     }
@@ -265,9 +265,15 @@ public class ArrayDeque<Item> {
         System.arraycopy(array, 0, temp, 0, lastLast);
         array = temp;
         findNextFirst();
-        nextLast--;
-        lastLast--;
-        return f;
+        if (nextLast - 1 < 0) {
+            nextLast = lastLast - 1;
+            return f;
+        }
+        else {
+            nextLast--;
+            lastLast--;
+            return f;
+        }
     }
 
     public Item get(int index) {
