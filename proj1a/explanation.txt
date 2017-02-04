@@ -1,0 +1,1 @@
+I started the project on Thursday and finished LinkedListDeque relatively fast so I assumed ArrayDeque wouldn’t take too long either. I started Array Deque on Friday, but the circular array theory kept confusing me and I kept restarting the class multiple times until I finally gave up.
