@@ -1,55 +1,5 @@
-/**
- * Created by pkmnfreak on 2/2/17.
- */
-public class ArrayDeque<Item> {
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> a = new ArrayDeque<>();
-        a.addFirst(1);
-        a.addFirst(8);
-        a.addFirst(6);
-        a.addFirst(5);
-        a.addLast(4);
-        a.removeLast();
-        a.addFirst(7);
-        a.addFirst(7);
-        a.addFirst(9);
-        a.addFirst(6);
-        a.addFirst(4);
-        a.addLast(2);
-        a.removeLast();
-        a.addLast(0);
-        a.addLast(10);
-        a.addLast(9);
-        a.addLast(8);
-        a.removeFirst();
-        a.addLast(7);
-        a.addLast(6);
-        a.addLast(5);
-        a.removeFirst();
-        a.addLast(4);
-        a.addLast(5);
-        a.addLast(6);
-        a.addFirst(2);
-        a.removeLast();
-        a.addFirst(3);
-        a.removeFirst();
-        a.removeFirst();
-        a.addFirst(4);
-        a.addFirst(5);
-        a.addFirst(4);
-        a.addFirst(6);
-        a.addFirst(1);
-        a.addFirst(11);
-        a.removeFirst();
-        a.addFirst(12);
-        a.addFirst(13);
-        a.addFirst(14);
-        a.removeFirst();
-        a.addFirst(15);
-        a.addLast(4);
-        a.addLast(6);
-    }
+public class ArrayDeque<Item> {
 
     private Item[] array;
     private int nextFirst;
@@ -180,6 +130,9 @@ public class ArrayDeque<Item> {
     }
 
     public void printDeque() {
+        if (isEmpty()) {
+            return;
+        }
         if (nextFirst != 0 && lastFirst != 0) {
             int i = lastFirst;
             while (i + 1 <= array.length) {
@@ -259,7 +212,7 @@ public class ArrayDeque<Item> {
     }
 
     public Item removeLast() {
-        if (size == 0) {
+        if (isEmpty()) {
             return null;
         }
         size--;
@@ -290,6 +243,9 @@ public class ArrayDeque<Item> {
     }
 
     public Item get(int index) {
+        if (index >= array.length || index < 0) {
+            return null;
+        }
         Item[] orderedArray = (Item[]) new Object[array.length];
         int j = 0;
         if (nextFirst != 0 && lastFirst != 0) {
