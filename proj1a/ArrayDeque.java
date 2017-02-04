@@ -229,6 +229,10 @@ public class ArrayDeque<Item> {
             return f;
         }
         else {
+            if (lastLast >= array.length || lastLast < 0) {
+                System.out.print("Help me");
+                return null;
+            }
             Item f = array[lastLast];
             Item[] temp = (Item[]) new Object[array.length - 1];
             System.arraycopy(array, 0, temp, 0, lastLast);
