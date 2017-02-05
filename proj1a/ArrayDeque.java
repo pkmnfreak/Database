@@ -1,12 +1,12 @@
 
-public class arrayDeque<Item> {
+public class ArrayDeque<Item> {
 
     private Item[] array;
     private int nextFirst;
     private int nextLast;
     private int size;
 
-    public arrayDeque() {
+    public ArrayDeque() {
         array = (Item[]) new Object[8];
         nextFirst = 4;
         nextLast = 5;
