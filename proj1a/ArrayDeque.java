@@ -6,7 +6,7 @@ public class ArrayDeque<Item> {
     private int nextLast;
     private int size;
 
-   public ArrayDeque() {
+    public ArrayDeque() {
         array = (Item[]) new Object[8];
         nextFirst = 4;
         nextLast = 5;
