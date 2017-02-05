@@ -5,7 +5,7 @@ public class ArrayDeque<Item> {
     private int nextFirst;
     private int nextLast;
     private int size;
-
+    
     public ArrayDeque() {
         array = (Item[]) new Object[8];
         nextFirst = 4;
@@ -40,7 +40,7 @@ public class ArrayDeque<Item> {
             return;
         }
         Item[] temp = (Item[]) new Object[i];
-        int pointer = nextFirst + 1;
+        int pointer = (nextFirst + 1) % array.length;
         for (int j = 0; j < array.length; j++) {
             temp[j] = array[pointer];
             pointer = (pointer + 1) % array.length;
@@ -102,7 +102,7 @@ public class ArrayDeque<Item> {
 
     public void printDeque() {
         Item[] temp = (Item[]) new Object[size];
-        int pointer = nextFirst + 1;
+        int pointer = (nextFirst + 1) % array.length;
         for (int j = 0; j < array.length; j++) {
             temp[j] = array[pointer];
             pointer = (pointer + 1) % array.length;
@@ -115,7 +115,7 @@ public class ArrayDeque<Item> {
 
     public Item get(int index) {
         Item[] temp = (Item[]) new Object[size];
-        int pointer = nextFirst + 1;
+        int pointer = (nextFirst + 1) % array.length;
         for (int j = 0; j < array.length; j++) {
             temp[j] = array[pointer];
             pointer = (pointer + 1) % array.length;
