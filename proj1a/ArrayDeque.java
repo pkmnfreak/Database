@@ -8,22 +8,20 @@ public class ArrayDeque<Item> {
 
     public static void main(String[] args) {
         ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
-        ArrayDeque.addLast(0);
-        ArrayDeque.addLast(1);
-        ArrayDeque.addLast(2);
-        ArrayDeque.addLast(3);
-        ArrayDeque.addLast(4);
-        ArrayDeque.addLast(5);
-        ArrayDeque.addLast(6);
-        ArrayDeque.addLast(7);
-        ArrayDeque.addLast(8);
+        ArrayDeque.addFirst(0);
+        ArrayDeque.addFirst(1);
+        ArrayDeque.addFirst(2);
+        ArrayDeque.addFirst(3);
+        ArrayDeque.removeLast();
+        ArrayDeque.addFirst(5);
+        ArrayDeque.addFirst(6);
+        ArrayDeque.addFirst(7);
+        ArrayDeque.addFirst(8);
         ArrayDeque.addLast(9);
         ArrayDeque.addLast(10);
-        ArrayDeque.addLast(11);
-        ArrayDeque.addLast(12);
-        ArrayDeque.addLast(13);
-        ArrayDeque.addLast(14);
+        ArrayDeque.get(3);
         ArrayDeque.removeLast();
+        ArrayDeque.get(7);
     }
     public ArrayDeque() {
         array = (Item[]) new Object[8];
@@ -58,7 +56,7 @@ public class ArrayDeque<Item> {
             pointer = (pointer + 1) % array.length;
         }
         nextFirst = temp.length - 1;
-        nextLast = size - 1;
+        nextLast = size;
         array = temp;
     }
 
@@ -126,6 +124,9 @@ public class ArrayDeque<Item> {
     }
 
     public Item get(int index) {
+        if (index > size) {
+            return null;
+        }
         Item[] temp = (Item[]) new Object[size];
         int pointer = (nextFirst + 1) % array.length;
         for (int j = 0; j < size; j++) {
