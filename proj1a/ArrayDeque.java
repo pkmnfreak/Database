@@ -6,25 +6,7 @@ public class ArrayDeque<Item> {
         ArrayDeque.addLast(0);
         ArrayDeque.addLast(1);
         ArrayDeque.addLast(2);
-        ArrayDeque.addLast(3);
         ArrayDeque.removeFirst();
-        ArrayDeque.addLast(4);
-        ArrayDeque.addLast(5);
-        ArrayDeque.addLast(6);
-        ArrayDeque.addLast(7);
-        ArrayDeque.addLast(8);
-        ArrayDeque.addFirst(9);
-        ArrayDeque.addFirst(10);
-        ArrayDeque.addLast(11);
-        ArrayDeque.addLast(12);
-        ArrayDeque.addLast(13);
-        ArrayDeque.addFirst(14);
-        ArrayDeque.addFirst(15);
-        ArrayDeque.addFirst(16);
-        ArrayDeque.addFirst(17);
-        ArrayDeque.addFirst(18);
-        ArrayDeque.addLast(19);
-        ArrayDeque.addLast(20);
     }
 
     private Item[] array;
@@ -35,7 +17,7 @@ public class ArrayDeque<Item> {
     public ArrayDeque() {
         array = (Item[]) new Object[8];
         nextFirst = 4;
-        nextLast = 4;
+        nextLast = 5;
         size = 0;
     }
 
@@ -84,13 +66,8 @@ public class ArrayDeque<Item> {
         if (size >= array.length) {
             resize(array.length * 2);
         }
-        if (isEmpty()) {
-            array[nextFirst] = item;
-        }
-        else {
-            nextFirst = (nextFirst - 1 + array.length)  % array.length;
-            array[nextFirst] = item;
-        }
+        array[nextFirst] = item;
+        nextFirst = (nextFirst - 1 + array.length)  % array.length;
         size++;
     }
 
@@ -98,8 +75,8 @@ public class ArrayDeque<Item> {
         if (size >= array.length) {
             resize(array.length * 2);
         }
-        nextLast = (nextLast + 1) % array.length;
         array[nextLast] = item;
+        nextLast = (nextLast + 1) % array.length;
         size++;
     }
 
