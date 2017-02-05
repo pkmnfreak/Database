@@ -65,9 +65,6 @@ public class ArrayDeque<Item> {
         if (size < array.length) {
             return;
         }
-        if (array.length < 16) {
-            return;
-        }
         Item[] temp = (Item[]) new Object[i];
         int pointer = nextFirst + 1;
         for (int j = 0; j < array.length; j++) {
@@ -114,8 +111,8 @@ public class ArrayDeque<Item> {
         array[nextFirst + 1] = null;
         nextFirst = (nextFirst + 1) % array.length;
         size--;
-        if (size <= array.length/4) {
-            resize(array.length/2);
+        if (4 * size <= array.length && array.length > 16) {
+            resize(array.length / 2);
         }
         return f;
     }
@@ -128,8 +125,8 @@ public class ArrayDeque<Item> {
         array[nextLast - 1] = null;
         size--;
         nextLast = (nextLast - 1 + array.length) % array.length;
-        if (size <= array.length/4) {
-            resize(array.length/2);
+        if (4 * size <= array.length && array.length > 16) {
+            resize(array.length / 2);
         }
         return f;
     }
