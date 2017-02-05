@@ -14,7 +14,7 @@ public class LinkedListDeque<Item> {
     private IntNode frontSentinel;
     private IntNode backSentinel;
     private int size;
-    private Item bloop;
+    private Item bleep;
 
     public void addFirst(Item bloop) {
         frontSentinel.next.prev = new IntNode(bloop, frontSentinel.next, frontSentinel);
@@ -38,7 +38,7 @@ public class LinkedListDeque<Item> {
 
     public void printDeque() {
         int i = 0;
-        IntNode p = new IntNode(bloop, frontSentinel.next, backSentinel);
+        IntNode p = new IntNode(bleep, frontSentinel.next, backSentinel);
         while (i < size) {
             System.out.print(p.next.item);
             System.out.print(" ");
@@ -49,7 +49,7 @@ public class LinkedListDeque<Item> {
 
     public Item removeFirst() {
         if (frontSentinel.next == backSentinel) {
-           return null;
+            return null;
         } else {
             Item p = frontSentinel.next.item;
             frontSentinel.next.next.prev = frontSentinel;
@@ -78,7 +78,7 @@ public class LinkedListDeque<Item> {
             return null;
         } else {
             int i = 0;
-            IntNode p = new IntNode(bloop, frontSentinel.next, backSentinel);
+            IntNode p = new IntNode(bleep, frontSentinel.next, backSentinel);
             while (i <= index) {
                 p = p.next;
                 i++;
@@ -105,8 +105,8 @@ public class LinkedListDeque<Item> {
     }
 
     public LinkedListDeque() {
-        frontSentinel = new IntNode(bloop, null, null);
-        backSentinel = new IntNode(bloop, null, null);
+        frontSentinel = new IntNode(bleep, null, null);
+        backSentinel = new IntNode(bleep, null, null);
         backSentinel.prev = frontSentinel;
         frontSentinel.next = backSentinel;
         size = 0;
