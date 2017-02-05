@@ -1,20 +1,12 @@
 
-public class ArrayDeque<Item> {
-
-    public static void main(String[] args) {
-        ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
-        ArrayDeque.addLast(0);
-        ArrayDeque.addLast(1);
-        ArrayDeque.addLast(2);
-        ArrayDeque.removeFirst();
-    }
+public class arrayDeque<Item> {
 
     private Item[] array;
     private int nextFirst;
     private int nextLast;
     private int size;
 
-    public ArrayDeque() {
+    public arrayDeque() {
         array = (Item[]) new Object[8];
         nextFirst = 4;
         nextLast = 5;
