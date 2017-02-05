@@ -6,24 +6,7 @@ public class ArrayDeque<Item> {
     private int nextLast;
     private int size;
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
-        ArrayDeque.addFirst(0);
-        ArrayDeque.addFirst(1);
-        ArrayDeque.addFirst(2);
-        ArrayDeque.addFirst(3);
-        ArrayDeque.removeLast();
-        ArrayDeque.addFirst(5);
-        ArrayDeque.addFirst(6);
-        ArrayDeque.addFirst(7);
-        ArrayDeque.addFirst(8);
-        ArrayDeque.addLast(9);
-        ArrayDeque.addLast(10);
-        ArrayDeque.get(3);
-        ArrayDeque.removeLast();
-        ArrayDeque.get(7);
-    }
-    public ArrayDeque() {
+   public ArrayDeque() {
         array = (Item[]) new Object[8];
         nextFirst = 4;
         nextLast = 5;
@@ -46,12 +29,9 @@ public class ArrayDeque<Item> {
     }
 
     private void resize(int i) {
-        if (size < array.length) {
-            return;
-        }
         Item[] temp = (Item[]) new Object[i];
         int pointer = (nextFirst + 1) % array.length;
-        for (int j = 0; j < array.length; j++) {
+        for (int j = 0; j < size; j++) {
             temp[j] = array[pointer];
             pointer = (pointer + 1) % array.length;
         }
