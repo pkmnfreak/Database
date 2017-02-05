@@ -45,7 +45,7 @@ public class ArrayDeque<Item> {
             temp[j] = array[pointer];
             pointer = (pointer + 1) % array.length;
         }
-        nextFirst = temp.length;
+        nextFirst = temp.length - 1;
         nextLast = size - 1;
         array = temp;
     }
@@ -76,8 +76,8 @@ public class ArrayDeque<Item> {
         if (isEmpty()) {
             return null;
         }
-        Item f = array[nextFirst + 1];
-        array[nextFirst + 1] = null;
+        Item f = array[(nextFirst + 1) % array.length];
+        array[(nextFirst + 1) % array.length] = null;
         nextFirst = (nextFirst + 1) % array.length;
         size--;
         if (4 * size <= array.length && array.length > 16) {
@@ -90,8 +90,8 @@ public class ArrayDeque<Item> {
         if (isEmpty()) {
             return null;
         }
-        Item f = array[nextLast - 1];
-        array[nextLast - 1] = null;
+        Item f = array[(nextLast - 1 + array.length) % array.length];
+        array[(nextLast - 1 + array.length) % array.length] = null;
         size--;
         nextLast = (nextLast - 1 + array.length) % array.length;
         if (4 * size <= array.length && array.length > 16) {
