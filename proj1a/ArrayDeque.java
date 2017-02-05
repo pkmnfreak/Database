@@ -1,6 +1,32 @@
 
 public class ArrayDeque<Item> {
 
+    public static void main(String[] args) {
+        ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
+        ArrayDeque.addLast(0);
+        ArrayDeque.addLast(1);
+        ArrayDeque.addLast(2);
+        ArrayDeque.addLast(3);
+        ArrayDeque.removeFirst();
+        ArrayDeque.addLast(4);
+        ArrayDeque.addLast(5);
+        ArrayDeque.addLast(6);
+        ArrayDeque.addLast(7);
+        ArrayDeque.addLast(8);
+        ArrayDeque.addFirst(9);
+        ArrayDeque.addFirst(10);
+        ArrayDeque.addLast(11);
+        ArrayDeque.addLast(12);
+        ArrayDeque.addLast(13);
+        ArrayDeque.addFirst(14);
+        ArrayDeque.addFirst(15);
+        ArrayDeque.addFirst(16);
+        ArrayDeque.addFirst(17);
+        ArrayDeque.addFirst(18);
+        ArrayDeque.addLast(19);
+        ArrayDeque.addLast(20);
+    }
+
     private Item[] array;
     private int nextFirst;
     private int nextLast;
@@ -39,7 +65,7 @@ public class ArrayDeque<Item> {
         if (size < array.length) {
             return;
         }
-        if (array.length >= 16) {
+        if (array.length < 16) {
             return;
         }
         Item[] temp = (Item[]) new Object[i];
