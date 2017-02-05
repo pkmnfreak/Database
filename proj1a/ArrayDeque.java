@@ -10,12 +10,20 @@ public class ArrayDeque<Item> {
         ArrayDeque<Integer> ArrayDeque = new ArrayDeque<>();
         ArrayDeque.addLast(0);
         ArrayDeque.addLast(1);
-        ArrayDeque.removeLast();
+        ArrayDeque.addLast(2);
         ArrayDeque.addLast(3);
-        ArrayDeque.addFirst(4);
-        ArrayDeque.removeFirst();
+        ArrayDeque.addLast(4);
+        ArrayDeque.addLast(5);
+        ArrayDeque.addLast(6);
+        ArrayDeque.addLast(7);
+        ArrayDeque.addLast(8);
+        ArrayDeque.addLast(9);
+        ArrayDeque.addLast(10);
+        ArrayDeque.addLast(11);
+        ArrayDeque.addLast(12);
+        ArrayDeque.addLast(13);
+        ArrayDeque.addLast(14);
         ArrayDeque.removeLast();
-        ArrayDeque.get(0);
     }
     public ArrayDeque() {
         array = (Item[]) new Object[8];
@@ -36,14 +44,7 @@ public class ArrayDeque<Item> {
     }
 
     public boolean isEmpty() {
-        int index = 0;
-        while (index < array.length) {
-            if (array[index] != null) {
-                return false;
-            }
-            index++;
-        }
-        return true;
+        return size == 0;
     }
 
     private void resize(int i) {
