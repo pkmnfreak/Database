@@ -14,26 +14,22 @@ public class LinkedListDeque<Item> {
     private IntNode frontSentinel;
     private IntNode backSentinel;
     private int size;
-    private Item item;
+    private Item bloop;
 
-    public void addFirst(Item item) {
-        frontSentinel.next.prev = new IntNode(item, frontSentinel.next, frontSentinel);
+    public void addFirst(Item bloop) {
+        frontSentinel.next.prev = new IntNode(bloop, frontSentinel.next, frontSentinel);
         frontSentinel.next = frontSentinel.next.prev;
         size++;
     }
 
-    public void addLast(Item item) {
-        backSentinel.prev.next = new IntNode(item, backSentinel, backSentinel.prev);
+    public void addLast(Item bloop) {
+        backSentinel.prev.next = new IntNode(bloop, backSentinel, backSentinel.prev);
         backSentinel.prev = backSentinel.prev.next;
         size++;
     }
 
     public boolean isEmpty() {
-        if (frontSentinel.next == backSentinel) {
-            return true;
-        } else {
-            return false;
-        }
+        return frontSentinel.next == backSentinel;
     }
 
     public int size() {
@@ -42,7 +38,7 @@ public class LinkedListDeque<Item> {
 
     public void printDeque() {
         int i = 0;
-        IntNode p = new IntNode(item, frontSentinel.next, backSentinel);
+        IntNode p = new IntNode(bloop, frontSentinel.next, backSentinel);
         while (i < size) {
             System.out.print(p.next.item);
             System.out.print(" ");
@@ -52,15 +48,15 @@ public class LinkedListDeque<Item> {
     }
 
     public Item removeFirst() {
-       if (frontSentinel.next == backSentinel) {
+        if (frontSentinel.next == backSentinel) {
            return null;
-       } else {
-           Item p = frontSentinel.next.item;
-           frontSentinel.next.next.prev = frontSentinel;
-           frontSentinel.next = frontSentinel.next.next;
-           size--;
-           return p;
-       }
+        } else {
+            Item p = frontSentinel.next.item;
+            frontSentinel.next.next.prev = frontSentinel;
+            frontSentinel.next = frontSentinel.next.next;
+            size--;
+            return p;
+        }
     }
 
     public Item removeLast() {
@@ -82,7 +78,7 @@ public class LinkedListDeque<Item> {
             return null;
         } else {
             int i = 0;
-            IntNode p = new IntNode(item, frontSentinel.next, backSentinel);
+            IntNode p = new IntNode(bloop, frontSentinel.next, backSentinel);
             while (i <= index) {
                 p = p.next;
                 i++;
@@ -109,8 +105,8 @@ public class LinkedListDeque<Item> {
     }
 
     public LinkedListDeque() {
-        frontSentinel = new IntNode(item, null, null);
-        backSentinel = new IntNode(item, null, null);
+        frontSentinel = new IntNode(bloop, null, null);
+        backSentinel = new IntNode(bloop, null, null);
         backSentinel.prev = frontSentinel;
         frontSentinel.next = backSentinel;
         size = 0;
