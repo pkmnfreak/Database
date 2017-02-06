@@ -71,6 +71,19 @@ public class IntList {
         return new IntList(L.first * L.first, squareListRecursive(L.rest));
     }
 
+    public static IntList reverse(IntList A) {
+        if (A == null) {
+            return null;
+        }
+        IntList R = null;
+        while (A != null) {
+            R = new IntList(A.first, R);
+            A = A.rest;
+        }
+        A = R;
+        return A;
+    }
+
     /** DO NOT MODIFY ANYTHING ABOVE THIS LINE! */
 
 

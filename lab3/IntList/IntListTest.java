@@ -40,10 +40,15 @@ public class IntListTest {
      * Anything can happen to A.
      */
 
+    @Test(timeout = 1000)
     public void testReverse() {
         IntList L = IntList.list(1, 2, 3);
+        IntList actual = IntList.reverse(L);
         IntList expected = IntList.list(3, 2, 1);
-        assertEquals(expected, L);
+        assertEquals(expected, actual);
+        assertNotEquals(actual, L);
+        IntList none = IntList.list();
+        assertEquals(null, IntList.reverse(none));
     }
 
     @Test
@@ -65,7 +70,7 @@ public class IntListTest {
 
     @Test
     public void testCatenate() {
-        IntList A = IntList.list(1,2,3);
+        IntList A = IntList.list(1, 2, 3);
         IntList B = IntList.list(4, 5, 6);
         IntList exp = IntList.list(1, 2, 3, 4, 5, 6);
         assertEquals(exp, IntList.catenate(A, B));
