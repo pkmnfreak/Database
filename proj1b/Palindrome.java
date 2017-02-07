@@ -1,8 +1,5 @@
 public class Palindrome {
 
-    public static void main(String[] args) {
-        System.out.print(isPalindrome("detrude", new OffByOne()));
-    }
     public static Deque<Character> wordToDeque(String word) {
         ArrayDequeSolution<Character> list = new ArrayDequeSolution<>();
         for (int i = 0; i < word.length(); i++) {
@@ -44,5 +41,4 @@ public class Palindrome {
             return false;
         }
     }
-
 }
