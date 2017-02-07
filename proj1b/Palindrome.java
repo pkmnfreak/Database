@@ -12,15 +12,13 @@ public class Palindrome {
         Deque<Character> list = wordToDeque(word);
         if (word.length() <= 1) {
             return true;
-        }
-        else if (list.removeFirst() == list.removeLast()) {
+        } else if (list.removeFirst() == list.removeLast()) {
             String newList = "";
             for (int i = 0; i < list.size(); i++) {
                 newList += list.get(i);
             }
             return isPalindrome(newList);
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -29,15 +27,13 @@ public class Palindrome {
         Deque<Character> list = wordToDeque(word);
         if (word.length() <= 1) {
             return true;
-        }
-        else if (cc.equalChars(list.removeFirst(), list.removeLast())) {
+        } else if (cc.equalChars(list.removeFirst(), list.removeLast())) {
             String newList = "";
             for (int i = 0; i < list.size(); i++) {
                 newList += list.get(i);
             }
             return isPalindrome(newList, cc);
-        }
-        else {
+        } else {
             return false;
         }
     }
