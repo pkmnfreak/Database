@@ -5,7 +5,7 @@ package synthesizer;
  */
 import java.util.Iterator;
 
-public interface BoundedQueue<T> extends Iterable<T>{
+public interface BoundedQueue<T> extends Iterable<T> {
     Iterator<T> iterator();
     int capacity();
     int fillCount();
