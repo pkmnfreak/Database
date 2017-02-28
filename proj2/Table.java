@@ -66,29 +66,40 @@ public class Table extends HashMap {
     public static Table join(Table x, Table y) {
        Table joinedTable = new Table(jointColumnNames(x,y), jointColumnTypes(x,y));
        ArrayList joinIndices = findSimItemsinColumn(x,y);
-       Character[] simColumn = findSimColumnNames(x,y);
-       for (char k:joinedTable.keys()) {
+       LinkedList simColumn = findSimColumnNames(x,y);
+        ArrayList temp = (ArrayList) joinIndices.get(0);
+        int columnLen = temp.size(); //gets the length of the column
+       for (Object k: joinedTable.keySet()) {
            //handles the shared key set
-           int columnLen = joinIndices.get(0).size(); //gets the length of the column
-           ArrayList newColumn = new ArrayList();
+           column newColumn = new column();
            if (simColumn.contains(k)) {
                for(int i = 0; i < columnLen; i+= 1) {
-                   int temp = joinIndices.get(0).get(i);
-                   newColumn.add(x(k).get(temp));
+                   ArrayList wheretoJoin = (ArrayList) joinIndices.get(0);
+                   int itemtoAdd = (int) wheretoJoin.get(i);
+                   column compList = (column) x.get(k);
+                   newColumn.add(compList.get(itemtoAdd));
                }
-           } else if (x.contains(k)) {
+               joinedTable.put(k,newColumn);
+           } else if (x.containsKey(k)) {
                for(int i = 0; i < columnLen; i+= 1) {
-                   int temp = joinIndices.get(0).get(i);
-                   newColumn.add(x(k).get(temp));
+                   ArrayList wheretoJoin = (ArrayList) joinIndices.get(0);
+                   int itemtoAdd = (int) wheretoJoin.get(i);
+                   column compList = (column) x.get(k);
+                   newColumn.add(compList.get(itemtoAdd));
                }
+               joinedTable.put(k,newColumn);
            } else {
                for(int i = 0; i < columnLen; i+= 1) {
-                   int temp = joinIndices.get(1).get(i);
-                   newColumn.add(y(k).get(temp));
+                   ArrayList wheretoJoin = (ArrayList) joinIndices.get(1);
+                   int itemtoAdd = (int) wheretoJoin.get(i);
+                   column compList = (column) y.get(k);
+                   newColumn.add(compList.get(itemtoAdd));
                }
+               joinedTable.put(k,newColumn);
            }
        }
-       return joinedTable;
+        joinedTable.numRows = columnLen;
+        return joinedTable;
     }
 
     /** helper method to find similar columns **/
@@ -99,7 +110,7 @@ public class Table extends HashMap {
 
         LinkedList<Character> simColumnNameStack = new LinkedList<Character>();
         for (int i = 0; i < y.numColumns; i++) {
-            for (int j = 0; j < x.numColumns; i++) {
+            for (int j = 0; j < x.numColumns; j++) {
                 if (y.columnnames[i].equals(x.columnnames[j])) {
                     simColumnNameStack.addLast(x.columnnames[i]);
                 }
@@ -128,7 +139,7 @@ public class Table extends HashMap {
         }
         for (int i = 0; i < simColumnNames.size(); i++) {
             for (int j = 0; j < returnArray.length; j++) {
-                if (simColumnNames.pop().equals(returnArray[j])) {
+                if (simColumnNames.peek().equals(returnArray[j])) {
                     Character[] arraycopy = new Character[returnArray.length];
                     /*copies items after matching column name*/
                     System.arraycopy(returnArray, j + 1, arraycopy, j + 1, arraycopy.length - j - 1);
@@ -144,7 +155,7 @@ public class Table extends HashMap {
     /** this will be put into the Table constructor in the join method**/
     private static String[] jointColumnTypes(Table x, Table y) {
         Character[] jointColumnNames = jointColumnNames(x,y);
-        Set<Character>  simColumnNames = findSimColumnNames (x,y);
+        LinkedList  simColumnNames = findSimColumnNames (x,y);
         String[] returnArray = new String[jointColumnNames.length];
         for (int i = 0; i < x.columntypes.length; i++) {
             returnArray[i] = x.columntypes[i];
@@ -159,10 +170,10 @@ public class Table extends HashMap {
 
     /** another helper method, finds the indexes at which we must merge in our new joint table **/
     private static ArrayList findSimItemsinColumn(Table x, Table y) {
-        Set<Character> commonKeys = findSimColumnNames(x,y);
+        LinkedList commonKeys = findSimColumnNames(x,y);
         ArrayList xindex = new ArrayList();
         ArrayList yindex = new ArrayList();
-        for (Character key: commonKeys) {
+        for (Object key: commonKeys) {
             column xval = (column) x.get(key);
             column yval = (column) y.get(key);
             for(int i = 0; i < xval.size(); i++) {
@@ -205,6 +216,7 @@ public class Table extends HashMap {
         T2.addRow(forow);
 
         T2.printTable();
-        System.out.println(findSimItemsinColumn(T1,T2));
+        Table T3 = join(T1,T2);
+        T3.printTable();
     }
 }
