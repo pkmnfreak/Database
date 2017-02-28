@@ -67,42 +67,75 @@ public class Table extends HashMap {
        Table joinedTable = new Table(jointColumnNames(x,y), jointColumnTypes(x,y));
        ArrayList joinIndices = findSimItemsinColumn(x,y);
        Character[] simColumn = findSimColumnNames(x,y);
-       for (Object k: joinedTable.keySet()) {
+       for (char k:joinedTable.keys()) {
            //handles the shared key set
-           column temp = (column) x.get(joinIndices.get(0));
-           for(int i = 0; i < temp.size() ;i++) {
-               int temp2 = (int) temp.get(i);
-               column temp3 = (column) x.get(k);
-               joinedTable.put(k, temp3.get(temp2));
+           int columnLen = joinIndices.get(0).size(); //gets the length of the column
+           ArrayList newColumn = new ArrayList();
+           if (simColumn.contains(k)) {
+               for(int i = 0; i < columnLen; i+= 1) {
+                   int temp = joinIndices.get(0).get(i);
+                   newColumn.add(x(k).get(temp));
+               }
+           } else if (x.contains(k)) {
+               for(int i = 0; i < columnLen; i+= 1) {
+                   int temp = joinIndices.get(0).get(i);
+                   newColumn.add(x(k).get(temp));
+               }
+           } else {
+               for(int i = 0; i < columnLen; i+= 1) {
+                   int temp = joinIndices.get(1).get(i);
+                   newColumn.add(y(k).get(temp));
+               }
            }
-           //handles the non-shared
        }
        return joinedTable;
     }
 
     /** helper method to find similar columns **/
-    private static Stack findSimColumnNames(Table x, Table y) {
+    private static LinkedList<Character> findSimColumnNames(Table x, Table y) {
         /** solution borrowed from http://stackoverflow.com/questions/23562308/java-find-matching-keys-of-two-hashmaps
-         * Sets remove duplicates automatically which is why it's used here **/
+         * Sets remove duplicates automatically which is why it's used here*
+         * Orders stack so that the last similar column is on the bottom (the one that's supposed to be first is last)**/
 
+        LinkedList<Character> simColumnNameStack = new LinkedList<Character>();
+        for (int i = 0; i < y.numColumns; i++) {
+            for (int j = 0; j < x.numColumns; i++) {
+                if (y.columnnames[i].equals(x.columnnames[j])) {
+                    simColumnNameStack.addLast(x.columnnames[i]);
+                }
+            }
+        }
+        return simColumnNameStack;
     }
 
     /** helper method, this will become the column names for joined table**/
     private static Character[] jointColumnNames(Table x, Table y) {
         /** Character[] array1and2 = new Character[x.columntypes.length + y.columntypes.length];
-        arraycopy(x.columntypes, 0, array1and2, 0, x.columntypes.length);
-        arraycopy(y.columntypes, 0, array1and2, x.columntypes.length, y.columntypes.length);
-        Set<Character> returnSet = new HashSet<Character> (Arrays.asList(array1and2));
-        Character[] returnArray = returnSet.toArray(new Character[returnSet.size()]);
-        return returnArray;**/
-        Set<Character>  simColumnNames = findSimColumnNames (x,y);
-        Character[] returnArray = new Character[x.columnnames.length + y.columnnames.length - simColumnNames.size()];
+         arraycopy(x.columntypes, 0, array1and2, 0, x.columntypes.length);
+         arraycopy(y.columntypes, 0, array1and2, x.columntypes.length, y.columntypes.length);
+         Set<Character> returnSet = new HashSet<Character> (Arrays.asList(array1and2));
+         Character[] returnArray = returnSet.toArray(new Character[returnSet.size()]);
+         return returnArray;**/
+        LinkedList<Character>  simColumnNames = findSimColumnNames (x,y);
+        Character[] returnArray = new Character[x.columnnames.length+y.columnnames.length-simColumnNames.size()];
         for (int i = 0; i < x.columntypes.length; i++) {
             returnArray[i] = x.columnnames[i];
         }
         for (int j = 0; j < y.columnnames.length; j++) {
             if (!simColumnNames.contains(y.columnnames[j])) {
                 returnArray[j + x.columnnames.length - 1] = y.columnnames[j];
+            }
+        }
+        for (int i = 0; i < simColumnNames.size(); i++) {
+            for (int j = 0; j < returnArray.length; j++) {
+                if (simColumnNames.pop().equals(returnArray[j])) {
+                    Character[] arraycopy = new Character[returnArray.length];
+                    /*copies items after matching column name*/
+                    System.arraycopy(returnArray, j + 1, arraycopy, j + 1, arraycopy.length - j - 1);
+                    /*copies items before matching column name*/
+                    System.arraycopy(returnArray, 0, arraycopy, 1, j);
+                    arraycopy[0] = returnArray[j];
+                }
             }
         }
         return returnArray;
