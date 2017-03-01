@@ -151,7 +151,7 @@ public class Table extends HashMap {
         for (int i = 0; i < y.numColumns; i++) {
             for (int j = 0; j < x.numColumns; j++) {
                 if (y.columnnames[i].equals(x.columnnames[j])) {
-                    simColumnNameStack.addLast(x.columnnames[i]);
+                    simColumnNameStack.addLast(x.columnnames[j]);
                 }
             }
         }
@@ -179,6 +179,7 @@ public class Table extends HashMap {
                     /*copies items before matching column name*/
                     System.arraycopy(returnArray, 0, arraycopy, 1, j);
                     arraycopy[0] = returnArray[j];
+                    returnArray = arraycopy;
                 }
             }
         }
@@ -235,7 +236,7 @@ public class Table extends HashMap {
         T1.addRow(secondrow);
         T1.printTable();
 
-        Character[] l = {'a','b'};
+        Character[] l = {'x','b'};
         String[] m = {"int", "int"};
         Table T2 = new Table(l,m);
         int[] frow = {7,0};
