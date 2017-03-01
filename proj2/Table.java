@@ -1,4 +1,6 @@
 
+import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
+
 import java.util.*;
 /**
  * Created by noraharhen on 2/20/17.
@@ -226,7 +228,136 @@ public class Table extends HashMap {
     }
 
 
+    public static Table select(ArrayList<Character> columns, ArrayList<String> tables) {
+        if (columns.size() <= 0) {
+            /* Throw exception???*/
+        }
+        if (tables.size() <= 0) {
+            /* Throw exception???*/
+        }
+        /*Identify types and store into newcolumntypes*/
+        if (tables.size() > 1) {
+            joinMultipleTables(tables);
+            tables.add(0, "joinedtemp");
+        }
+        Table newTable = (Table) allTables.get(tables.get(0));
+        for (int i = 0; i < newTable.size(); i++) {
+            if (!Arrays.asList(newTable.columnnames).contains(columns.get(i))) {
+                newTable.remove(columns.get(i));
+            }
+        }
+        return newTable;
+    }
+
+    /*columns is an arraylist where the last value is the new column name*/
+    /*String str = op.replace(" ", "");
+        if(str.equals("*")){
+           retVal = a*b;
+        } else if(str.equals("+")){
+           retVal = a+b;
+        }//etc
+        */
+    public static Table Binaryselect(ArrayList<Character> columns, ArrayList<String> tables, String operator) {
+        if (tables.size() > 1) {
+            joinMultipleTables(tables);
+            tables.add(0, "joinedtemp");
+        }
+        Table newTable = (Table) allTables.get(tables.get(0));
+        if (operator.equals("*")){
+
+        } else if (operator.equals("-")) {
+
+        } else if (operator.equals("+")) {
+
+        } else if (operator.equals("/")) {
+
+        }
+    }
+
+    public static column addColumns(column column1, column column2) {
+        column newColumn = new column();
+        if (column1.get(0) instanceof Integer) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Integer) column1.get(i) + (Integer) column2.get(i));
+            }
+        } else if (column1.get(0) instanceof Float) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Float) column1.get(i) + (Float) column2.get(i));
+            }
+        } else {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((String) column1.get(i) + (String) column2.get(i));
+            }
+        }
+        return newColumn;
+    }
+
+    public static column minusColumns(column column1, column column2) {
+        column newColumn = new column();
+        if (column1.get(0) instanceof Integer) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Integer) column1.get(i) - (Integer) column2.get(i));
+            }
+        } else if (column1.get(0) instanceof Float) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Float) column1.get(i) - (Float) column2.get(i));
+            }
+        } else {
+            /*throw exceptionerror*/
+        }
+        return newColumn;
+    }
+
+    public static column multiplyColumns(column column1, column column2) {
+        column newColumn = new column();
+        if (column1.get(0) instanceof Integer) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Integer) column1.get(i) * (Integer) column2.get(i));
+            }
+        } else if (column1.get(0) instanceof Float) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Float) column1.get(i) * (Float) column2.get(i));
+            }
+        } else {
+            /*throw exceptionerror*/
+        }
+        return newColumn;
+    }
+
+    public static column divideColumns(column column1, column column2) {
+        column newColumn = new column();
+        if (column1.get(0) instanceof Integer) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Integer) column1.get(i) / (Integer) column2.get(i));
+            }
+        } else if (column1.get(0) instanceof Float) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Float) column1.get(i) / (Float) column2.get(i));
+            }
+        } else {
+            /*throw exceptionerror*/
+        }
+        return newColumn;
+    }
+
+
+    public static Table joinMultipleTables(ArrayList<String> tables) {
+        int i = tables.size();
+        while (i > 1) {
+            allTables.put("joinedtemp", join(allTables.get(tables.get(0)), allTables.get(tables.get(1))));
+            tables.add(0, allTables.get("joinedtemp"));
+            tables.remove(1);
+            tables.remove(2);
+            i--;
+        }
+        return allTables.get("joinedtemp");
+    }
+
     public static void main(String[] args) {
+        Value v0 = new Value(0);
+        Value v1 = new Value("Good morning");
+        Value v2 = new Value();
+        /*
         Character[] x = {'x','y', 'z'};
         String[] n = {"int", "int", "int"};
         Table T1 = new Table(x,n);
@@ -246,5 +377,6 @@ public class Table extends HashMap {
         T2.printTable();
         Table T3 = join(T1,T2);
         T3.printTable();
+        */
     }
 }

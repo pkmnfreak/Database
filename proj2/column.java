@@ -12,6 +12,13 @@ public class column<T> {
         this.items = items;
     }
 
+    /*copies column2 into column1. Assume column1 is empty*/
+    public static void copy(column column1, column column2) {
+        for (int i = 0; i < column2.items.size(); i++) {
+            column1.add(column2.items.get(i));
+        }
+    }
+
     /** adds item to end of column **/
     public boolean add(T x) {
         items.add(x);

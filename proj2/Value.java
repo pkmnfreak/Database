@@ -9,7 +9,6 @@ public class Value<Item>{
     public int intNoValue = 0;
     public float floatNoValue = 0.0f;
 
-
     public Value() {
         this.label = "NOVALUE";
     }
@@ -45,3 +44,5 @@ public class Value<Item>{
         return this.value;
     }
 }
+
+/*getclass().getname()*/
