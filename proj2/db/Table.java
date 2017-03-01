@@ -262,6 +262,9 @@ public class Table extends HashMap {
         return " ";
     }
 
+    public Table Load(String name) {
+        
+    }
 
     public static void main(String[] args) {
         Character[] x = {'x','y', 'z'};
