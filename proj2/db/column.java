@@ -14,9 +14,6 @@ public class column<T> {
         this.items = items;
     }
 
-    public column(String type) {
-        this.items = items;
-    }
 
     /** adds item to end of db.column **/
     public boolean add(T x) {

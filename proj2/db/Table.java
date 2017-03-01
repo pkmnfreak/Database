@@ -8,9 +8,9 @@ import java.io.*;
 public class Table extends HashMap {
 
     /** keeps track of user defined order of columns **/
-    private String[] columnnames;
+    public String[] columnnames;
     /** keeps track of type of each db.column as defined by user **/
-    private String[] columntypes;
+    public String[] columntypes;
     /** number of rows in table **/
     public int numRows;
     /** number of columns in table, this cannot change **/
@@ -271,7 +271,7 @@ public class Table extends HashMap {
     }
 
     //helper method to convertTypes
-    private static Object convertType(String item,String type) {
+    public static Object convertType(String item,String type) {
         if (type.equals("int")){
             return Integer.parseInt(item);
         } else if (type.equals("int")) {
@@ -294,15 +294,15 @@ public class Table extends HashMap {
         T1.addRow(secondrow);
         T1.printTable();
 
-        String[] l = {"x","b"};
-        String[] m = {"int", "int"};
+        String[] l = {"l","b"};
+        String[] m = {"String", "String"};
         Table T2 = new Table(l,m);
-        Object[] frow = {7,0};
+        Object[] frow = {"hi","i am"};
         T2.addRow(frow);
-        Object[] srow = {2,8};
+        Object[] srow = {"joe","hmmm"};
         T2.addRow(srow);
         T2.printTable();
         Table T4 = Load("T4.tbl");
-        join(T2,T4).printTable();
+        join(T1,T2).printTable();
     }
 }
