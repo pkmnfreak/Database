@@ -1,3 +1,4 @@
+package db;
 
 /**
  * Created by pkmnfreak on 2/27/17.
@@ -21,6 +22,7 @@ public class Value<Item>{
         } else {
             this.label = x.toString();
             this.value = x;
+
         }
     }
 
@@ -43,6 +45,14 @@ public class Value<Item>{
         }
         return this.value;
     }
+<<<<<<< HEAD:proj2/Value.java
 }
 
 /*getclass().getname()*/
+=======
+
+    public String toString() {
+        return this.value.toString();
+    }
+ }
+>>>>>>> 758f5e2a16dfa2f743ca2e59de78a6db42b65bad:proj2/db/Value.java
