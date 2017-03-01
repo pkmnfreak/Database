@@ -264,6 +264,7 @@ public class Table extends HashMap {
 
     public Table Load(String name) {
         
+        return new Table(columnnames,columntypes);
     }
 
     public static void main(String[] args) {
