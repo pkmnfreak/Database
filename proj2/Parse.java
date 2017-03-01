@@ -1,3 +1,5 @@
+package db;
+
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -76,7 +78,8 @@ public class Parse {
         for (int i = 0; i < cols.length-1; i++) {
             joiner.add(cols[i]);
         }
-
+        //Table newTable = new Table(colnames,coltype);
+        //allTables.put(name, newTable);
         String colSentence = joiner.toString() + " and " + cols[cols.length-1];
         System.out.printf("You are trying to create a table named %s with the columns %s\n", name, colSentence);
     }
