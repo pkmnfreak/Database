@@ -267,6 +267,72 @@ public class Table extends HashMap {
         return " ";
     }
 
+    public static column addColumns(column column1, column column2) {
+        column newColumn = new column();
+        if (column1.get(0) instanceof Integer) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Integer) column1.get(i) + (Integer) column2.get(i));
+            }
+        } else if (column1.get(0) instanceof Float) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Float) column1.get(i) + (Float) column2.get(i));
+            }
+        } else {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((String) column1.get(i) + (String) column2.get(i));
+            }
+        }
+        return newColumn;
+    }
+
+    public static column minusColumns(column column1, column column2) {
+        column newColumn = new column();
+        if (column1.get(0) instanceof Integer) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Integer) column1.get(i) - (Integer) column2.get(i));
+            }
+        } else if (column1.get(0) instanceof Float) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Float) column1.get(i) - (Float) column2.get(i));
+            }
+        } else {
+            /*throw exceptionerror*/
+        }
+        return newColumn;
+    }
+
+    public static column multiplyColumns(column column1, column column2) {
+        column newColumn = new column();
+        if (column1.get(0) instanceof Integer) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Integer) column1.get(i) * (Integer) column2.get(i));
+            }
+        } else if (column1.get(0) instanceof Float) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Float) column1.get(i) * (Float) column2.get(i));
+            }
+        } else {
+            /*throw exceptionerror*/
+        }
+        return newColumn;
+    }
+
+    public static column divideColumns(column column1, column column2) {
+        column newColumn = new column();
+        if (column1.get(0) instanceof Integer) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Integer) column1.get(i) / (Integer) column2.get(i));
+            }
+        } else if (column1.get(0) instanceof Float) {
+            for (int i = 0; i < column2.size(); i++) {
+                newColumn.add((Float) column1.get(i) / (Float) column2.get(i));
+            }
+        } else {
+            /*throw exceptionerror*/
+        }
+        return newColumn;
+    }
+
     public static void main(String[] args) {
         String[] colnam ={ "x", "y"};
         String[] coltyp = {"String", "int"};

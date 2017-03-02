@@ -166,6 +166,75 @@ public class Database {
         selectedTable.addRow(returnArray);
     }
 
+    public Table select(ArrayList<String> columns, ArrayList<String> tables) {
+        if (columns.size() <= 0) {
+            /* Throw exception???*/
+        }
+        if (tables.size() <= 0) {
+            /* Throw exception???*/
+        }
+        /*Identify types and store into newcolumntypes*/
+        if (tables.size() > 1) {
+            joinMultipleTables(tables);
+            tables.add(0, "joinedtemp");
+        }
+        Table newTable = (Table) allTables.get(tables.get(0));
+        for (int i = 0; i < newTable.size(); i++) {
+            if (!columns.contains(newTable.columnnames[i])) {
+                newTable.remove(newTable.columnnames[i]);
+                String[] newColumnNames = new String[newTable.columnnames.length - 1];
+                String[] newColumnTypes = new String[newTable.columntypes.length - 1];
+                System.arraycopy(newTable.columnnames, 0, newColumnNames, 0, i);
+                System.arraycopy(newTable.columnnames, i + 1, newColumnNames, i, newTable.columnnames.length - i - 1);
+                System.arraycopy(newTable.columntypes, 0, newColumnTypes, 0, i);
+                System.arraycopy(newTable.columntypes, i + 1, newColumnTypes, i, newTable.columntypes.length - i - 1);
+                newTable.columnnames = newColumnNames;
+                newTable.columntypes = newColumnTypes;
+                newTable.numColumns--;
+                i--;
+            }
+        }
+        return newTable;
+    }
+
+
+    public  Table joinMultipleTables(ArrayList<String> tables) {
+        int i = tables.size();
+        while (i > 1) {
+            Table newTable = (Table) allTables.get(tables.get(0));
+            allTables.put("joinedtemp", newTable.join(newTable, (Table) allTables.get(tables.get(1))));
+            tables.add(0, "joinedtemp");
+            tables.remove(1);
+            tables.remove(1);
+            i--;
+        }
+        return (Table) allTables.get("joinedtemp");
+    }
+
+    public  Table Binaryselect(ArrayList<String> columns, ArrayList<String> tables, String operator) {
+        if (tables.size() > 1) {
+            joinMultipleTables(tables);
+            tables.add(0, "joinedtemp");
+        }
+        if (columns.size() != 3) {
+            /*throw error*/
+        }
+        Table table = (Table) allTables.get(tables.get(0));
+        String[] newColumn = {columns.get(2).toString()};
+        String[] newType = {((column) table.get(columns.get(0))).get(0).getClass().getName()};
+        Table resultTable = new Table(newColumn, newType);
+        resultTable.numRows = table.numRows;
+        if (operator.equals("*")){
+            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiplyColumns((column) table.get(columns.get(0)), (column) table.get(columns.get(1))));
+        } else if (operator.equals("-")) {
+            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.minusColumns((column) table.get(columns.get(0)), (column) table.get(columns.get(1))));
+        } else if (operator.equals("+")) {
+            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.addColumns((column) table.get(columns.get(0)), (column) table.get(columns.get(1))));
+        } else if (operator.equals("/")) {
+            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.divideColumns((column) table.get(columns.get(0)), (column) table.get(columns.get(1))));
+        }
+        return resultTable;
+    }
 
     private String printTable(String name) {
         allTables.get(name).printTable();
@@ -184,9 +253,9 @@ public class Database {
     }
 
     private String select(String exprs, String tables, String conds) {
-        return "";
+        return " ";
     }
-    
+
 
 }
 
