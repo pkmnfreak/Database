@@ -57,7 +57,7 @@ public class Database {
             allTables.put("joinedtemp", newTable.join(newTable, (Table) allTables.get(tables.get(1))));
             tables.add(0, "joinedtemp");
             tables.remove(1);
-            tables.remove(2);
+            tables.remove(1);
             i--;
         }
         return (Table) allTables.get("joinedtemp");
@@ -179,14 +179,6 @@ public class Database {
         T1.addRow(firstrow);
         Object[] secondrow = {8, 3, 9};
         T1.addRow(secondrow);
-        db.allTables.put("T1", T1);
-        ArrayList<String> columns = new ArrayList<>();
-        ArrayList<String> tables = new ArrayList<>();
-        columns.add("x");
-        columns.add("y");
-        tables.add("T1");
-        select(columns, tables).printTable();
-        /*
         String[] l = {"x","b"};
         String[] m = {"int", "int"};
         Table T2 = new Table(l,m);
@@ -194,6 +186,16 @@ public class Database {
         T2.addRow(frow);
         Object[] srow = {2,8};
         T2.addRow(srow);
+        db.allTables.put("T1", T1);
+        db.allTables.put("T2", T2);
+        ArrayList<String> columns = new ArrayList<>();
+        ArrayList<String> tables = new ArrayList<>();
+        columns.add("x");
+        columns.add("y");
+        tables.add("T1");
+        tables.add("T2");
+        select(columns, tables).printTable();
+        /*
         T2.printTable();
         Table T3 = join(T1,T2);
         T3.printTable();
