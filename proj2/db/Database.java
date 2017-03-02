@@ -72,9 +72,10 @@ public class Database {
             /*throw error*/
         }
         Table table = (Table) allTables.get(tables.get(0));
-        String[] newColumn = {columns.get(3).toString()};
-        String[] newType = {table.get(columns.get(0)).getClass().getName()};
+        String[] newColumn = {columns.get(2).toString()};
+        String[] newType = {((column) table.get(columns.get(0))).get(0).getClass().getName()};
         Table resultTable = new Table(newColumn, newType);
+        resultTable.numRows = table.numRows;
         if (operator.equals("*")){
             resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiplyColumns((column) table.get(columns.get(0)), (column) table.get(columns.get(1))));
         } else if (operator.equals("-")) {
@@ -192,9 +193,10 @@ public class Database {
         ArrayList<String> tables = new ArrayList<>();
         columns.add("x");
         columns.add("y");
+        columns.add("a");
         tables.add("T1");
         tables.add("T2");
-        select(columns, tables).printTable();
+        Binaryselect(columns, tables, "+").printTable();
         /*
         T2.printTable();
         Table T3 = join(T1,T2);
