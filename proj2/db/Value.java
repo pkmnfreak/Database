@@ -45,7 +45,19 @@ public class Value<Item>{
         }
         return this.value;
     }
+<<<<<<< HEAD
     public String toString() {
         return this.value.toString();
     }
  }
+=======
+
+    public String toString() {
+        return this.value.toString();
+    }
+}
+
+
+/*getclass().getname()*/
+
+>>>>>>> 7d578c69eb728491f069d037e3fba889106eec41

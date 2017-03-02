@@ -32,6 +32,10 @@ public class column<T> {
         return true;
     }
 
+    public String checkType() {
+        return this.get(0).getClass().getName();
+    }
+
     public int size() {
         return items.size();
     }
