@@ -77,8 +77,6 @@ public class Parse {
         for (int i = 0; i < cols.length-1; i++) {
             joiner.add(cols[i]);
         }
-        //Table newTable = new Table(colnames,coltype);
-        //allTables.put(name, newTable);
         String colSentence = joiner.toString() + " and " + cols[cols.length-1];
         System.out.printf("You are trying to create a table named %s with the columns %s\n", name, colSentence);
     }
@@ -89,7 +87,7 @@ public class Parse {
     }
 
     private static void loadTable(String name) {
-        ;
+         System.out.printf("You are trying to load the table named %s\n", name);
     }
 
     private static void storeTable(String name) {

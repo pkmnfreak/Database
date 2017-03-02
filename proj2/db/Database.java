@@ -1,10 +1,6 @@
 package db;
 
-import javax.xml.crypto.Data;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -12,14 +8,171 @@ import java.util.StringJoiner;
 
 
 public class Database {
-    private static Map allTables;
+    Map<String, Table> allTables;
 
     public Database() {
-        this.allTables = new HashMap<String, Table>();
+        allTables = new HashMap<>();
     }
 
+<<<<<<< HEAD
     public static Table select(String[] columns, String[] tables) {
         if (columns.length <= 0) {
+=======
+    private static final String REST  = "\\s*(.*)\\s*",
+            COMMA = "\\s*,\\s*",
+            AND   = "\\s+and\\s+";
+
+    // Stage 1 syntax, contains the command name.
+    private static final Pattern CREATE_CMD = Pattern.compile("create table " + REST),
+            LOAD_CMD   = Pattern.compile("load " + REST),
+            STORE_CMD  = Pattern.compile("store " + REST),
+            DROP_CMD   = Pattern.compile("drop table " + REST),
+            INSERT_CMD = Pattern.compile("insert into " + REST),
+            PRINT_CMD  = Pattern.compile("print " + REST),
+            SELECT_CMD = Pattern.compile("select " + REST);
+
+    // Stage 2 syntax, contains the clauses of commands.
+    private static final Pattern CREATE_NEW  = Pattern.compile("(\\S+)\\s+\\((\\S+\\s+\\S+\\s*" +
+            "(?:,\\s*\\S+\\s+\\S+\\s*)*)\\)"),
+            SELECT_CLS  = Pattern.compile("([^,]+?(?:,[^,]+?)*)\\s+from\\s+" +
+                    "(\\S+\\s*(?:,\\s*\\S+\\s*)*)(?:\\s+where\\s+" +
+                    "([\\w\\s+\\-*/'<>=!.]+?(?:\\s+and\\s+" +
+                    "[\\w\\s+\\-*/'<>=!.]+?)*))?"),
+            CREATE_SEL  = Pattern.compile("(\\S+)\\s+as select\\s+" +
+                    SELECT_CLS.pattern()),
+            INSERT_CLS  = Pattern.compile("(\\S+)\\s+values\\s+(.+?" +
+                    "\\s*(?:,\\s*.+?\\s*)*)");
+
+    //parses input
+    public String transact(String query) throws IOException {
+        this.eval(query);
+        return " ";
+    }
+
+    private void eval(String query) throws IOException {
+        Matcher m;
+        if ((m = CREATE_CMD.matcher(query)).matches()) {
+            createTable(m.group(1));
+        } else if ((m = LOAD_CMD.matcher(query)).matches()) {
+            loadTable(m.group(1));
+        } else if ((m = STORE_CMD.matcher(query)).matches()) {
+            storeTable(m.group(1));
+        } else if ((m = DROP_CMD.matcher(query)).matches()) {
+            dropTable(m.group(1));
+        } else if ((m = INSERT_CMD.matcher(query)).matches()) {
+            insertRow(m.group(1));
+        } else if ((m = PRINT_CMD.matcher(query)).matches()) {
+            printTable(m.group(1));
+        } else if ((m = SELECT_CMD.matcher(query)).matches()) {
+            select(m.group(1));
+        } else {
+            System.err.printf("Malformed query: %s\n", query);
+        }
+    }
+
+
+    private void createTable(String expr) {
+        Matcher m;
+        if ((m = CREATE_NEW.matcher(expr)).matches()) {
+            createNewTable(m.group(1), m.group(2).split(COMMA));
+        } else if ((m = CREATE_SEL.matcher(expr)).matches()) {
+            createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
+        } else {
+            System.err.printf("Malformed create: %s\n", expr);
+        }
+    }
+
+    private void createNewTable(String name, String[] cols) {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (int i = 0; i < cols.length-1; i++) {
+            joiner.add(cols[i]);
+        }
+        String[] colnames = new String[cols.length];
+        String[] coltypes = new String[cols.length];
+        for (int i = 0; i < cols.length; i++) {
+                String delims = "[, ]";
+                String[] splitColType = cols[i].split(delims);
+                colnames[i] = splitColType[0];
+                coltypes[i] = splitColType[1];
+        }
+        Table newTable = new Table(colnames, coltypes);
+        allTables.put(name, newTable);
+    }
+
+    private void createSelectedTable(String name, String exprs, String tables, String conds) {
+        System.out.printf("You are trying to create a table named %s by selecting these expressions:" +
+                " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
+    }
+
+    private void loadTable(String name) throws IOException {
+            BufferedReader in = new BufferedReader(new FileReader(name+".tbl"));
+            String line = in.readLine();
+            String delims = "[ ,]";
+            String[] header = line.split(delims);
+            String[] columnnames = new String[header.length/2];
+            String[] columntypes = new String[header.length/2];
+            for(int i = 0; i < header.length; i++) {
+                if(i % 2 == 0) {
+                    columnnames[i/2] = header[i];
+                } else {
+                    columntypes[i/2] = header[i];
+                }
+            }
+            //create new table associated with this
+            Table newTable = new Table(columnnames, columntypes);
+            String nextLine;
+            //populate table with values, do this several time per row
+            while ((nextLine = in.readLine()) != null) {
+                String[] row = nextLine.split(delims);
+                Value[] returnRow = new Value[row.length];
+                for (int i = 0; i < row.length; i++) {
+                    returnRow[i] = convertType(row[i], newTable.columntypes[i]);
+                }
+                newTable.addRow(returnRow);
+            }
+            allTables.put(name,newTable);
+        }
+
+        //helper method to convertTypes
+    public static Value convertType(String item,String type) {
+        if (type.equals("int")){
+            return new Value(Integer.parseInt(item));
+        } else if (type.equals("int")) {
+            return new Value(Float.parseFloat(item));
+        } else if (type.equals("int")) {
+            return new Value (item);
+        } else {
+            throw new Error();
+        }
+    }
+
+    private void storeTable(String name) {
+        allTables.get(name).Store(name);
+
+    }
+
+    private void dropTable(String name) {
+        allTables.remove(name);
+    }
+
+    private void insertRow(String expr) {
+        Matcher m = INSERT_CLS.matcher(expr);
+        if (!m.matches()) {
+            System.err.printf("Malformed insert: %s\n", expr);
+            return;
+        }
+        Table selectedTable = allTables.get(m.group(1));
+        String[] rowArray = m.group(2).split(",");
+        Value[] returnArray = new  Value[rowArray.length];
+        for(int i = 0; i < rowArray.length; i++) {
+            returnArray[i] = (Value) convertType(rowArray[i],selectedTable.columntypes[i]);
+        }
+        selectedTable.addRow(returnArray);
+    }
+
+    public Table select(ArrayList<String> columns, ArrayList<String> tables) {
+        if (columns.size() <= 0) {
+>>>>>>> 4c995166f82bf2c96635ce587edb060a81698911
             /* Throw exception???*/
         }
         if (tables.length <= 0) {
@@ -53,8 +206,13 @@ public class Database {
     }
 
 
+<<<<<<< HEAD
     public static Table joinMultipleTables(String[] tables) {
         int i = tables.length;
+=======
+    public  Table joinMultipleTables(ArrayList<String> tables) {
+        int i = tables.size();
+>>>>>>> 4c995166f82bf2c96635ce587edb060a81698911
         while (i > 1) {
             Table newTable = (Table) allTables.get(tables[0]);
             allTables.put("joinedtemp", newTable.join(newTable, (Table) allTables.get(tables[1])));
@@ -68,8 +226,13 @@ public class Database {
         return (Table) allTables.get("joinedtemp");
     }
 
+<<<<<<< HEAD
     public static Table Binaryselect(String[] columns, String[] tables, String operator) {
         if (tables.length > 1) {
+=======
+    public  Table Binaryselect(ArrayList<String> columns, ArrayList<String> tables, String operator) {
+        if (tables.size() > 1) {
+>>>>>>> 4c995166f82bf2c96635ce587edb060a81698911
             joinMultipleTables(tables);
             String[] copyTables = new String[tables.length + 1];
             System.arraycopy(tables, 0, copyTables, 1, tables.length);
@@ -96,80 +259,27 @@ public class Database {
         return resultTable;
     }
 
-
-    //parses input
-    public String transact(String query) {
-        return "YOUR CODE HERE";
-        /*make an arraylist of columns and tables inputted*/
-        /*Get rid of whitespace String str = op.replace(" ", "");*/
-        /*
-        String[] input = query.split(" ");
-
-        for(int i = 0; i < input.length; i++) {
-            System.out.println(input[i]);
-        }
-        */
-       /* if (input[0].equals("load"))
-            return load(input[1]);
-        else if (input[0].equals("print")) {
-            return print(query);
-        }
-        else if (input[0].equals("join"))
-            return select();
-        else
-            return "Please enter a valid input";
-            */
+    private String printTable(String name) {
+        allTables.get(name).printTable();
+        return "";
     }
 
-    // creates new key which is the name of table and the value is the table
-    /*public String createTable(String name) {
-        //Table newTable =  new Table(columnnames, columntypes);
-        //allTables.put(input[2].toString, newTable);
-    }
-
-    //load file
-    /*public String load(String x) {
-        FileReader tableReader = new FileReader(x + ".java");
-        BufferedReader tableBuffRead = new BufferedReader(tableReader);
-        //create a table here
-        String firstLine = tableBuffRead.readLine();
-        Character[] columnnames = new Character[firstLine.length()/2];
-        String[] columntypes = new String[firstLine.length()/2];
-        for(int i = 0; i < columnnames.length; i++) {
-            if (i % 2 == 0) {
-                columnnames[i] = firstLine[i];
-            } else {
-                columntypes[i] = firstLine[i];
-            }
-        }
-        Table newTable = new Table(columnnames, columntypes;)
-        //put table into database
-        allTables.put(key,newTable);
-            return " ";
-    }
-
-
-    //create a tbl file from existing file
-    public String store() {
-        FileWriter tableWriter = new FileWriter();
-        BufferedWriter tableBuffWrite = new BufferedWriter(tableWriter);
-    }
-
-    // insert values into existing table
-    public String insert(array values) {
-        if (allTables.contains(key)) {
-            Table temp = allTables.get(key);
-            temp.addRow(values);
+    private String select(String expr) {
+        Matcher m = SELECT_CLS.matcher(expr);
+        if (!m.matches()) {
+            System.err.printf("Malformed select: %s\n", expr);
+            return "";
         }
 
+        select(m.group(1), m.group(2), m.group(3));
+        return "";
     }
 
-    // take in key of table and then calls printTable method on value associated with key
-    public String print(key) {
-        Table temp = allTables.get(key);
-        return temp.printTable();
+    private String select(String exprs, String tables, String conds) {
+        return " ";
     }
 
+<<<<<<< HEAD
     public String select() {
 
     }
@@ -208,7 +318,9 @@ public class Database {
 
         //eval(args[0]); */
     }
-
-
+=======
+>>>>>>> 4c995166f82bf2c96635ce587edb060a81698911
 
 }
+
+
