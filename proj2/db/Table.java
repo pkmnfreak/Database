@@ -22,18 +22,29 @@ public class Table extends HashMap {
         this.numColumns = columnnames.length;
         this.columnnames = columnnames;
         this.columntypes = columntypes;
-        for(int i = 0; i <columnnames.length; i++) {
+        for(int i = 0; i < columnnames.length; i++) {
             this.put(columnnames[i], new column());
         }
     }
 
     /** add a row by inserting in order a value into each db.column individually **/
-    public void addRow(Object[] x) {
+    public void addRow(Value[] x) {
         for(int i = 0; i < numColumns; i++) {
             column temp = (column) get(columnnames[i]);
-            temp.add(x[i]);
+            Value valAdd = new Value(x[i]);
+            temp.add(valAdd);
         }
         numRows += 1;
+    }
+
+    public row selectRow(int index) {
+        //create an array of values which will be put in to the row constructor
+        Value[] rowArray = new Value[numColumns];
+        for(int i =0; i < numColumns; i++) { // iterate through all columns
+            column temp = (column) get(columnnames[i]);
+            rowArray[i] = new Value(temp.get(index));
+        }
+        return new row(rowArray);
     }
 
     /** print items in db.Table **/
@@ -51,6 +62,9 @@ public class Table extends HashMap {
        if (simColumn.size() == 0) {
            return cartesianJoin(x,y);
        }
+       if (joinIndices.size() == 0) {
+           return joinedTable;
+       }
        ArrayList temp = (ArrayList) joinIndices.get(0);
        int columnLen = temp.size(); //gets the length of the db.column
        for (Object k: joinedTable.keySet()) {
@@ -61,7 +75,8 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(0);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) x.get(k);
-                   newColumn.add(compList.get(itemtoAdd));
+                   Value valAdd = new Value(compList.get(itemtoAdd));
+                   newColumn.add(valAdd);
                }
                joinedTable.put(k,newColumn);
            } else if (x.containsKey(k)) {
@@ -69,7 +84,8 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(0);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) x.get(k);
-                   newColumn.add(compList.get(itemtoAdd));
+                   Value valAdd = new Value(compList.get(itemtoAdd));
+                   newColumn.add(valAdd);
                }
                joinedTable.put(k,newColumn);
            } else {
@@ -77,7 +93,8 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(1);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) y.get(k);
-                   newColumn.add(compList.get(itemtoAdd));
+                   Value valAdd = new Value(compList.get(itemtoAdd));
+                   newColumn.add(valAdd);
                }
                joinedTable.put(k,newColumn);
            }
@@ -107,14 +124,16 @@ public class Table extends HashMap {
                 column compList = (column) x.get(k);
                 for (int i = 0; i < x.numRows; i += 1) {
                     int itemtoAdd = (int) compList.get(i);
+                    Value valAdd = new Value(itemtoAdd);
                     for (int j =0; j < columnLen/x.numRows;j++)
-                    newColumn.add(itemtoAdd);
+                    newColumn.add(valAdd);
                 }
             } else {
                 column compList = (column) y.get(k);
                 for (int i = 0; i < columnLen; i += 1) {
                     int itemtoAdd = (int) compList.get(i % x.numRows);
-                    newColumn.add(itemtoAdd);
+                    Value valAdd = new Value(itemtoAdd);
+                    newColumn.add(valAdd);
                 }
             }
             joinedTable.put(k,newColumn);
@@ -142,26 +161,22 @@ public class Table extends HashMap {
     /** helper method, this will become the db.column names for joined table**/
     private static String[] jointColumnNames(Table x, Table y) {
         LinkedList<String>  simColumnNames = findSimColumnNames (x,y);
-        String[] returnArray = new String[x.columnnames.length+y.columnnames.length-simColumnNames.size()];
-        for (int i = 0; i < x.columntypes.length; i++) {
-            returnArray[i] = x.columnnames[i];
+        String[] returnArray = new String[x.columnnames.length + y.columnnames.length - simColumnNames.size()];
+        for(int i = 0; i < simColumnNames.size(); i++) {
+            returnArray[i] = simColumnNames.get(i);
+        }
+
+        int xnotSim = 0; //keep track of number of names in x but not sim
+
+        for (int i = 0; i < x.columnnames.length; i++) {
+            if (!simColumnNames.contains(x.columnnames[i])) {
+                xnotSim += 1;
+                returnArray[i + simColumnNames.size()] = x.columnnames[i];
+            }
         }
         for (int j = 0; j < y.columnnames.length; j++) {
             if (!simColumnNames.contains(y.columnnames[j])) {
-                returnArray[j + x.columnnames.length-1] = y.columnnames[j];
-            }
-        }
-        for (int i = 0; i < simColumnNames.size(); i++) {
-            for (int j = 0; j < returnArray.length; j++) {
-                if (simColumnNames.peek().equals(returnArray[j])) {
-                    String[] arraycopy = new String[returnArray.length];
-                    /*copies items after matching db.column name*/
-                    System.arraycopy(returnArray, j + 1, arraycopy, j + 1, arraycopy.length - j - 1);
-                    /*copies items before matching db.column name*/
-                    System.arraycopy(returnArray, 0, arraycopy, 1, j);
-                    arraycopy[0] = returnArray[j];
-                    returnArray = arraycopy;
-                }
+                returnArray[j + simColumnNames.size() + xnotSim] = y.columnnames[j];
             }
         }
         return returnArray;
@@ -172,12 +187,24 @@ public class Table extends HashMap {
         String[] jointColumnNames = jointColumnNames(x,y);
         LinkedList  simColumnNames = findSimColumnNames (x,y);
         String[] returnArray = new String[jointColumnNames.length];
-        for (int i = 0; i < x.columntypes.length; i++) {
-            returnArray[i] = x.columntypes[i];
+        for(int i = 0; i < simColumnNames.size(); i++) {
+            //get index of simColumnNames
+            String temp = (String) simColumnNames.get(i);
+            int index = Arrays.binarySearch(x.columnnames,temp);
+            returnArray[i] = (String) x.columntypes[index];
         }
-        for (int j = 0; j < y.columntypes.length; j++) {
+
+        int xnotSim = 0; //keep track of number of names in x but not sim
+
+        for (int i = 0; i < x.columnnames.length; i++) {
+            if (!simColumnNames.contains(x.columnnames[i])) {
+                xnotSim += 1;
+                returnArray[i + simColumnNames.size()] = x.columntypes[i];
+            }
+        }
+        for (int j = 0; j < y.columnnames.length; j++) {
             if (!simColumnNames.contains(y.columnnames[j])) {
-                returnArray[j+x.columntypes.length-1] = y.columntypes[j];
+                returnArray[j + simColumnNames.size() + xnotSim] = y.columntypes[j];
             }
         }
         return returnArray;
@@ -236,73 +263,30 @@ public class Table extends HashMap {
             out.println(this.toString());
             out.close();
         } catch (Exception e) {
-                System.out.println("error: couldn't make file");};
+                System.out.println("error: couldn't make file");}
         return " ";
     }
 
-    public static Table Load(String name) throws IOException {
-        //load file
-        BufferedReader in = new BufferedReader(new FileReader(name));
-        String line = in.readLine();
-        String delims = "[ ,]";
-        String[] header = line.split(delims);
-        String[] columnnames = new String[header.length/2];
-        String[] columntypes = new String[header.length/2];
-        for(int i = 0; i < header.length; i++) {
-            if(i % 2 == 0) {
-                columnnames[i/2] = header[i];
-            } else {
-                columntypes[i/2] = header[i];
-            }
-        }
-        //create new table associated with this
-        Table newTable = new Table(columnnames, columntypes);
-        String nextLine;
-        //populate table with values, do this several time per row
-        while ((nextLine = in.readLine()) != null) {
-            String[] row = nextLine.split(delims);
-            Object[] returnRow = new Object[row.length];
-            for (int i = 0; i < row.length; i++) {
-                returnRow[i] = convertType(row[i], newTable.columntypes[i]);
-            }
-            newTable.addRow(returnRow);
-        }
-        return newTable;
-    }
-
-    //helper method to convertTypes
-    public static Object convertType(String item,String type) {
-        if (type.equals("int")){
-            return Integer.parseInt(item);
-        } else if (type.equals("int")) {
-            return Float.parseFloat(item);
-        } else if (type.equals("int")) {
-            return item;
-        } else {
-            throw new Error();
-        }
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        String[] x = {"x","y", "z"};
-        String[] n = {"int", "int", "int"};
-        Table T1 = new Table(x,n);
-        Object [] firstrow = {2,5,4};
-        T1.addRow(firstrow);
-        Object[] secondrow = {8,3,9};
-        T1.addRow(secondrow);
+    public static void main(String[] args) {
+        String[] colnam ={ "x", "y"};
+        String[] coltyp = {"String", "int"};
+        Table T1 = new Table(colnam,coltyp);
+        Value h = new Value("happy");
+        Value sev = new Value(7);
+        Value[] frow = new Value[]{h, sev};
+        T1.addRow(frow);
         T1.printTable();
 
-        String[] l = {"l","b"};
-        String[] m = {"String", "String"};
-        Table T2 = new Table(l,m);
-        Object[] frow = {"hi","i am"};
-        T2.addRow(frow);
-        Object[] srow = {"joe","hmmm"};
+        String[] colnam2 ={ "a", "y"};
+        String[] coltyp2 = {"String", "int"};
+        Table T2 = new Table(colnam2,coltyp2);
+        Value s = new Value("sad");
+        Value elev = new Value(11);
+        Value[] srow = new Value[]{s, elev};
         T2.addRow(srow);
         T2.printTable();
-        Table T4 = Load("T4.tbl");
-        join(T1,T2).printTable();
+        Table T3 = join(T1,T2);
+        T3.printTable();
     }
+
 }

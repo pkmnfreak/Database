@@ -1,9 +1,6 @@
 package db;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -11,10 +8,10 @@ import java.util.StringJoiner;
 
 
 public class Database {
-    Map<String, Table> allTables = new HashMap<>();
+    Map<String, Table> allTables;
 
     public Database() {
-        this.allTables = allTables;
+        allTables = new HashMap<>();
     }
 
     private static final String REST  = "\\s*(.*)\\s*",
@@ -43,12 +40,12 @@ public class Database {
                     "\\s*(?:,\\s*.+?\\s*)*)");
 
     //parses input
-    public String transact(String query) {
-         eval(query);
-         return " ";
+    public String transact(String query) throws IOException {
+        this.eval(query);
+        return " ";
     }
 
-    private static void eval(String query) {
+    private void eval(String query) throws IOException {
         Matcher m;
         if ((m = CREATE_CMD.matcher(query)).matches()) {
             createTable(m.group(1));
@@ -86,10 +83,16 @@ public class Database {
         for (int i = 0; i < cols.length-1; i++) {
             joiner.add(cols[i]);
         }
-        Table newTable = new Table(colnames, coltype);
+        String[] colnames = new String[cols.length];
+        String[] coltypes = new String[cols.length];
+        for (int i = 0; i < cols.length; i++) {
+                String delims = "[, ]";
+                String[] splitColType = cols[i].split(delims);
+                colnames[i] = splitColType[0];
+                coltypes[i] = splitColType[1];
+        }
+        Table newTable = new Table(colnames, coltypes);
         allTables.put(name, newTable);
-        String colSentence = joiner.toString() + " and " + cols[cols.length-1];
-        System.out.printf("You are trying to create a table named %s with the columns %s\n", name, colSentence);
     }
 
     private void createSelectedTable(String name, String exprs, String tables, String conds) {
@@ -97,10 +100,46 @@ public class Database {
                 " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
     }
 
-    private void loadTable(String name) {
-        Table newTable;
-        newTable = Load(name);
-        allTables.put(name, newTable);
+    private void loadTable(String name) throws IOException {
+            BufferedReader in = new BufferedReader(new FileReader(name+".tbl"));
+            String line = in.readLine();
+            String delims = "[ ,]";
+            String[] header = line.split(delims);
+            String[] columnnames = new String[header.length/2];
+            String[] columntypes = new String[header.length/2];
+            for(int i = 0; i < header.length; i++) {
+                if(i % 2 == 0) {
+                    columnnames[i/2] = header[i];
+                } else {
+                    columntypes[i/2] = header[i];
+                }
+            }
+            //create new table associated with this
+            Table newTable = new Table(columnnames, columntypes);
+            String nextLine;
+            //populate table with values, do this several time per row
+            while ((nextLine = in.readLine()) != null) {
+                String[] row = nextLine.split(delims);
+                Value[] returnRow = new Value[row.length];
+                for (int i = 0; i < row.length; i++) {
+                    returnRow[i] = convertType(row[i], newTable.columntypes[i]);
+                }
+                newTable.addRow(returnRow);
+            }
+            allTables.put(name,newTable);
+        }
+
+        //helper method to convertTypes
+    public static Value convertType(String item,String type) {
+        if (type.equals("int")){
+            return new Value(Integer.parseInt(item));
+        } else if (type.equals("int")) {
+            return new Value(Float.parseFloat(item));
+        } else if (type.equals("int")) {
+            return new Value (item);
+        } else {
+            throw new Error();
+        }
     }
 
     private void storeTable(String name) {
@@ -120,42 +159,34 @@ public class Database {
         }
         Table selectedTable = allTables.get(m.group(1));
         String[] rowArray = m.group(2).split(",");
-        Object[] returnArray = Object[rowArray.length];
+        Value[] returnArray = new  Value[rowArray.length];
         for(int i = 0; i < rowArray.length; i++) {
-            returnArray[i] = convertType(rowArray[i],selectedTable.columntypes[i]);
+            returnArray[i] = (Value) convertType(rowArray[i],selectedTable.columntypes[i]);
         }
         selectedTable.addRow(returnArray);
     }
 
-    private static Object convertType(String name, String type) {
-        if (type.equals("int")){
-            return Integer.parseInt(name);
-        } else if (type.equals("int")) {
-            return Float.parseFloat(name);
-        } else if (type.equals("int")) {
-            return name;
-        } else {
-            throw new Error();
-        }
-    }
 
-    private void printTable(String name) {
+    private String printTable(String name) {
         allTables.get(name).printTable();
+        return "";
     }
 
-    private void select(String expr) {
+    private String select(String expr) {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
             System.err.printf("Malformed select: %s\n", expr);
-            return;
+            return "";
         }
 
         select(m.group(1), m.group(2), m.group(3));
+        return "";
     }
 
-    private void select(String exprs, String tables, String conds) {
-
+    private String select(String exprs, String tables, String conds) {
+        return "";
     }
+    
 
 }
 

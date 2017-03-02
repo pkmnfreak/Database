@@ -3,15 +3,15 @@ import java.util.ArrayList;
 /**
  * Created by noraharhen on 3/1/17.
  */
-public class row<T> {
+public class row {
     ArrayList items = new ArrayList();
 
-    public row(Object[] x) {
+    public row(Value[] x) {
         this.items = items;
     }
 
-    public T get(int index) {
-        return (T) items.get(index);
+    public Value get(int index) {
+        return (Value) items.get(index);
     }
 
 }
