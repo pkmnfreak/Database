@@ -8,15 +8,9 @@ import java.io.*;
 public class Table extends HashMap {
 
     /** keeps track of user defined order of columns **/
-<<<<<<< HEAD
     public String[] columnnames;
     /** keeps track of type of each db.column as defined by user **/
     public String[] columntypes;
-=======
-    String[] columnnames;
-    /** keeps track of type of each db.column as defined by user **/
-    String[] columntypes;
->>>>>>> 7d578c69eb728491f069d037e3fba889106eec41
     /** number of rows in table **/
     public int numRows;
     /** number of columns in table, this cannot change **/
@@ -273,8 +267,6 @@ public class Table extends HashMap {
         return " ";
     }
 
-<<<<<<< HEAD
-=======
     public static Table Load(String name) throws IOException {
         //load file
         BufferedReader in = new BufferedReader(new FileReader(name));
@@ -296,9 +288,9 @@ public class Table extends HashMap {
         //populate table with values, do this several time per row
         while ((nextLine = in.readLine()) != null) {
             String[] row = nextLine.split(delims);
-            Object[] returnRow = new Object[row.length];
+            Value[] returnRow = new Value[row.length];
             for (int i = 0; i < row.length; i++) {
-                returnRow[i] = convertType(row[i], newTable.columntypes[i]);
+                returnRow[i] = new Value(convertType(row[i], newTable.columntypes[i]));
             }
             newTable.addRow(returnRow);
         }
@@ -328,8 +320,6 @@ public class Table extends HashMap {
         }//etc
         */
 
-
->>>>>>> 7d578c69eb728491f069d037e3fba889106eec41
     public static column addColumns(column column1, column column2) {
         column newColumn = new column();
         if (column1.get(0) instanceof Integer) {
@@ -396,47 +386,10 @@ public class Table extends HashMap {
         return newColumn;
     }
 
-<<<<<<< HEAD
-    public static void main(String[] args) {
-        String[] colnam ={ "x", "y"};
-        String[] coltyp = {"String", "int"};
-        Table T1 = new Table(colnam,coltyp);
-        Value h = new Value("happy");
-        Value sev = new Value(7);
-        Value[] frow = new Value[]{h, sev};
-        T1.addRow(frow);
-=======
-
     public static void main(String[] args) {
         Value v0 = new Value(0);
         Value v1 = new Value("Good morning");
         Value v2 = new Value();
-        /*
-        Character[] x = {'x','y', 'z'};
-        String[] x = {"x","y", "z"};
-        String[] n = {"int", "int", "int"};
-        Table T1 = new Table(x,n);
-        Object [] firstrow = {2,5,4};
-        T1.addRow(firstrow);
-        Object[] secondrow = {8,3,9};
-        T1.addRow(secondrow);
->>>>>>> 7d578c69eb728491f069d037e3fba889106eec41
-        T1.printTable();
-
-        String[] colnam2 ={ "a", "y"};
-        String[] coltyp2 = {"String", "int"};
-        Table T2 = new Table(colnam2,coltyp2);
-        Value s = new Value("sad");
-        Value elev = new Value(11);
-        Value[] srow = new Value[]{s, elev};
-        T2.addRow(srow);
-        T2.printTable();
-        Table T3 = join(T1,T2);
-        T3.printTable();
-<<<<<<< HEAD
-=======
-        */
->>>>>>> 7d578c69eb728491f069d037e3fba889106eec41
     }
 
 }
