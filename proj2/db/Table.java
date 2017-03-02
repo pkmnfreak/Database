@@ -10,9 +10,9 @@ import java.io.*;
 public class Table extends HashMap {
 
     /** keeps track of user defined order of columns **/
-    private String[] columnnames;
+    String[] columnnames;
     /** keeps track of type of each db.column as defined by user **/
-    private String[] columntypes;
+    String[] columntypes;
     /** number of rows in table **/
     public int numRows;
     /** number of columns in table, this cannot change **/
@@ -286,28 +286,6 @@ public class Table extends HashMap {
     }
 
 
-<<<<<<< HEAD:proj2/Table.java
-    public static Table select(ArrayList<Character> columns, ArrayList<String> tables) {
-        if (columns.size() <= 0) {
-            /* Throw exception???*/
-        }
-        if (tables.size() <= 0) {
-            /* Throw exception???*/
-        }
-        /*Identify types and store into newcolumntypes*/
-        if (tables.size() > 1) {
-            joinMultipleTables(tables);
-            tables.add(0, "joinedtemp");
-        }
-        Table newTable = (Table) allTables.get(tables.get(0));
-        for (int i = 0; i < newTable.size(); i++) {
-            if (!Arrays.asList(newTable.columnnames).contains(columns.get(i))) {
-                newTable.remove(columns.get(i));
-            }
-        }
-        return newTable;
-    }
-
     /*columns is an arraylist where the last value is the new column name*/
     /*String str = op.replace(" ", "");
         if(str.equals("*")){
@@ -316,22 +294,7 @@ public class Table extends HashMap {
            retVal = a+b;
         }//etc
         */
-    public static Table Binaryselect(ArrayList<Character> columns, ArrayList<String> tables, String operator) {
-        if (tables.size() > 1) {
-            joinMultipleTables(tables);
-            tables.add(0, "joinedtemp");
-        }
-        Table newTable = (Table) allTables.get(tables.get(0));
-        if (operator.equals("*")){
 
-        } else if (operator.equals("-")) {
-
-        } else if (operator.equals("+")) {
-
-        } else if (operator.equals("/")) {
-
-        }
-    }
 
     public static column addColumns(column column1, column column2) {
         column newColumn = new column();
@@ -400,28 +363,13 @@ public class Table extends HashMap {
     }
 
 
-    public static Table joinMultipleTables(ArrayList<String> tables) {
-        int i = tables.size();
-        while (i > 1) {
-            allTables.put("joinedtemp", join(allTables.get(tables.get(0)), allTables.get(tables.get(1))));
-            tables.add(0, allTables.get("joinedtemp"));
-            tables.remove(1);
-            tables.remove(2);
-            i--;
-        }
-        return allTables.get("joinedtemp");
-    }
-
     public static void main(String[] args) {
         Value v0 = new Value(0);
         Value v1 = new Value("Good morning");
         Value v2 = new Value();
         /*
         Character[] x = {'x','y', 'z'};
-=======
-    public static void main(String[] args) throws IOException {
         String[] x = {"x","y", "z"};
->>>>>>> 758f5e2a16dfa2f743ca2e59de78a6db42b65bad:proj2/db/Table.java
         String[] n = {"int", "int", "int"};
         Table T1 = new Table(x,n);
         Object [] firstrow = {2,5,4};
@@ -438,13 +386,8 @@ public class Table extends HashMap {
         Object[] srow = {2,8};
         T2.addRow(srow);
         T2.printTable();
-<<<<<<< HEAD:proj2/Table.java
         Table T3 = join(T1,T2);
         T3.printTable();
         */
-=======
-        Table T4 = Load("T4.tbl");
-        join(T2,T4).printTable();
->>>>>>> 758f5e2a16dfa2f743ca2e59de78a6db42b65bad:proj2/db/Table.java
     }
 }
