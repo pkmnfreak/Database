@@ -1,5 +1,7 @@
 package db;
 
+import com.sun.org.apache.bcel.internal.generic.TargetLostException;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -126,15 +128,16 @@ public class Database {
             }
             //create new table associated with this
             Table newTable = new Table(columnnames, columntypes);
-            String nextLine;
+            String nextLine = in.readLine();
             //populate table with values, do this several time per row
-            while ((nextLine = in.readLine()) != null) {
+            while (nextLine != null && !nextLine.equals("")) {
                 String[] row = nextLine.split(delims);
                 Value[] returnRow = new Value[row.length];
                 for (int i = 0; i < row.length; i++) {
                     returnRow[i] = convertValue(row[i], newTable.columntypes[i]);
                 }
                 newTable.addRow(returnRow);
+                nextLine = in.readLine();
             }
             in.close();
             allTables.put(name, newTable);

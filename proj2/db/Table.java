@@ -259,12 +259,15 @@ public class Table extends HashMap {
 
     // stores the string representation of file in a .tbl file
     public void Store(String name) {
-        try (PrintWriter out = new PrintWriter( name + ".tbl" ) ) {
+       try {
+            PrintWriter out = new PrintWriter( name + ".tbl" );
             out.println(this.toString());
             out.close();
-        } catch (Exception e) {
+        } catch (FileNotFoundException  e) {
                 System.out.println("error: couldn't make file" + e);
-        }
+        } catch (IOException e) {
+                System.out.println("error: couldn't make file" + e);
+       }
     }
 
    /* public static Table Load(String name) {
