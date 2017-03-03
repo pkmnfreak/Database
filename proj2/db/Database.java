@@ -28,21 +28,22 @@ public class Database {
             SELECT_CMD = Pattern.compile("select " + REST);
 
     // Stage 2 syntax, contains the clauses of commands.
-    private static final Pattern CREATE_NEW  = Pattern.compile("(\\S+)\\s+\\((\\S+\\s+\\S+\\s*" +
+    private static final Pattern CREATE_NEW  = Pattern.compile("(\\S+)\\s+\\((\\S+\\s+\\S+\\s*"
+            +
             "(?:,\\s*\\S+\\s+\\S+\\s*)*)\\)"),
-            SELECT_CLS  = Pattern.compile("([^,]+?(?:,[^,]+?)*)\\s+from\\s+" +
-                    "(\\S+\\s*(?:,\\s*\\S+\\s*)*)(?:\\s+where\\s+" +
-                    "([\\w\\s+\\-*/'<>=!.]+?(?:\\s+and\\s+" +
-                    "[\\w\\s+\\-*/'<>=!.]+?)*))?"),
-            CREATE_SEL  = Pattern.compile("(\\S+)\\s+as select\\s+" +
-                    SELECT_CLS.pattern()),
-            INSERT_CLS  = Pattern.compile("(\\S+)\\s+values\\s+(.+?" +
-                    "\\s*(?:,\\s*.+?\\s*)*)");
+            SELECT_CLS  = Pattern.compile("([^,]+?(?:,[^,]+?)*)\\s+from\\s+"
+                    + "(\\S+\\s*(?:,\\s*\\S+\\s*)*)(?:\\s+where\\s+"
+                    + "([\\w\\s+\\-*/'<>=!.]+?(?:\\s+and\\s+"
+                    + "[\\w\\s+\\-*/'<>=!.]+?)*))?"),
+            CREATE_SEL  = Pattern.compile("(\\S+)\\s+as select\\s+"
+                    + SELECT_CLS.pattern()),
+            INSERT_CLS  = Pattern.compile("(\\S+)\\s+values\\s+(.+?"
+                    + "\\s*(?:,\\s*.+?\\s*)*)");
 
     //parses input
     public String transact(String query) {
         this.eval(query);
-        return " ";
+        return "";
     }
 
     private void eval(String query) {
@@ -80,16 +81,16 @@ public class Database {
 
     private void createNewTable(String name, String[] cols) {
         StringJoiner joiner = new StringJoiner(", ");
-        for (int i = 0; i < cols.length-1; i++) {
+        for (int i = 0; i < cols.length - 1; i++) {
             joiner.add(cols[i]);
         }
         String[] colnames = new String[cols.length];
         String[] coltypes = new String[cols.length];
         for (int i = 0; i < cols.length; i++) {
-                String delims = "[, ]";
-                String[] splitColType = cols[i].split(delims);
-                colnames[i] = splitColType[0];
-                coltypes[i] = splitColType[1];
+            String delims = "[, ]";
+            String[] splitColType = cols[i].split(delims);
+            colnames[i] = splitColType[0];
+            coltypes[i] = splitColType[1];
         }
         Table newTable = new Table(colnames, coltypes);
         allTables.put(name, newTable);
@@ -97,8 +98,9 @@ public class Database {
 
     private String createSelectedTable(String name, String exprs, String tables, String conds) {
         //allTables.put(name, select(name, tables,conds))
-        System.out.printf("You are trying to create a table named %s by selecting these expressions:" +
-                " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
+        System.out.printf("You are trying to create a table named %s by selecting these expressions:"
+                + " '%s' from the join of these tables: '%s', filtered by these conditions: "
+                + "'%s'\n", name, exprs, tables, conds);
         return "";
     }
 
@@ -124,7 +126,7 @@ public class Database {
             //populate table with values, do this several time per row
             while ((nextLine = in.readLine()) != null) {
                 String[] row = nextLine.split(delims);
-                Value[] returnRow = new Value[row.length];
+                Object[] returnRow = new Object[row.length];
                 for (int i = 0; i < row.length; i++) {
                     returnRow[i] = convertType(row[i], newTable.columntypes[i]);
                 }
@@ -135,16 +137,16 @@ public class Database {
             System.out.println("No file found");
         }
         return "";
-        }
+    }
 
         //helper method to convertTypes
-    public static Value convertType(String item,String type) {
-        if (type.equals("int")){
-            return new Value(Integer.parseInt(item));
+    public static Object convertType(String item, String type) {
+        if (type.equals("int")) {
+            return Integer.parseInt(item);
         } else if (type.equals("int")) {
-            return new Value(Float.parseFloat(item));
+            return Float.parseFloat(item);
         } else if (type.equals("int")) {
-            return new Value (item);
+            return item;
         } else {
             throw new Error();
         }
@@ -161,7 +163,7 @@ public class Database {
         return "";
     }
 
-    private String insertRow(String expr){
+    private String insertRow(String expr) {
         try {
             Matcher m = INSERT_CLS.matcher(expr);
             Table selectedTable = allTables.get(m.group(1));
@@ -198,9 +200,11 @@ public class Database {
                 String[] newColumnNames = new String[newTable.columnnames.length - 1];
                 String[] newColumnTypes = new String[newTable.columntypes.length - 1];
                 System.arraycopy(newTable.columnnames, 0, newColumnNames, 0, i);
-                System.arraycopy(newTable.columnnames, i + 1, newColumnNames, i, newTable.columnnames.length - i - 1);
+                System.arraycopy(newTable.columnnames, i + 1, newColumnNames, i,
+                        newTable.columnnames.length - i - 1);
                 System.arraycopy(newTable.columntypes, 0, newColumnTypes, 0, i);
-                System.arraycopy(newTable.columntypes, i + 1, newColumnTypes, i, newTable.columntypes.length - i - 1);
+                System.arraycopy(newTable.columntypes, i + 1, newColumnTypes, i,
+                        newTable.columntypes.length - i - 1);
                 newTable.columnnames = newColumnNames;
                 newTable.columntypes = newColumnTypes;
                 newTable.numColumns--;
@@ -227,7 +231,7 @@ public class Database {
         return (Table) allTables.get("joinedtemp");
     }
 
-    public Table Binaryselect(String[] columns, String[] tables, String operator) {
+    public Table binarySelect(String[] columns, String[] tables, String operator) {
         try {
             if (tables.length > 1) {
                 joinMultipleTables(tables);
@@ -246,13 +250,17 @@ public class Database {
         Table resultTable = new Table(newColumn, newType);
         resultTable.numRows = table.numRows;
         if (operator.equals("*")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                    table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
         } else if (operator.equals("-")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                    table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
         } else if (operator.equals("+")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                    table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
         } else if (operator.equals("/")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                    table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
 
         }
         return resultTable;
