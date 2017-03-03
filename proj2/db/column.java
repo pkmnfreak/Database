@@ -1,5 +1,6 @@
 package db;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 /**
@@ -119,5 +120,4 @@ public class column<T> {
             return new Value(i);
         }
     }
-
 }

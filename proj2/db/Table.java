@@ -258,13 +258,13 @@ public class Table extends HashMap {
     }
 
     // stores the string representation of file in a .tbl file
-    public String Store(String name) {
+    public void Store(String name) {
         try (PrintWriter out = new PrintWriter( name + ".tbl" ) ) {
             out.println(this.toString());
             out.close();
         } catch (Exception e) {
-                System.out.println("error: couldn't make file" + e);}
-        return " ";
+                System.out.println("error: couldn't make file" + e);
+        }
     }
 
    /* public static Table Load(String name) {
@@ -298,8 +298,8 @@ public class Table extends HashMap {
     } */
 
     //helper method to convertTypes
-    private static Object convertType(String item,String type) {
-        if (type.equals("int")){
+    private static Object convertType(String item, String type) {
+        if (type.equals("int")) {
             return Integer.parseInt(item);
         } else if (type.equals("int")) {
             return Float.parseFloat(item);
@@ -310,33 +310,6 @@ public class Table extends HashMap {
         }
     }
 
-
-    /*columns is an arraylist where the last value is the new column name*/
-    /*String str = op.replace(" ", "");
-        if(str.equals("*")){
-           retVal = a*b;
-        } else if(str.equals("+")){
-           retVal = a+b;
-        }//etc
-        */
-
-    public static column addColumns(column column1, column column2) {
-        column newColumn = new column();
-        if (column1.get(0) instanceof Integer) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Integer) column1.get(i) + (Integer) column2.get(i));
-            }
-        } else if (column1.get(0) instanceof Float) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Float) column1.get(i) + (Float) column2.get(i));
-            }
-        } else {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((String) column1.get(i) + (String) column2.get(i));
-            }
-        }
-        return newColumn;
-    }
 
     public static column add(column column1, Value value1) {
         column newColumn = new column();
@@ -374,51 +347,38 @@ public class Table extends HashMap {
         return newColumn;
     }
 
+    public static column addColumns(column column1, column column2) {
+        column newColumn = new column();
+        for (int i = 0; i < column2.size(); i++) {
+            Value newValue = column1.addValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            newColumn.add(newValue);
+        }
+        return newColumn;
+    }
 
     public static column minusColumns(column column1, column column2) {
         column newColumn = new column();
-        if (column1.get(0) instanceof Integer) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Integer) column1.get(i) - (Integer) column2.get(i));
-            }
-        } else if (column1.get(0) instanceof Float) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Float) column1.get(i) - (Float) column2.get(i));
-            }
-        } else {
-            /*throw exceptionerror*/
+        for (int i = 0; i < column2.size(); i++) {
+            Value newValue = column1.minusValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            newColumn.add(newValue);
         }
         return newColumn;
     }
 
     public static column multiplyColumns(column column1, column column2) {
         column newColumn = new column();
-        if (column1.get(0) instanceof Integer) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Integer) column1.get(i) * (Integer) column2.get(i));
-            }
-        } else if (column1.get(0) instanceof Float) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Float) column1.get(i) * (Float) column2.get(i));
-            }
-        } else {
-            /*throw exceptionerror*/
+        for (int i = 0; i < column2.size(); i++) {
+            Value newValue = column1.multiplyValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            newColumn.add(newValue);
         }
         return newColumn;
     }
 
     public static column divideColumns(column column1, column column2) {
         column newColumn = new column();
-        if (column1.get(0) instanceof Integer) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Integer) column1.get(i) / (Integer) column2.get(i));
-            }
-        } else if (column1.get(0) instanceof Float) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Float) column1.get(i) / (Float) column2.get(i));
-            }
-        } else {
-            /*throw exceptionerror*/
+        for (int i = 0; i < column2.size(); i++) {
+            Value newValue = column1.divideValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            newColumn.add(newValue);
         }
         return newColumn;
     }
@@ -553,13 +513,6 @@ public class Table extends HashMap {
             }
         }
         return newColumn;
-    }
-
-
-    public static void main(String[] args) {
-        Value v0 = new Value(0);
-        Value v1 = new Value("Good morning");
-        Value v2 = new Value();
     }
 
 }

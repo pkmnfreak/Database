@@ -1,4 +1,5 @@
 package db;
+import java.math.BigDecimal;
 
 /**
  * Created by pkmnfreak on 2/27/17.
@@ -45,8 +46,7 @@ public class Value<Item>{
         }
         return this.value;
     }
-    public String toString() {
-        return this.value.toString();
-    }
+
+
  }
 

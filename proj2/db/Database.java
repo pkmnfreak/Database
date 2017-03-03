@@ -1,6 +1,9 @@
 package db;
 
 
+import java.io.*;
+import java.math.BigDecimal;
+import java.util.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -220,8 +223,6 @@ public class Database {
                 newTable.columntypes = newColumnTypes;
                 newTable.numColumns--;
                 i--;
-
-
             }
         }
         return newTable;
@@ -242,42 +243,6 @@ public class Database {
         return (Table) allTables.get("joinedtemp");
     }
 
-    public Table binarySelect(String[] columns, String[] tables, String operator) {
-        try {
-            if (tables.length > 1) {
-                joinMultipleTables(tables);
-                String[] copyTables = new String[tables.length + 1];
-                System.arraycopy(tables, 0, copyTables, 1, tables.length);
-                copyTables[0] = "joinedtemp";
-                tables = copyTables;
-            }
-
-        } catch (Exception e) {
-            System.out.println("Malformed query" + e);
-        }
-        Table table = (Table) allTables.get(tables[0]);
-        String[] newColumn = {columns[2]};
-        String[] newType = {((column) table.get(columns[0])).get(0).getClass().getName()};
-        Table resultTable = new Table(newColumn, newType);
-        resultTable.numRows = table.numRows;
-        if (operator.equals("*")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
-                    table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
-        } else if (operator.equals("-")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
-                    table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
-        } else if (operator.equals("+")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
-                    table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
-        } else if (operator.equals("/")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
-                    table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
-
-        }
-        return resultTable;
-    }
-
-
     public Table select(String[] columns, String[] tables, String operator) {
         try {
             if (tables.length > 1) {
@@ -289,7 +254,7 @@ public class Database {
             }
 
         } catch (Exception e) {
-            System.out.println("Malformed query");
+            System.out.println("Malformed query" + e);
         }
         Table table = (Table) allTables.get(tables[0]);
         String[] newColumn = {columns[2]};
@@ -328,6 +293,8 @@ public class Database {
         allTables.put(columns[2], resultTable);
         return resultTable;
     }
+
+
 
     /*columns are the columns we want, tables are the tables we are selecting from, conditionals is an array of symbols, and comparisons is an array of
  String arrays of size 2, where the first String is the left side and the second is the right side
@@ -469,6 +436,7 @@ public class Database {
         return allTables.get(name).printTable();
     }
 
+
     private String select(String expr) {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
@@ -482,6 +450,7 @@ public class Database {
         Database db = new Database();
         db.transact("create table t0 (a String, b String)");
         db.transact("print t0");
+
     }
 
 }
