@@ -182,37 +182,37 @@ public class Database {
     }
 
     public String select(String[] columns, String[] tables) throws Exception {
-            if (tables.length <= 0) {
+        if (tables.length <= 0) {
             throw new Exception("Table is empty");
-    }
+        }
         /*Identify types and store into newcolumntypes*/
         if (tables.length > 1) {
-        joinMultipleTables(tables);
-        String[] copyTables = new String[tables.length + 1];
-        System.arraycopy(tables, 0, copyTables, 1, tables.length);
-        copyTables[0] = "joinedtemp";
-        tables = copyTables;
-    }
-    Table newTable = (Table) allTables.get(tables[0]);
-        for (int i = 0; i < newTable.size(); i++) {
-        if (!(Arrays.asList(columns).contains(newTable.columnnames[i]))) {
-            newTable.remove(newTable.columnnames[i]);
-            String[] newColumnNames = new String[newTable.columnnames.length - 1];
-            String[] newColumnTypes = new String[newTable.columntypes.length - 1];
-            System.arraycopy(newTable.columnnames, 0, newColumnNames, 0, i);
-            System.arraycopy(newTable.columnnames, i + 1, newColumnNames, i, newTable.columnnames.length - i - 1);
-            System.arraycopy(newTable.columntypes, 0, newColumnTypes, 0, i);
-            System.arraycopy(newTable.columntypes, i + 1, newColumnTypes, i, newTable.columntypes.length - i - 1);
-            newTable.columnnames = newColumnNames;
-            newTable.columntypes = newColumnTypes;
-            newTable.numColumns--;
-            i--;
+            joinMultipleTables(tables);
+            String[] copyTables = new String[tables.length + 1];
+            System.arraycopy(tables, 0, copyTables, 1, tables.length);
+            copyTables[0] = "joinedtemp";
+            tables = copyTables;
         }
-    }
-        allTables.put("hi", newTable);
-        return "";
-}
+        Table newTable = (Table) allTables.get(tables[0]);
+        for (int i = 0; i < newTable.size(); i++) {
+            if (!(Arrays.asList(columns).contains(newTable.columnnames[i]))) {
+                newTable.remove(newTable.columnnames[i]);
+                String[] newColumnNames = new String[newTable.columnnames.length - 1];
+                String[] newColumnTypes = new String[newTable.columntypes.length - 1];
+                System.arraycopy(newTable.columnnames, 0, newColumnNames, 0, i);
+                System.arraycopy(newTable.columnnames, i + 1, newColumnNames, i, newTable.columnnames.length - i - 1);
+                System.arraycopy(newTable.columntypes, 0, newColumnTypes, 0, i);
+                System.arraycopy(newTable.columntypes, i + 1, newColumnTypes, i, newTable.columntypes.length - i - 1);
+                newTable.columnnames = newColumnNames;
+                newTable.columntypes = newColumnTypes;
+                newTable.numColumns--;
+                i--;
 
+
+            }
+        }
+        return "";
+    }
 
     public  Table joinMultipleTables(String[] tables) {
         int i = tables.length;
@@ -237,7 +237,7 @@ public class Database {
             copyTables[0] = "joinedtemp";
             tables = copyTables;
         }
-        if (columns.length == 3) {
+        if (columns.length != 3) {
             throw new IOException("could not");
         }
 
@@ -278,6 +278,10 @@ public class Database {
     private String select(String exprs, String tables, String conds) {
         return " ";
     }
+
+   /* public static void main(String[] args) {
+        System.out.print("hi");
+    }*/
 
 
 }
