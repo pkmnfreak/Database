@@ -126,9 +126,9 @@ public class Database {
             //populate table with values, do this several time per row
             while ((nextLine = in.readLine()) != null) {
                 String[] row = nextLine.split(delims);
-                Object[] returnRow = new Object[row.length];
+                Value[] returnRow = new Value[row.length];
                 for (int i = 0; i < row.length; i++) {
-                    returnRow[i] = convertType(row[i], newTable.columntypes[i]);
+                    returnRow[i] = (Value) convertType(row[i], newTable.columntypes[i]);
                 }
                 newTable.addRow(returnRow);
             }
@@ -142,13 +142,11 @@ public class Database {
         //helper method to convertTypes
     public static Object convertType(String item, String type) {
         if (type.equals("int")) {
-            return Integer.parseInt(item);
-        } else if (type.equals("int")) {
-            return Float.parseFloat(item);
-        } else if (type.equals("int")) {
-            return item;
+            return new Value(Integer.parseInt(item));
+        } else if (type.equals("Float")) {
+            return new Value(Float.parseFloat(item));
         } else {
-            throw new Error();
+            return new Value(item);
         }
     }
 
