@@ -40,7 +40,7 @@ public class Database {
                     "\\s*(?:,\\s*.+?\\s*)*)");
 
     //parses input
-    public String transact(String query) throws IOException {
+    public String transact(String query) {
         this.eval(query);
         return " ";
     }
