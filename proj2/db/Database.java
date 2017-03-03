@@ -45,7 +45,7 @@ public class Database {
         return " ";
     }
 
-    private void eval(String query) throws IOException {
+    private void eval(String query) {
         Matcher m;
         if ((m = CREATE_CMD.matcher(query)).matches()) {
             createTable(m.group(1));
@@ -164,10 +164,6 @@ public class Database {
     private String insertRow(String expr){
         try {
             Matcher m = INSERT_CLS.matcher(expr);
-            /*if (!m.matches()) {
-                System.err.printf("Malformed insert: %s\n", expr);
-                throw new Exception("Malformed query");
-            }*/
             Table selectedTable = allTables.get(m.group(1));
             String[] rowArray = m.group(2).split(",");
             Value[] returnArray = new Value[rowArray.length];
@@ -181,9 +177,11 @@ public class Database {
         return " ";
     }
 
-    public String select(String[] columns, String[] tables) throws Exception {
-        if (tables.length <= 0) {
-            throw new Exception("Table is empty");
+    public Table select(String[] columns, String[] tables) {
+        try {
+            String i = tables[0];
+        } catch (Exception e) {
+            System.out.println("No tables given");
         }
         /*Identify types and store into newcolumntypes*/
         if (tables.length > 1) {
@@ -211,7 +209,7 @@ public class Database {
 
             }
         }
-        return "";
+        return newTable;
     }
 
     public  Table joinMultipleTables(String[] tables) {
@@ -229,24 +227,25 @@ public class Database {
         return (Table) allTables.get("joinedtemp");
     }
 
-    public Table Binaryselect(String[] columns, String[] tables, String operator) throws IOException {
-        if (tables.length > 1) {
-            joinMultipleTables(tables);
-            String[] copyTables = new String[tables.length + 1];
-            System.arraycopy(tables, 0, copyTables, 1, tables.length);
-            copyTables[0] = "joinedtemp";
-            tables = copyTables;
-        }
-        if (columns.length != 3) {
-            throw new IOException("could not");
-        }
+    public Table Binaryselect(String[] columns, String[] tables, String operator) {
+        try {
+            if (tables.length > 1) {
+                joinMultipleTables(tables);
+                String[] copyTables = new String[tables.length + 1];
+                System.arraycopy(tables, 0, copyTables, 1, tables.length);
+                copyTables[0] = "joinedtemp";
+                tables = copyTables;
+            }
 
+        } catch (Exception e) {
+            System.out.println("Malformed query");
+        }
         Table table = (Table) allTables.get(tables[0]);
         String[] newColumn = {columns[2]};
         String[] newType = {((column) table.get(columns[0])).get(0).getClass().getName()};
         Table resultTable = new Table(newColumn, newType);
         resultTable.numRows = table.numRows;
-        if (operator.equals("*")){
+        if (operator.equals("*")) {
             resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
         } else if (operator.equals("-")) {
             resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
@@ -254,6 +253,7 @@ public class Database {
             resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
         } else if (operator.equals("/")) {
             resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+
         }
         return resultTable;
     }
