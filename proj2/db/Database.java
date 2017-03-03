@@ -51,7 +51,7 @@ public class Database {
     //parses input
     public String transact(String query) {
         this.eval(query);
-        return null;
+        return "";
     }
 
     private void eval(String query) {
@@ -106,13 +106,13 @@ public class Database {
         }
         Table newTable = new Table(colnames, coltypes);
         allTables.put(name, newTable);
-        return null;
+        return "";
     }
 
     private String createSelectedTable(String name, String exprs, String tables, String conds) {
         Table newTable = select(exprs, tables, conds);
         allTables.put(name, newTable);
-        return null;
+        return "";
     }
 
 
@@ -152,7 +152,7 @@ public class Database {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
         //helper method to convertTypes
@@ -168,13 +168,13 @@ public class Database {
 
     private String storeTable(String name) {
         allTables.get(name).Store(name);
-        return null;
+        return "";
 
     }
 
     private String dropTable(String name) {
         allTables.remove(name);
-        return null;
+        return "";
     }
 
     private String insertRow(String expr) {
@@ -190,7 +190,7 @@ public class Database {
         } catch (Error e) {
             System.out.println("Malformed query");
         }
-        return null;
+        return "";
     }
 
     public Table select(String[] columns, String[] tables) {
