@@ -298,8 +298,8 @@ public class Table extends HashMap {
     }
 
     //helper method to convertTypes
-    private static Object convertType(String item,String type) {
-        if (type.equals("int")){
+    private static Object convertType(String item, String type) {
+        if (type.equals("int")) {
             return Integer.parseInt(item);
         } else if (type.equals("int")) {
             return Float.parseFloat(item);
@@ -319,69 +319,206 @@ public class Table extends HashMap {
            retVal = a+b;
         }//etc
         */
+    public static column add(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            Value newValue = column1.addValue(((Value) column1.get(i)), value1);
+            newColumn.add(newValue);
+        }
+        return newColumn;
+    }
+
+    public static column minus(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            Value newValue = column1.minusValue(((Value) column1.get(i)), value1);
+            newColumn.add(newValue);
+        }
+        return newColumn;
+    }
+
+    public static column multiply(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            Value newValue = column1.multiplyValue(((Value) column1.get(i)), value1);
+            newColumn.add(newValue);
+        }
+        return newColumn;
+    }
+
+    public static column divide(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            Value newValue = column1.divideValue(((Value) column1.get(i)), value1);
+            newColumn.add(newValue);
+        }
+        return newColumn;
+    }
 
     public static column addColumns(column column1, column column2) {
         column newColumn = new column();
-        if (column1.get(0) instanceof Integer) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Integer) column1.get(i) + (Integer) column2.get(i));
+        for (int i = 0; i < column2.size(); i++) {
+            Value newValue = column1.addValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            newColumn.add(newValue);
             }
-        } else if (column1.get(0) instanceof Float) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Float) column1.get(i) + (Float) column2.get(i));
-            }
-        } else {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((String) column1.get(i) + (String) column2.get(i));
-            }
-        }
         return newColumn;
     }
 
     public static column minusColumns(column column1, column column2) {
         column newColumn = new column();
-        if (column1.get(0) instanceof Integer) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Integer) column1.get(i) - (Integer) column2.get(i));
-            }
-        } else if (column1.get(0) instanceof Float) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Float) column1.get(i) - (Float) column2.get(i));
-            }
-        } else {
-            /*throw exceptionerror*/
+        for (int i = 0; i < column2.size(); i++) {
+            Value newValue = column1.minusValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            newColumn.add(newValue);
         }
         return newColumn;
     }
 
     public static column multiplyColumns(column column1, column column2) {
         column newColumn = new column();
-        if (column1.get(0) instanceof Integer) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Integer) column1.get(i) * (Integer) column2.get(i));
-            }
-        } else if (column1.get(0) instanceof Float) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Float) column1.get(i) * (Float) column2.get(i));
-            }
-        } else {
-            /*throw exceptionerror*/
+        for (int i = 0; i < column2.size(); i++) {
+            Value newValue = column1.multiplyValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            newColumn.add(newValue);
         }
         return newColumn;
     }
 
     public static column divideColumns(column column1, column column2) {
         column newColumn = new column();
-        if (column1.get(0) instanceof Integer) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Integer) column1.get(i) / (Integer) column2.get(i));
+        for (int i = 0; i < column2.size(); i++) {
+            Value newValue = column1.divideValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            newColumn.add(newValue);
+        }
+        return newColumn;
+    }
+
+    public column greaterThan(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            if (column1.compare((Value) column1.get(i), value1) > 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
             }
-        } else if (column1.get(0) instanceof Float) {
-            for (int i = 0; i < column2.size(); i++) {
-                newColumn.add((Float) column1.get(i) / (Float) column2.get(i));
+        }
+        return newColumn;
+    }
+
+    public column lessThan(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            if (column1.compare((Value) column1.get(i), value1) < 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
             }
-        } else {
-            /*throw exceptionerror*/
+        }
+        return newColumn;
+    }
+
+    public column equalTo(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            if (column1.compare((Value) column1.get(i), value1) == 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column notEqualTo(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            if (column1.compare((Value) column1.get(i), value1) != 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column greaterThanOrEqualTo(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            if (column1.compare((Value) column1.get(i), value1) >= 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column lessThanOrEqualTo(column column1, Value value1) {
+        column newColumn = new column();
+        for (int i = 0; i < column1.size(); i++) {
+            if (column1.compare((Value) column1.get(i), value1) <= 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column greaterThanColumns(column column1, column column2) {
+        column newColumn = new column();
+        for (int i = 0; i < column2.size(); i++) {
+            if (column1.compare((Value) column1.get(i), (Value) column2.get(i)) > 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column lessThanColumns(column column1, column column2) {
+        column newColumn = new column();
+        for (int i = 0; i < column2.size(); i++) {
+            if (column1.compare((Value) column1.get(i), (Value) column2.get(i)) < 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column equalToColumns(column column1, column column2) {
+        column newColumn = new column();
+        for (int i = 0; i < column2.size(); i++) {
+            if (column1.compare((Value) column1.get(i), (Value) column2.get(i)) == 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column notEqualToColumns(column column1, column column2) {
+        column newColumn = new column();
+        for (int i = 0; i < column2.size(); i++) {
+            if (column1.compare((Value) column1.get(i), (Value) column2.get(i)) != 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column greaterThanOrEqualToColumns(column column1, column column2) {
+        column newColumn = new column();
+        for (int i = 0; i < column2.size(); i++) {
+            if (column1.compare((Value) column1.get(i), (Value) column2.get(i)) >= 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
+        }
+        return newColumn;
+    }
+
+    public column lessThanOrEqualToColumns(column column1, column column2) {
+        column newColumn = new column();
+        for (int i = 0; i < column2.size(); i++) {
+            if (column1.compare((Value) column1.get(i), (Value) column2.get(i)) <= 0) {
+                Value newValue = new Value(((Value) column1.get(i)).value);
+                newColumn.add(newValue);
+            }
         }
         return newColumn;
     }
@@ -389,7 +526,13 @@ public class Table extends HashMap {
     public static void main(String[] args) {
         Value v0 = new Value(0);
         Value v1 = new Value("Good morning");
-        Value v2 = new Value();
+        Value v4 = new Value("hi");
+        Value v2 = new Value(6);
+        Value v3 = new Value(6.0);
+        column c = new column();
+        System.out.print(c.compare(v1, v4));
+
+
     }
 
 }

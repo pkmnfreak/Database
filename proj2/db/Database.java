@@ -1,6 +1,7 @@
 package db;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -205,8 +206,6 @@ public class Database {
                 newTable.columntypes = newColumnTypes;
                 newTable.numColumns--;
                 i--;
-
-
             }
         }
         return newTable;
@@ -227,7 +226,7 @@ public class Database {
         return (Table) allTables.get("joinedtemp");
     }
 
-    public Table Binaryselect(String[] columns, String[] tables, String operator) {
+    public Table select(String[] columns, String[] tables, String operator) {
         try {
             if (tables.length > 1) {
                 joinMultipleTables(tables);
@@ -246,15 +245,35 @@ public class Database {
         Table resultTable = new Table(newColumn, newType);
         resultTable.numRows = table.numRows;
         if (operator.equals("*")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            if (Arrays.asList(table.columnnames).contains(columns[1])) {
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            } else {
+                Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiply((column) table.get(columns[0]), tempVal));
+            }
         } else if (operator.equals("-")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            if (Arrays.asList(table.columnnames).contains(columns[1])) {
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            } else {
+                Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.minus((column) table.get(columns[0]), tempVal));
+            }
         } else if (operator.equals("+")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            if (Arrays.asList(table.columnnames).contains(columns[1])) {
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            } else {
+                Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.add((column) table.get(columns[0]), tempVal));
+            }
         } else if (operator.equals("/")) {
-            resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
-
+            if (Arrays.asList(table.columnnames).contains(columns[1])) {
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+            } else {
+                Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.divide((column) table.get(columns[0]), tempVal));
+            }
         }
+        allTables.put(columns[2], resultTable);
         return resultTable;
     }
 
@@ -264,26 +283,160 @@ public class Database {
         return "";
     }
 
-    private String select(String expr) {
+
+    private void select(String expr) {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
             System.err.printf("Malformed select: %s\n", expr);
-            return "";
+            return;
         }
 
         select(m.group(1), m.group(2), m.group(3));
-        return "";
     }
 
-    private String select(String exprs, String tables, String conds) {
-        return " ";
+    /*columns are the columns we want, tables are the tables we are selecting from, conditionals is an array of symbols, and comparisons is an array of
+     String arrays of size 2, where the first String is the left side and the second is the right side
+     */
+    private Table selectConditional(String[] columns, String[] tables, String[] conditionals, String[][] comparisons) {
+        try {
+            if (tables.length > 1) {
+                joinMultipleTables(tables);
+                String[] copyTables = new String[tables.length + 1];
+                System.arraycopy(tables, 0, copyTables, 1, tables.length);
+                copyTables[0] = "joinedtemp";
+                tables = copyTables;
+            }
+        } catch (Exception e) {
+            System.out.println("Malformed query oops");
+        }
+        Table table = (Table) allTables.get(tables[0]);
+        String[] newColumn = columns;
+        String[] newType = new String[columns.length];
+        for (int i = 0; i < columns.length; i++) {
+            newType[i] = ((column) table.get(columns[i])).get(0).getClass().getName();
+        }
+        Table resultTable = new Table(newColumn, newType);
+        resultTable.numRows = table.numRows;
+        for (int i = 0; i < conditionals.length; i++) {
+            if (conditionals[i].equals(">")) {
+                for (String j : columns) {
+                    if (Arrays.asList(table.columnnames).contains(comparisons[i][1])) {
+                        resultTable.replace(j, resultTable.get(j), table.greaterThanColumns((column) table.get(comparisons[i][0]), (column) table.get(comparisons[i][1])));
+                    } else {
+                        Value tempVal = ((column) resultTable.get(j)).createValue(comparisons[i][1]);
+                        resultTable.replace(j, resultTable.get(j), table.greaterThan((column) table.get(comparisons[i][0]), tempVal));
+                    }
+                }
+            } else if (conditionals[i].equals("<")) {
+                for (String j : columns) {
+                    if (Arrays.asList(table.columnnames).contains(comparisons[i][1])) {
+                        resultTable.replace(j, resultTable.get(j), table.lessThanColumns((column) table.get(comparisons[i][0]), (column) table.get(comparisons[i][1])));
+                    } else {
+                        Value tempVal = ((column) resultTable.get(j)).createValue(comparisons[i][1]);
+                        resultTable.replace(j, resultTable.get(j), table.lessThan((column) table.get(comparisons[i][0]), tempVal));
+                    }
+                }
+            } else if (conditionals[i].equals("==")) {
+                for (String j : columns) {
+                    if (Arrays.asList(table.columnnames).contains(comparisons[i][1])) {
+                        resultTable.replace(j, resultTable.get(j), table.equalToColumns((column) table.get(comparisons[i][0]), (column) table.get(comparisons[i][1])));
+                    } else {
+                        Value tempVal = ((column) resultTable.get(j)).createValue(comparisons[i][1]);
+                        resultTable.replace(j, resultTable.get(j), table.equalTo((column) table.get(comparisons[i][0]), tempVal));
+                    }
+                }
+            } else if (conditionals[i].equals("!=")) {
+                for (String j : columns) {
+                    if (Arrays.asList(table.columnnames).contains(comparisons[i][1])) {
+                        resultTable.replace(j, resultTable.get(j), table.notEqualToColumns((column) table.get(comparisons[i][0]), (column) table.get(comparisons[i][1])));
+                    } else {
+                        Value tempVal = ((column) resultTable.get(j)).createValue(comparisons[i][1]);
+                        resultTable.replace(j, resultTable.get(j), table.notEqualTo((column) table.get(comparisons[i][0]), tempVal));
+                    }
+                }
+            } else if (conditionals[i].equals(">=")) {
+                for (String j : columns) {
+                    if (Arrays.asList(table.columnnames).contains(comparisons[i][1])) {
+                        resultTable.replace(j, resultTable.get(j), table.greaterThanOrEqualToColumns((column) table.get(comparisons[i][0]), (column) table.get(comparisons[i][1])));
+                    } else {
+                        Value tempVal = ((column) resultTable.get(j)).createValue(comparisons[i][1]);
+                        resultTable.replace(j, resultTable.get(j), table.greaterThanOrEqualTo((column) table.get(comparisons[i][0]), tempVal));
+                    }
+                }
+            } else if (conditionals[i].equals("<=")) {
+                for (String j : columns) {
+                    if (Arrays.asList(table.columnnames).contains(comparisons[i][1])) {
+                        resultTable.replace(j, resultTable.get(j), table.lessThanOrEqualToColumns((column) table.get(comparisons[i][0]), (column) table.get(comparisons[i][1])));
+                    } else {
+                        Value tempVal = ((column) resultTable.get(j)).createValue(comparisons[i][1]);
+                        resultTable.replace(j, resultTable.get(j), table.lessThanOrEqualTo((column) table.get(comparisons[i][0]), tempVal));
+                    }
+                }
+            }
+        }
+        allTables.put("newTableFromBinaryConditionalSelect", resultTable);
+        return resultTable;
     }
 
-   /* public static void main(String[] args) {
-        System.out.print("hi");
-    }*/
+    private void select(String columns, String tables, String conditionals) {
+        /*Check if select statement contains operators */
+        if (columns.contains("+")) {
+            String[] columnNames = columns.split(" \\+ ");
+            String[] afterOperator = columnNames[1].split(" as ");
+            columnNames[1] = afterOperator[0];
+            String[] copyTemp = new String[columnNames.length + 1];
+            System.arraycopy(columnNames, 0, copyTemp, 0, 2);
+            columnNames = copyTemp;
+            columnNames[2] = afterOperator[1];
+            String[] tableNames = tables.split(", ");
+            select(columnNames, tableNames, "+");
+        } else if (columns.contains("-")) {
+            String[] columnNames = columns.split(" \\- ");
+            String[] afterOperator = columnNames[1].split(" as ");
+            columnNames[1] = afterOperator[0];
+            String[] copyTemp = new String[columnNames.length + 1];
+            System.arraycopy(columnNames, 0, copyTemp, 0, 2);
+            columnNames = copyTemp;
+            columnNames[2] = afterOperator[1];
+            String[] tableNames = tables.split(", ");
+            select(columnNames, tableNames, "-");
+        } else if (columns.contains("*")) {
+            String[] columnNames = columns.split(" \\* ");
+            String[] afterOperator = columnNames[1].split(" as ");
+            columnNames[1] = afterOperator[0];
+            String[] copyTemp = new String[columnNames.length + 1];
+            System.arraycopy(columnNames, 0, copyTemp, 0, 2);
+            columnNames = copyTemp;
+            columnNames[2] = afterOperator[1];
+            String[] tableNames = tables.split(", ");
+            select(columnNames, tableNames, "*");
+        } else if (columns.contains("/")) {
+            String[] columnNames = columns.split(" \\/ ");
+            String[] afterOperator = columnNames[1].split(" as ");
+            columnNames[1] = afterOperator[0];
+            String[] copyTemp = new String[columnNames.length + 1];
+            System.arraycopy(columnNames, 0, copyTemp, 0, 2);
+            columnNames = copyTemp;
+            columnNames[2] = afterOperator[1];
+            String[] tableNames = tables.split(", ");
+            select(columnNames, tableNames, "/");
+        }
 
+        return;
+    }
 
+    /*
+   public static void main(String[] args) {
+        Database db = new Database();
+        db.transact("select fire - water as ice from T1, T2");
+    }
+*/
+    public static void main(String[] args) {
+        Value x = new Value(1);
+        Value y = new Value(2.8);
+        BigDecimal b = new BigDecimal(x.value.toString()).add(new BigDecimal(y.value.toString()));
+        System.out.print(b);
+    }
 }
 
 
