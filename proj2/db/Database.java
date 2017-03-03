@@ -1,14 +1,18 @@
 package db;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.io.BufferedReader;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.StringJoiner;
+import java.util.Arrays;
 
 
 public class Database {
-    Map<String, Table> allTables;
+    HashMap<String, Table> allTables;
 
     public Database() {
         allTables = new HashMap<>();
@@ -79,21 +83,26 @@ public class Database {
         }
     }
 
-    private void createNewTable(String name, String[] cols) {
-        StringJoiner joiner = new StringJoiner(", ");
-        for (int i = 0; i < cols.length - 1; i++) {
-            joiner.add(cols[i]);
+    private String createNewTable(String name, String[] cols) {
+        try {
+            StringJoiner joiner = new StringJoiner(", ");
+            for (int i = 0; i < cols.length - 1; i++) {
+                joiner.add(cols[i]);
+            }
+            String[] colnames = new String[cols.length];
+            String[] coltypes = new String[cols.length];
+            for (int i = 0; i < cols.length; i++) {
+                String delims = "[, ]";
+                String[] splitColType = cols[i].split(delims);
+                colnames[i] = splitColType[0];
+                coltypes[i] = splitColType[1];
+            }
+            Table newTable = new Table(colnames, coltypes);
+            allTables.put(name, newTable);
+        } catch (Exception e) {
+            System.err.println("Malformed query");
         }
-        String[] colnames = new String[cols.length];
-        String[] coltypes = new String[cols.length];
-        for (int i = 0; i < cols.length; i++) {
-            String delims = "[, ]";
-            String[] splitColType = cols[i].split(delims);
-            colnames[i] = splitColType[0];
-            coltypes[i] = splitColType[1];
-        }
-        Table newTable = new Table(colnames, coltypes);
-        allTables.put(name, newTable);
+        return "";
     }
 
     private String createSelectedTable(String name, String exprs, String tables, String conds) {
@@ -133,8 +142,8 @@ public class Database {
                 newTable.addRow(returnRow);
             }
             allTables.put(name, newTable);
-        } catch (Exception e) {
-            System.out.println("No file found");
+        } catch (IOException e) {
+            System.err.println("Malformed Table");
         }
         return "";
     }
@@ -174,7 +183,7 @@ public class Database {
         } catch (Exception e) {
             System.out.println("Malformed query");
         }
-        return " ";
+        return "";
     }
 
     public Table select(String[] columns, String[] tables) {
@@ -266,8 +275,12 @@ public class Database {
 
 
     private String printTable(String name) {
-        allTables.get(name).printTable();
-        return "";
+        try {
+            allTables.get(name);
+        } catch (Error e) {
+            System.err.println("Table does not exist");
+        }
+        return allTables.get(name).printTable();
     }
 
     private String select(String expr) {
@@ -282,7 +295,7 @@ public class Database {
     }
 
     private String select(String exprs, String tables, String conds) {
-        return " ";
+        return "";
     }
 
    /* public static void main(String[] args) {
