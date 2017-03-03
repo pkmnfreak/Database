@@ -1,9 +1,5 @@
 package db;
 
-
-import java.io.*;
-import java.math.BigDecimal;
-import java.util.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,7 +7,6 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.util.StringJoiner;
 import java.util.Arrays;
 
 
@@ -88,18 +83,14 @@ public class Database {
     }
 
     private String createNewTable(String name, String[] cols) {
-        try {
-            StringJoiner joiner = new StringJoiner(", ");
-            for (int i = 0; i < cols.length - 1; i++) {
-                joiner.add(cols[i]);
-            }
-        } catch (IndexOutOfBoundsException e) {
-            System.err.println("No Columns" + e);
+        if (cols.length == 0) {
+            System.err.println("No Columns");
         }
+
         String[] colnames = new String[cols.length];
         String[] coltypes = new String[cols.length];
         for (int i = 0; i < cols.length; i++) {
-            String delims = "[, ]";
+            String delims = "[ ,]";
             String[] splitColType = cols[i].split(delims);
             colnames[i] = splitColType[0];
             coltypes[i] = splitColType[1];
@@ -139,7 +130,7 @@ public class Database {
                 String[] row = nextLine.split(delims);
                 Value[] returnRow = new Value[row.length];
                 for (int i = 0; i < row.length; i++) {
-                    returnRow[i] = (Value) convertType(row[i], newTable.columntypes[i]);
+                    returnRow[i] = convertValue(row[i], newTable.columntypes[i]);
                 }
                 newTable.addRow(returnRow);
             }
@@ -150,16 +141,16 @@ public class Database {
         } catch (IndexOutOfBoundsException e){
             System.err.println("Malformed Table" + e);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Malformed Table" + e);
         }
         return "";
     }
 
         //helper method to convertTypes
-    public static Object convertType(String item, String type) {
+    public static Value convertValue(String item, String type) {
         if (type.equals("int")) {
             return new Value(Integer.parseInt(item));
-        } else if (type.equals("Float")) {
+        } else if (type.equals("float")) {
             return new Value(Float.parseFloat(item));
         } else {
             return new Value(item);
@@ -178,20 +169,24 @@ public class Database {
     }
 
     private String insertRow(String expr) {
-        try {
-            Matcher m = INSERT_CLS.matcher(expr);
-            Table selectedTable = allTables.get(m.group(1));
-            String[] rowArray = m.group(2).split(",");
-            Value[] returnArray = new Value[rowArray.length];
-            for (int i = 0; i < rowArray.length; i++) {
-                returnArray[i] = (Value) convertType(rowArray[i], selectedTable.columntypes[i]);
-            }
-            selectedTable.addRow(returnArray);
-        } catch (Error e) {
-            System.out.println("Malformed query");
+        Matcher m = INSERT_CLS.matcher(expr);
+        if (!m.matches()) {
+            System.err.printf("Malformed insert: %s\n", expr);
+            return "";
         }
+        Table selectedTable = allTables.get(m.group(1));
+        String[] rowArray = m.group(2).split(",");
+        for(int i = 0; i < rowArray.length; i++) {
+            rowArray[i] = rowArray[i].trim();
+        }
+        Value[] returnArray = new Value[rowArray.length];
+        for (int i = 0; i < rowArray.length; i++) {
+           returnArray[i] =  convertValue(rowArray[i], selectedTable.columntypes[i]);
+        }
+        selectedTable.addRow(returnArray);
         return "";
     }
+
 
     public Table select(String[] columns, String[] tables) {
         try {
@@ -428,10 +423,8 @@ public class Database {
 
 
     private String printTable(String name) {
-        try {
-            allTables.get(name);
-        } catch (Error e) {
-            System.err.println("Table does not exist");
+        if (!allTables.containsKey(name)) {
+            System.err.println("no table with that name");
         }
         return allTables.get(name).printTable();
     }
@@ -448,7 +441,7 @@ public class Database {
 
     public static void main(String[] args) {
         Database db = new Database();
-        db.transact("create table t0 (a String, b String)");
+        db.transact("create table t0 (x float,y string)");
         db.transact("print t0");
 
     }

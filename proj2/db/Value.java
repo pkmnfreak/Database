@@ -47,6 +47,10 @@ public class Value<Item>{
         return this.value;
     }
 
+    public String toString() {
+        return this.label;
+    }
+
 
  }
 
