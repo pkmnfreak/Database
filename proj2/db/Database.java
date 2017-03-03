@@ -3,13 +3,19 @@ package db;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.io.BufferedReader;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.StringJoiner;
+import java.util.Arrays;
 
 
 public class Database {
-    Map<String, Table> allTables;
+    HashMap<String, Table> allTables;
 
     public Database() {
         allTables = new HashMap<>();
@@ -29,21 +35,22 @@ public class Database {
             SELECT_CMD = Pattern.compile("select " + REST);
 
     // Stage 2 syntax, contains the clauses of commands.
-    private static final Pattern CREATE_NEW  = Pattern.compile("(\\S+)\\s+\\((\\S+\\s+\\S+\\s*" +
+    private static final Pattern CREATE_NEW  = Pattern.compile("(\\S+)\\s+\\((\\S+\\s+\\S+\\s*"
+            +
             "(?:,\\s*\\S+\\s+\\S+\\s*)*)\\)"),
-            SELECT_CLS  = Pattern.compile("([^,]+?(?:,[^,]+?)*)\\s+from\\s+" +
-                    "(\\S+\\s*(?:,\\s*\\S+\\s*)*)(?:\\s+where\\s+" +
-                    "([\\w\\s+\\-*/'<>=!.]+?(?:\\s+and\\s+" +
-                    "[\\w\\s+\\-*/'<>=!.]+?)*))?"),
-            CREATE_SEL  = Pattern.compile("(\\S+)\\s+as select\\s+" +
-                    SELECT_CLS.pattern()),
-            INSERT_CLS  = Pattern.compile("(\\S+)\\s+values\\s+(.+?" +
-                    "\\s*(?:,\\s*.+?\\s*)*)");
+            SELECT_CLS  = Pattern.compile("([^,]+?(?:,[^,]+?)*)\\s+from\\s+"
+                    + "(\\S+\\s*(?:,\\s*\\S+\\s*)*)(?:\\s+where\\s+"
+                    + "([\\w\\s+\\-*/'<>=!.]+?(?:\\s+and\\s+"
+                    + "[\\w\\s+\\-*/'<>=!.]+?)*))?"),
+            CREATE_SEL  = Pattern.compile("(\\S+)\\s+as select\\s+"
+                    + SELECT_CLS.pattern()),
+            INSERT_CLS  = Pattern.compile("(\\S+)\\s+values\\s+(.+?"
+                    + "\\s*(?:,\\s*.+?\\s*)*)");
 
     //parses input
     public String transact(String query) {
         this.eval(query);
-        return " ";
+        return "";
     }
 
     private void eval(String query) {
@@ -79,27 +86,33 @@ public class Database {
         }
     }
 
-    private void createNewTable(String name, String[] cols) {
-        StringJoiner joiner = new StringJoiner(", ");
-        for (int i = 0; i < cols.length-1; i++) {
-            joiner.add(cols[i]);
-        }
-        String[] colnames = new String[cols.length];
-        String[] coltypes = new String[cols.length];
-        for (int i = 0; i < cols.length; i++) {
+    private String createNewTable(String name, String[] cols) {
+        try {
+            StringJoiner joiner = new StringJoiner(", ");
+            for (int i = 0; i < cols.length - 1; i++) {
+                joiner.add(cols[i]);
+            }
+            String[] colnames = new String[cols.length];
+            String[] coltypes = new String[cols.length];
+            for (int i = 0; i < cols.length; i++) {
                 String delims = "[, ]";
                 String[] splitColType = cols[i].split(delims);
                 colnames[i] = splitColType[0];
                 coltypes[i] = splitColType[1];
+            }
+            Table newTable = new Table(colnames, coltypes);
+            allTables.put(name, newTable);
+        } catch (Exception e) {
+            System.err.println("Malformed query");
         }
-        Table newTable = new Table(colnames, coltypes);
-        allTables.put(name, newTable);
+        return "";
     }
 
     private String createSelectedTable(String name, String exprs, String tables, String conds) {
         //allTables.put(name, select(name, tables,conds))
-        System.out.printf("You are trying to create a table named %s by selecting these expressions:" +
-                " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", name, exprs, tables, conds);
+        System.out.printf("You are trying to create a table named %s by selecting these expressions:"
+                + " '%s' from the join of these tables: '%s', filtered by these conditions: "
+                + "'%s'\n", name, exprs, tables, conds);
         return "";
     }
 
@@ -127,27 +140,25 @@ public class Database {
                 String[] row = nextLine.split(delims);
                 Value[] returnRow = new Value[row.length];
                 for (int i = 0; i < row.length; i++) {
-                    returnRow[i] = convertType(row[i], newTable.columntypes[i]);
+                    returnRow[i] = (Value) convertType(row[i], newTable.columntypes[i]);
                 }
                 newTable.addRow(returnRow);
             }
             allTables.put(name, newTable);
-        } catch (Exception e) {
-            System.out.println("No file found");
+        } catch (IOException e) {
+            System.err.println("Malformed Table");
         }
         return "";
-        }
+    }
 
         //helper method to convertTypes
-    public static Value convertType(String item,String type) {
-        if (type.equals("int")){
+    public static Object convertType(String item, String type) {
+        if (type.equals("int")) {
             return new Value(Integer.parseInt(item));
-        } else if (type.equals("int")) {
+        } else if (type.equals("Float")) {
             return new Value(Float.parseFloat(item));
-        } else if (type.equals("int")) {
-            return new Value (item);
         } else {
-            throw new Error();
+            return new Value(item);
         }
     }
 
@@ -162,7 +173,7 @@ public class Database {
         return "";
     }
 
-    private String insertRow(String expr){
+    private String insertRow(String expr) {
         try {
             Matcher m = INSERT_CLS.matcher(expr);
             Table selectedTable = allTables.get(m.group(1));
@@ -175,7 +186,7 @@ public class Database {
         } catch (Exception e) {
             System.out.println("Malformed query");
         }
-        return " ";
+        return "";
     }
 
     public Table select(String[] columns, String[] tables) {
@@ -199,9 +210,11 @@ public class Database {
                 String[] newColumnNames = new String[newTable.columnnames.length - 1];
                 String[] newColumnTypes = new String[newTable.columntypes.length - 1];
                 System.arraycopy(newTable.columnnames, 0, newColumnNames, 0, i);
-                System.arraycopy(newTable.columnnames, i + 1, newColumnNames, i, newTable.columnnames.length - i - 1);
+                System.arraycopy(newTable.columnnames, i + 1, newColumnNames, i,
+                        newTable.columnnames.length - i - 1);
                 System.arraycopy(newTable.columntypes, 0, newColumnTypes, 0, i);
-                System.arraycopy(newTable.columntypes, i + 1, newColumnTypes, i, newTable.columntypes.length - i - 1);
+                System.arraycopy(newTable.columntypes, i + 1, newColumnTypes, i,
+                        newTable.columntypes.length - i - 1);
                 newTable.columnnames = newColumnNames;
                 newTable.columntypes = newColumnTypes;
                 newTable.numColumns--;
@@ -279,8 +292,12 @@ public class Database {
 
 
     private String printTable(String name) {
-        allTables.get(name).printTable();
-        return "";
+        try {
+            allTables.get(name);
+        } catch (Error e) {
+            System.err.println("Table does not exist");
+        }
+        return allTables.get(name).printTable();
     }
 
 
