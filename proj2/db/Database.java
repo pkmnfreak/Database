@@ -45,46 +45,48 @@ public class Database {
 
     //parses input
     public String transact(String query) {
-        this.eval(query);
-        return "";
+        return this.eval(query);
     }
 
-    private void eval(String query) {
+    private String eval(String query) {
         Matcher m;
         if ((m = CREATE_CMD.matcher(query)).matches()) {
-            createTable(m.group(1));
+             return createTable(m.group(1));
         } else if ((m = LOAD_CMD.matcher(query)).matches()) {
-            loadTable(m.group(1));
+            return loadTable(m.group(1));
         } else if ((m = STORE_CMD.matcher(query)).matches()) {
-            storeTable(m.group(1));
+            return storeTable(m.group(1));
         } else if ((m = DROP_CMD.matcher(query)).matches()) {
-            dropTable(m.group(1));
+            return dropTable(m.group(1));
         } else if ((m = INSERT_CMD.matcher(query)).matches()) {
-            insertRow(m.group(1));
+            return insertRow(m.group(1));
         } else if ((m = PRINT_CMD.matcher(query)).matches()) {
-            printTable(m.group(1));
+            return printTable(m.group(1));
         } else if ((m = SELECT_CMD.matcher(query)).matches()) {
-            select(m.group(1));
+            return select(m.group(1));
         } else {
             System.err.printf("Malformed query: %s\n", query);
+            return new Error("No command found").toString();
         }
     }
 
 
-    private void createTable(String expr) {
+    private String createTable(String expr) {
         Matcher m;
         if ((m = CREATE_NEW.matcher(expr)).matches()) {
-            createNewTable(m.group(1), m.group(2).split(COMMA));
+            return createNewTable(m.group(1), m.group(2).split(COMMA));
         } else if ((m = CREATE_SEL.matcher(expr)).matches()) {
-            createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
+            return createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
         } else {
-            System.err.printf("Malformed create: %s\n", expr);
+            //System.err.printf("Malformed create: %s\n", expr);
+            return new Error("Malformed create").toString();
         }
     }
 
     private String createNewTable(String name, String[] cols) {
         if (cols.length == 0) {
-            System.err.println("No Columns");
+            //System.err.println("No Columns");
+            return new Error("No Columns").toString();
         }
 
         String[] colnames = new String[cols.length];
@@ -438,13 +440,6 @@ public class Database {
         return select(m.group(1), m.group(2), m.group(3)).toString();
     }
 
-
-    public static void main(String[] args) {
-        Database db = new Database();
-        db.transact("create table t0 (x float,y string)");
-        db.transact("print t0");
-
-    }
 
 }
 
