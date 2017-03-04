@@ -19,11 +19,13 @@ public class Value<Item>{
         if (x instanceof Float) {
             if (((Float) x).isNaN()) {
                 this.label = "NaN";
+            } else {
+                this.label = x.toString();
+                this.value = x;
             }
         } else {
             this.label = x.toString();
             this.value = x;
-
         }
     }
 
@@ -51,6 +53,12 @@ public class Value<Item>{
         return this.label;
     }
 
+    public boolean equals(Value x) {
+        if (!this.getValue().equals(x.getValue())) {
+            return false;
+        }
+        return true;
+    }
 
  }
 
