@@ -167,12 +167,12 @@ public class column<T> {
             Integer.parseInt(i);
             return new Value(Integer.parseInt(i));
         } catch (NumberFormatException e) {
-        }
-        try {
-            Float.parseFloat(i);
-            return new Value(Float.parseFloat(i));
-        } catch(NumberFormatException e) {
-            return new Value(i);
+            try {
+                Float.parseFloat(i);
+                return new Value(Float.parseFloat(i));
+            } catch (NumberFormatException f) {
+                return new Value(i);
+            }
         }
     }
 }
