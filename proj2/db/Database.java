@@ -449,10 +449,18 @@ public class Database {
     }
 */
     public static void main(String[] args) {
-        Value x = new Value(1);
-        Value y = new Value(2.8);
-        BigDecimal b = new BigDecimal(x.value.toString()).add(new BigDecimal(y.value.toString()));
-        System.out.print(b);
+        Value x1 = new Value(1);
+        Value x2 = new Value(8);
+        Value y1 = new Value(2.0);
+        Value y2 = new Value(3.6);
+        String[] columnnames = {"columnx", "columny", "columnz"};
+        String[] columntypes = {"java.lang.Integer", "java.lang.Float", "java.lang.Whatever"};
+        Table table = new Table(columnnames, columntypes);
+        ((column) table.get("columnx")).add(x1);
+        ((column) table.get("columnx")).add(x2);
+        ((column) table.get("columny")).add(y1);
+        ((column) table.get("columny")).add(y2);
+        table.printTable();
     }
 }
 
