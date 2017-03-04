@@ -47,7 +47,7 @@ public class testDatabase {
         Database db = new Database();
         db.transact("load t3");
         db.transact("load t1");
-        db.transact("select * from t3,t1");
+        db.transact("select x,y from t3,t1 where x > y");
     }
 
 

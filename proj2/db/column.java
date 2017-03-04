@@ -1,6 +1,5 @@
 package db;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 /**
  * Created by noraharhen on 2/24/17.
@@ -13,6 +12,18 @@ public class column<T> {
 
     public column() {
         this.items = items;
+    }
+
+    public String checkType(T i) {
+        if (i.getClass().getName() == "java.lang.Integer") {
+            return "int";
+        } else if (i.getClass().getName() == "java.lang.Float") {
+            return "float";
+        } else if (i.getClass().getName() == "java.lang.String") {
+            return "string";
+        } else {
+            return i.getClass().getName();
+        }
     }
 
     /*copies column2 into column1. Assume column1 is empty*/
@@ -46,31 +57,58 @@ public class column<T> {
         return items.get(index);
     }
 
-    public int compare(Value x, Value y) {
-        if (x.value instanceof Number && y.value instanceof Number) {
-            return new BigDecimal(x.value.toString()).compareTo(new BigDecimal(y.value.toString()));
-        } else if (x.value.getClass().getName() != y.value.getClass().getName()) {
-            System.out.print("You're comparing two different types!");
-            return 1204;
-        } else {
-            return ((String) x.value).length() - ((String) y.value).length();
-        }
+
+    public boolean greaterThan(Value value1, Value value2) {
+        return (compare(value1, value2) > 0);
     }
 
-    public int compare(Value x, T i) {
-        if (x.value instanceof Number && i instanceof Number) {
-            return new BigDecimal(x.value.toString()).compareTo(new BigDecimal(i.toString()));
-        } else if (x.value.getClass().getName() != i.getClass().getName()) {
+    public boolean lessThan(Value value1, Value value2) {
+        return (compare(value1, value2) < 0);
+    }
+
+    public boolean greaterThanOrEqualTo(Value value1, Value value2) {
+        return (compare(value1, value2) >= 0);
+    }
+
+    public boolean lessThanOrEqualTo(Value value1, Value value2) {
+        return (compare(value1, value2) <= 0);
+    }
+
+    public boolean equalTo(Value value1, Value value2) {
+        return (compare(value1, value2) == 0);
+    }
+
+    public boolean notEqualTo(Value value1, Value value2) {
+        return (compare(value1, value2) != 0);
+    }
+
+
+    public Float compare(Value x, Value y) {
+        if (x.value instanceof Integer && y.value instanceof Integer) {
+            return (float) ((Integer) x.value - (Integer) y.value);
+        } else if (x.value instanceof Integer && y.value instanceof Float) {
+            return (Integer) x.value - (Float) y.value;
+        } else if (x.value instanceof Float && y.value instanceof Integer) {
+            return (Float) x.value - (Integer) y.value;
+        } else if (x.value instanceof Float && y.value instanceof Float) {
+            return (Float) x.value - (Float) y.value;
+        } else if (x.value.getClass().getName() != y.value.getClass().getName()) {
             System.out.print("You're comparing two different types!");
-            return 1204;
+            return (float) 1204;
         } else {
-            return ((String) x.value).length() - ((String) i).length();
+            return (float) ((String) x.value).length() - ((String) y.value).length();
         }
     }
 
     public Value addValue(Value x, Value y) {
-        if (x.value instanceof Number && y.value instanceof Number) {
-            return new Value(new BigDecimal(x.value.toString()).add(new BigDecimal(y.value.toString())));
+        if (x.value instanceof Integer && y.value instanceof Integer) {
+            return new Value(((Integer) x.value + (Integer) y.value));
+        } else if (x.value instanceof Integer && y.value instanceof Float) {
+            return new Value((Integer) x.value + (Float) y.value);
+        } else if (x.value instanceof Float && y.value instanceof Integer) {
+            return new Value((Float) x.value + (Integer) y.value);
+        } else if (x.value instanceof Float && y.value instanceof Float) {
+            return new Value((Float) x.value + (Float) y.value);
         } else if (x.value.getClass().getName() != y.value.getClass().getName()) {
             System.out.print("You're adding two different types!");
             return new Value();
@@ -80,8 +118,14 @@ public class column<T> {
     }
 
     public Value minusValue(Value x, Value y) {
-        if (x.value instanceof Number && y.value instanceof Number) {
-            return new Value(new BigDecimal(x.value.toString()).subtract(new BigDecimal(y.value.toString())));
+        if (x.value instanceof Integer && y.value instanceof Integer) {
+            return new Value(((Integer) x.value - (Integer) y.value));
+        } else if (x.value instanceof Integer && y.value instanceof Float) {
+            return new Value((Integer) x.value - (Float) y.value);
+        } else if (x.value instanceof Float && y.value instanceof Integer) {
+            return new Value((Float) x.value - (Integer) y.value);
+        } else if (x.value instanceof Float && y.value instanceof Float) {
+            return new Value((Float) x.value - (Float) y.value);
         } else {
             System.out.print("Input error both aren't numbers");
             return new Value();
@@ -89,8 +133,14 @@ public class column<T> {
     }
 
     public Value multiplyValue(Value x, Value y) {
-        if (x.value instanceof Number && y.value instanceof Number) {
-            return new Value(new BigDecimal(x.value.toString()).multiply(new BigDecimal(y.value.toString())));
+        if (x.value instanceof Integer && y.value instanceof Integer) {
+            return new Value(((Integer) x.value * (Integer) y.value));
+        } else if (x.value instanceof Integer && y.value instanceof Float) {
+            return new Value((Integer) x.value * (Float) y.value);
+        } else if (x.value instanceof Float && y.value instanceof Integer) {
+            return new Value((Float) x.value * (Integer) y.value);
+        } else if (x.value instanceof Float && y.value instanceof Float) {
+            return new Value((Float) x.value * (Float) y.value);
         } else {
             System.out.print("Input error both aren't numbers");
             return new Value();
@@ -98,8 +148,14 @@ public class column<T> {
     }
 
     public Value divideValue(Value x, Value y) {
-        if (x.value instanceof Number && y.value instanceof Number) {
-            return new Value(new BigDecimal(x.value.toString()).divide(new BigDecimal(y.value.toString())));
+        if (x.value instanceof Integer && y.value instanceof Integer) {
+            return new Value(((Integer) x.value / (Integer) y.value));
+        } else if (x.value instanceof Integer && y.value instanceof Float) {
+            return new Value((Integer) x.value / (Float) y.value);
+        } else if (x.value instanceof Float && y.value instanceof Integer) {
+            return new Value((Float) x.value / (Integer) y.value);
+        } else if (x.value instanceof Float && y.value instanceof Float) {
+            return new Value((Float) x.value / (Float) y.value);
         } else {
             System.out.print("Input error both aren't numbers");
             return new Value();

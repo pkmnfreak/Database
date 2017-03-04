@@ -1,5 +1,4 @@
 package db;
-import java.math.BigDecimal;
 
 /**
  * Created by pkmnfreak on 2/27/17.
@@ -19,11 +18,13 @@ public class Value<Item>{
         if (x instanceof Float) {
             if (((Float) x).isNaN()) {
                 this.label = "NaN";
+            } else {
+                this.label = x.toString();
+                this.value = x;
             }
         } else {
             this.label = x.toString();
             this.value = x;
-
         }
     }
 
