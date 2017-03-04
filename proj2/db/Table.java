@@ -28,13 +28,15 @@ public class Table extends HashMap {
     }
 
     /** add a row by inserting in order a value into each db.column individually **/
-    public void addRow(Object[] x) {
+    public void addRow(Value[] x) {
         for(int i = 0; i < numColumns; i++) {
             column temp = (column) get(columnnames[i]);
             if (temp.checkType(x[i]) != columnnames[i]) {
                 /*throw error*/
             }
             temp.add(x[i]);
+            Value valAdd = x[i];
+            temp.add(valAdd);
         }
         numRows += 1;
     }
@@ -173,12 +175,12 @@ public class Table extends HashMap {
         for (int i = 0; i < x.columnnames.length; i++) {
             if (!simColumnNames.contains(x.columnnames[i])) {
                 xnotSim += 1;
-                returnArray[i + simColumnNames.size()] = x.columnnames[i];
+                returnArray[i + simColumnNames.size()-1] = x.columnnames[i];
             }
         }
         for (int j = 0; j < y.columnnames.length; j++) {
             if (!simColumnNames.contains(y.columnnames[j])) {
-                returnArray[j + simColumnNames.size() + xnotSim] = y.columnnames[j];
+                returnArray[j + simColumnNames.size() + xnotSim-1] = y.columnnames[j];
             }
         }
         return returnArray;
@@ -192,7 +194,7 @@ public class Table extends HashMap {
         for(int i = 0; i < simColumnNames.size(); i++) {
             //get index of simColumnNames
             String temp = (String) simColumnNames.get(i);
-            int index = Arrays.binarySearch(x.columnnames,temp);
+            int index = Arrays.asList(x.columnnames).indexOf(temp);
             returnArray[i] = (String) x.columntypes[index];
         }
 
@@ -201,12 +203,12 @@ public class Table extends HashMap {
         for (int i = 0; i < x.columnnames.length; i++) {
             if (!simColumnNames.contains(x.columnnames[i])) {
                 xnotSim += 1;
-                returnArray[i + simColumnNames.size()] = x.columntypes[i];
+                returnArray[i + simColumnNames.size() - 1] = x.columntypes[i];
             }
         }
         for (int j = 0; j < y.columnnames.length; j++) {
             if (!simColumnNames.contains(y.columnnames[j])) {
-                returnArray[j + simColumnNames.size() + xnotSim] = y.columntypes[j];
+                returnArray[j + simColumnNames.size() + xnotSim - 1] = y.columntypes[j];
             }
         }
         return returnArray;
@@ -222,7 +224,11 @@ public class Table extends HashMap {
             column yval = (column) y.get(key);
             for(int i = 0; i < xval.size(); i++) {
                 for (int j = 0; j <yval.size(); j++) {
-                    if(xval.get(i).equals(yval.get(j))) {
+                    Value currX =  (Value) xval.get(i);
+                    String xName = (String) currX.label;
+                    Value currY =  (Value) yval.get(j);
+                    String yName = (String) currY.label;
+                    if(currX.equals(currY)) {
                         xindex.add(i);
                         yindex.add(j);
                     }

@@ -52,6 +52,12 @@ public class Value<Item>{
         return this.label;
     }
 
+    public boolean equals(Value x) {
+        if (!this.getValue().equals(x.getValue())) {
+            return false;
+        }
+        return true;
+    }
 
  }
 

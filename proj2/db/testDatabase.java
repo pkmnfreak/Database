@@ -48,6 +48,9 @@ public class testDatabase {
         db.transact("load t3");
         db.transact("load t1");
         db.transact("select x,y from t3,t1 where x > y");
+        db.transact("load records");
+        db.transact("load teams");
+        db.transact("select * from teams, records");
     }
 
 
