@@ -31,14 +31,7 @@ public class Table extends HashMap {
     public void addRow(Value[] x) {
         for(int i = 0; i < numColumns; i++) {
             column temp = (column) get(columnnames[i]);
-           /* if (temp.checkType(x[i]) != columnnames[i]) {
-                /*throw error*/
-      //  }*/
-            temp.add(x[i]);
             Value valAdd = x[i];
-            /*if(columntypes[i] == "int") {
-                if(!(valAdd.getValue() is instanceof Integer))
-            }*/
             temp.add(valAdd);
         }
         numRows += 1;
@@ -246,7 +239,7 @@ public class Table extends HashMap {
 
     public String toString() {
         String returnString = "";
-        for (int i = 0; i < columnnames.length-1; i++) {
+        for (int i = 0; i < columnnames.length - 1; i++) {
             returnString = returnString + columnnames[i].toString() + " " + columntypes[i].toString() +",";
 
         }
