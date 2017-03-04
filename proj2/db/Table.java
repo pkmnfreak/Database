@@ -28,7 +28,7 @@ public class Table extends HashMap {
     }
 
     /** add a row by inserting in order a value into each db.column individually **/
-    public void addRow(Value[] x) {
+    public void addRow(Object[] x) {
         for(int i = 0; i < numColumns; i++) {
             column temp = (column) get(columnnames[i]);
             Value valAdd = new Value(x[i]);
@@ -258,16 +258,19 @@ public class Table extends HashMap {
     }
 
     // stores the string representation of file in a .tbl file
-    public String Store(String name) {
-        try (PrintWriter out = new PrintWriter( name + ".tbl" ) ) {
+    public void Store(String name) {
+       try {
+            PrintWriter out = new PrintWriter( name + ".tbl" );
             out.println(this.toString());
             out.close();
-        } catch (Exception e) {
-                System.out.println("error: couldn't make file");}
-        return " ";
+        } catch (FileNotFoundException  e) {
+                System.out.println("error: couldn't make file" + e);
+        } catch (IOException e) {
+                System.out.println("error: couldn't make file" + e);
+       }
     }
 
-    public static Table Load(String name) throws IOException {
+   /* public static Table Load(String name) {
         //load file
         BufferedReader in = new BufferedReader(new FileReader(name));
         String line = in.readLine();
@@ -295,7 +298,7 @@ public class Table extends HashMap {
             newTable.addRow(returnRow);
         }
         return newTable;
-    }
+    } */
 
     //helper method to convertTypes
     private static Object convertType(String item, String type) {
@@ -311,14 +314,6 @@ public class Table extends HashMap {
     }
 
 
-    /*columns is an arraylist where the last value is the new column name*/
-    /*String str = op.replace(" ", "");
-        if(str.equals("*")){
-           retVal = a*b;
-        } else if(str.equals("+")){
-           retVal = a+b;
-        }//etc
-        */
     public static column add(column column1, Value value1) {
         column newColumn = new column();
         for (int i = 0; i < column1.size(); i++) {
@@ -360,7 +355,7 @@ public class Table extends HashMap {
         for (int i = 0; i < column2.size(); i++) {
             Value newValue = column1.addValue(((Value) column1.get(i)), ((Value) column2.get(i)));
             newColumn.add(newValue);
-            }
+        }
         return newColumn;
     }
 
@@ -521,18 +516,6 @@ public class Table extends HashMap {
             }
         }
         return newColumn;
-    }
-
-    public static void main(String[] args) {
-        Value v0 = new Value(0);
-        Value v1 = new Value("Good morning");
-        Value v4 = new Value("hi");
-        Value v2 = new Value(6);
-        Value v3 = new Value(6.0);
-        column c = new column();
-        System.out.print(c.compare(v1, v4));
-
-
     }
 
 }

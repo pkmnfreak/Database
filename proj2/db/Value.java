@@ -31,8 +31,8 @@ public class Value<Item>{
         if (this.label.equals("NOVALUE")) {
             try {
                 Integer.parseInt(this.value.toString());
-                return intNoValue;
             } catch (NumberFormatException e) {
+                return intNoValue;
             }
             try {
                 Float.parseFloat(this.value.toString());
@@ -45,6 +45,10 @@ public class Value<Item>{
             return Float.NaN;
         }
         return this.value;
+    }
+
+    public String toString() {
+        return this.label;
     }
 
 

@@ -2,6 +2,7 @@ package db;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 /**
  * Created by noraharhen on 2/24/17.
  */
