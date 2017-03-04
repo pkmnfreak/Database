@@ -68,7 +68,7 @@ public class Database {
             return select(m.group(1));
         } else {
             System.err.printf("ERROR: Malformed query: %s\n", query);
-            return new Error("ERROR: Malformed query").toString();
+            return "ERROR: Malformed query";
         }
     }
 
@@ -444,7 +444,7 @@ public class Database {
             return allTables.get(name).printTable();
         } catch (NullPointerException e) {
             System.err.println("ERROR: No Such table");
-            return new Error("ERROR: No Such table").toString();
+            return "ERROR: No Such table";
         }
     }
 
@@ -452,6 +452,7 @@ public class Database {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
             System.err.printf("ERROR: Malformed select: %s\n", expr);
+            return "ERROR: Malformed Select";
         }
         String returnString = select(m.group(1), m.group(2), m.group(3)).toString();
         System.out.println(returnString);
