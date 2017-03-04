@@ -47,7 +47,9 @@ public class testDatabase {
         Database db = new Database();
         db.transact("load t3");
         db.transact("load t1");
-        db.transact("select * from t3,t1");
+        db.transact("load records");
+        db.transact("load teams");
+        db.transact("select * from teams, records");
     }
 
 
