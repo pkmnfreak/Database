@@ -523,23 +523,21 @@ public class Database {
         }
         String[] columnNames = columns.split(",");
         String[] tableNames = tables.split(",");
-        String[] conditionalPhrases = conditionals.split(AND);
+        String[] conditionalPhrases = conditionals.split(" ");
         if (conditionals != null) {
-            String[][] conditionalNames = new String[conditionalPhrases.length * 2][2];
+            String[][] conditionalNames = new String[2][2];
             String[] tempConditionalNames = new String[2];
-            String[] comparisons = new String[conditionalPhrases.length];
+            String[] comparisons = new String[1];
             for (int i = 0; i < conditionalPhrases.length; i++) {
-                tempConditionalNames = conditionalPhrases[i].split(" > | < | == | != | >= | <= ");
-                conditionalNames[i] = tempConditionalNames;
+                tempConditionalNames[i] = conditionalPhrases[i].split(" > | < | == | != | >= | <= ");
+                conditionalNames[i][i] = tempConditionalNames;
             }
             for (int i = 0; i < conditionalPhrases.length; i++) {
                 if (conditionalPhrases[i].contains(">=") || conditionalPhrases[i].contains("<=") || conditionalPhrases[i].contains("==") || conditionalPhrases[i].contains("!=")) {
-                    comparisons[i] = conditionalPhrases[i].substring(2, 4);
-                } else {
-                    comparisons[i] = Character.toString(conditionalPhrases[i].charAt(2));
+                    comparisons[0] = conditionalPhrases[i];
                 }
             }
-            return selectConditional(columnNames, tableNames, comparisons, conditionalNames);
+            return selectConditional(columnNames, tableNames, conditionalPhrases, conditionalNames);
         }
         return select(columnNames, tableNames);
     }
