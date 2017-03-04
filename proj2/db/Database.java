@@ -1,6 +1,5 @@
 package db;
 
-import com.sun.org.apache.bcel.internal.generic.TargetLostException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -131,7 +130,7 @@ public class Database {
             String nextLine = in.readLine();
             //populate table with values, do this several time per row
             while (nextLine != null && !nextLine.equals("")) {
-                String[] row = nextLine.split(delims);
+                String[] row = nextLine.split(",");
                 Value[] returnRow = new Value[row.length];
                 for (int i = 0; i < row.length; i++) {
                     returnRow[i] = convertValue(row[i], newTable.columntypes[i]);
@@ -382,6 +381,10 @@ public class Database {
 
     private Table select(String columns, String tables, String conditionals) {
         /*Check if select statement contains operators */
+        if (columns.toCharArray()[0] == '*') {
+            String[] tableNames = tables.split(", ");
+            return joinMultipleTables(tableNames);
+        }
         if (columns.contains("+")) {
             String[] columnNames = columns.split(" \\+ ");
             String[] afterOperator = columnNames[1].split(" as ");
