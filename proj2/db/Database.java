@@ -100,6 +100,11 @@ public class Database {
         for (int i = 0; i < cols.length; i++) {
             String delims = "[ ,]";
             String[] splitColType = cols[i].split(delims);
+            if (!(splitColType[1].equals("int") ||
+                    splitColType[1].equals("string") || splitColType[1].equals("float"))) {
+                System.err.println("ERROR:This is an incorrect type.");
+                return "ERROR:This is an incorrect type.";
+            }
             colnames[i] = splitColType[0];
             coltypes[i] = splitColType[1];
         }
@@ -160,6 +165,9 @@ public class Database {
 
         //helper method to convertTypes
     public static Value convertValue(String item, String type) {
+        if (item.equals("NOVALUE")) {
+            return new Value();
+        }
         if (type.equals("int")) {
             return new Value(Integer.parseInt(item));
         } else if (type.equals("float")) {
@@ -170,9 +178,12 @@ public class Database {
     }
 
     private String storeTable(String name) {
-        allTables.get(name).Store(name);
-        return "";
-
+        if(allTables.containsKey(name)) {
+            allTables.get(name).Store(name);
+            return "";
+        }
+        System.err.println("ERROR: Table does not exist");
+        return "ERROR: Table does not exist";
     }
 
     private String dropTable(String name) {
@@ -488,7 +499,7 @@ public class Database {
     private Table select(String columns, String tables, String conditionals) {
         /*Check if select statement contains operators */
         if (columns.toCharArray()[0] == '*' && conditionals == null) {
-            String[] tableNames = tables.split(",");
+            String[] tableNames = tables.split(" ,");
             return joinMultipleTables(tableNames);
         }
         String[] columnNames = columns.split(",");

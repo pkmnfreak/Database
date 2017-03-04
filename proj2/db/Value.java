@@ -1,5 +1,7 @@
 package db;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by pkmnfreak on 2/27/17.
  */
@@ -19,8 +21,9 @@ public class Value<Item>{
             if (((Float) x).isNaN()) {
                 this.label = "NaN";
             } else {
-                this.label = x.toString();
-                this.value = x;
+                DecimalFormat df = new DecimalFormat("#.###");
+                this.label = df.format(x).toString();
+                this.value = df.format(x);
             }
         } else {
             this.label = x.toString();
@@ -37,10 +40,10 @@ public class Value<Item>{
             }
             try {
                 Float.parseFloat(this.value.toString());
-                return floatNoValue;
             } catch(NumberFormatException e) {
-                return stringNoValue;
+                return floatNoValue;
             }
+            return stringNoValue;
         }
         if (this.label.equals("NaN")) {
             return Float.NaN;

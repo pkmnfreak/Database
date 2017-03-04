@@ -171,12 +171,12 @@ public class Table extends HashMap {
         for (int i = 0; i < x.columnnames.length; i++) {
             if (!simColumnNames.contains(x.columnnames[i])) {
                 xnotSim += 1;
-                returnArray[i + simColumnNames.size()-1] = x.columnnames[i];
+                returnArray[i + simColumnNames.size() - 1] = x.columnnames[i];
             }
         }
         for (int j = 0; j < y.columnnames.length; j++) {
             if (!simColumnNames.contains(y.columnnames[j])) {
-                returnArray[j + simColumnNames.size() + xnotSim-1] = y.columnnames[j];
+                returnArray[j + simColumnNames.size() + xnotSim - 1] = y.columnnames[j];
             }
         }
         return returnArray;
@@ -274,35 +274,7 @@ public class Table extends HashMap {
        }
     }
 
-   /* public static Table Load(String name) {
-        //load file
-        BufferedReader in = new BufferedReader(new FileReader(name));
-        String line = in.readLine();
-        String delims = "[ ,]";
-        String[] header = line.split(delims);
-        String[] columnnames = new String[header.length/2];
-        String[] columntypes = new String[header.length/2];
-        for(int i = 0; i < header.length; i++) {
-            if(i % 2 == 0) {
-                columnnames[i/2] = header[i];
-            } else {
-                columntypes[i/2] = header[i];
-            }
-        }
-        //create new table associated with this
-        Table newTable = new Table(columnnames, columntypes);
-        String nextLine;
-        //populate table with values, do this several time per row
-        while ((nextLine = in.readLine()) != null) {
-            String[] row = nextLine.split(delims);
-            Value[] returnRow = new Value[row.length];
-            for (int i = 0; i < row.length; i++) {
-                returnRow[i] = new Value(convertType(row[i], newTable.columntypes[i]));
-            }
-            newTable.addRow(returnRow);
-        }
-        return newTable;
-    } */
+
 
     //helper method to convertTypes
     private static Object convertType(String item, String type) {
