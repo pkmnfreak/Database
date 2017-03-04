@@ -43,6 +43,24 @@ public class testDatabase {
     }
 
     @Test
+    public void testWhiteSpace() {
+        Database db = new Database();
+        db.transact("create table t1 (a string, b string, c string)");
+        db.transact("create table t2 (a string, b string, c       string)");
+        String expected = db.transact("print t1");
+        String actual = db.transact("print t2");
+
+        assertEquals(actual,expected);
+        
+    }
+
+    @Test
+    public void testPrintError() {
+        Database db = new Database();
+        db.transact("print badTable");
+    }
+
+    @Test
     public void testSelect() {
         Database db = new Database();
         db.transact("load t3");
@@ -51,6 +69,12 @@ public class testDatabase {
         db.transact("load records");
         db.transact("load teams");
         db.transact("select * from teams, records");
+    }
+
+    @Test
+    public void testLoadMalformed() {
+        Database db = new Database();
+        db.transact("load apples");
     }
 
 
