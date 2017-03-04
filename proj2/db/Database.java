@@ -521,8 +521,8 @@ public class Database {
         }
         String[] columnNames = columns.split(",");
         String[] tableNames = tables.split(",");
-        String[] conditionalPhrases = conditionals.split(" ");
         if (conditionals != null) {
+            String[] conditionalPhrases = conditionals.split(" ");
             String cond = conditionalPhrases[1];
             String[] conditionalNames = new String[2];
             conditionalNames[0]=conditionalPhrases[0];
