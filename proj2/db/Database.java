@@ -67,8 +67,8 @@ public class Database {
         } else if ((m = SELECT_CMD.matcher(query)).matches()) {
             return select(m.group(1));
         } else {
-            System.err.printf("Malformed query: %s\n", query);
-            return new Error("No command found").toString();
+            System.err.printf("ERROR: Malformed query: %s\n", query);
+            return new Error("ERROR: Malformed query").toString();
         }
     }
 
@@ -87,8 +87,8 @@ public class Database {
 
     private String createNewTable(String name, String[] cols) {
         if (cols.length == 0) {
-            //System.err.println("No Columns");
-            return new Error("No Columns").toString();
+            System.err.println("ERROR: No Columns");
+            return new Error("ERROR: No Columns").toString();
         }
 
         String[] colnames = new String[cols.length];
@@ -142,11 +142,11 @@ public class Database {
             in.close();
             allTables.put(name, newTable);
         } catch (FileNotFoundException e) {
-            System.err.println("Malformed Table" + e);
+            System.err.println("ERROR: Malformed Table" + e);
         } catch (IndexOutOfBoundsException e){
-            System.err.println("Malformed Table" + e);
+            System.err.println("ERROR: Malformed Table" + e);
         } catch (IOException e) {
-            System.err.println("Malformed Table" + e);
+            System.err.println("ERROR: Malformed Table" + e);
         }
         return "";
     }
@@ -176,7 +176,7 @@ public class Database {
     private String insertRow(String expr) {
         Matcher m = INSERT_CLS.matcher(expr);
         if (!m.matches()) {
-            System.err.printf("Malformed insert: %s\n", expr);
+            System.err.printf("ERROR: Malformed insert: %s\n", expr);
             return "";
         }
         Table selectedTable = allTables.get(m.group(1));
@@ -432,16 +432,23 @@ public class Database {
 
 
     private String printTable(String name) {
-        if (!allTables.containsKey(name)) {
-            System.err.println("no table with that name");
+        /*if (!allTables.containsKey(name)) {
+            System.err.println("Table does not exist");
         }
-        return allTables.get(name).printTable();
+        return allTables.get(name).printTable();*/
+        try {
+            allTables.get(name);
+            return allTables.get(name).printTable();
+        } catch (NullPointerException e) {
+            System.err.println("ERROR: No Such table");
+            return new Error("ERROR: No Such table").toString();
+        }
     }
 
     private String select(String expr) {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
-            System.err.printf("Malformed select: %s\n", expr);
+            System.err.printf("ERROR: Malformed select: %s\n", expr);
         }
         return select(m.group(1), m.group(2), m.group(3)).toString();
     }
