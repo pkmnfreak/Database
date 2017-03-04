@@ -437,7 +437,6 @@ public class Database {
         return allTables.get(name).printTable();
     }
 
-
     private String select(String expr) {
         Matcher m = SELECT_CLS.matcher(expr);
         if (!m.matches()) {
