@@ -80,15 +80,15 @@ public class Database {
         } else if ((m = CREATE_SEL.matcher(expr)).matches()) {
             return createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
         } else {
-            //System.err.printf("Malformed create: %s\n", expr);
-            return new Error("Malformed create").toString();
+            System.err.printf("ERROR: Malformed create: %s\n", expr);
+            return "ERROR: Malformed Create";
         }
     }
 
     private String createNewTable(String name, String[] cols) {
         if (cols.length == 0) {
             System.err.println("ERROR: No Columns");
-            return new Error("ERROR: No Columns").toString();
+            return "ERROR: No Columns";
         }
 
         String[] colnames = new String[cols.length];
@@ -143,10 +143,13 @@ public class Database {
             allTables.put(name, newTable);
         } catch (FileNotFoundException e) {
             System.err.println("ERROR: Malformed Table" + e);
+            return "ERROR: Malformed Table";
         } catch (IndexOutOfBoundsException e){
             System.err.println("ERROR: Malformed Table" + e);
+            return "ERROR: Malformed Table";
         } catch (IOException e) {
             System.err.println("ERROR: Malformed Table" + e);
+            return "ERROR: Malformed Table";
         }
         return "";
     }
@@ -450,7 +453,9 @@ public class Database {
         if (!m.matches()) {
             System.err.printf("ERROR: Malformed select: %s\n", expr);
         }
-        return select(m.group(1), m.group(2), m.group(3)).toString();
+        String returnString = select(m.group(1), m.group(2), m.group(3)).toString();
+        System.out.println(returnString);
+        return returnString;
     }
 
 
