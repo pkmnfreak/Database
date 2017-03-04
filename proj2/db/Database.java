@@ -90,6 +90,10 @@ public class Database {
             System.err.println("ERROR: No Columns");
             return "ERROR: No Columns";
         }
+        if (allTables.containsKey(name)) {
+            System.err.println("ERROR: No Columns");
+            return "ERROR: This table already exists";
+        }
 
         String[] colnames = new String[cols.length];
         String[] coltypes = new String[cols.length];
@@ -172,6 +176,10 @@ public class Database {
     }
 
     private String dropTable(String name) {
+        if (!allTables.containsKey(name)) {
+            System.out.println("ERROR: This table does not exist");
+            return "ERROR: This table does not exist";
+        }
         allTables.remove(name);
         return "";
     }

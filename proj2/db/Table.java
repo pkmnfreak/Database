@@ -32,6 +32,9 @@ public class Table extends HashMap {
         for(int i = 0; i < numColumns; i++) {
             column temp = (column) get(columnnames[i]);
             Value valAdd = x[i];
+            /*if(columntypes[i] == "int") {
+                if(!(valAdd.getValue() is instanceof Integer))
+            }*/
             temp.add(valAdd);
         }
         numRows += 1;
