@@ -31,9 +31,9 @@ public class Table extends HashMap {
     public void addRow(Value[] x) {
         for(int i = 0; i < numColumns; i++) {
             column temp = (column) get(columnnames[i]);
-            if (temp.checkType(x[i]) != columnnames[i]) {
+           /* if (temp.checkType(x[i]) != columnnames[i]) {
                 /*throw error*/
-            }
+      //  }*/
             temp.add(x[i]);
             Value valAdd = x[i];
             /*if(columntypes[i] == "int") {

@@ -239,24 +239,23 @@ public class Database {
         return newTable;
     }
 
-    public  Table joinMultipleTables(String[] tables) {
+    public Table joinMultipleTables(String[] tables) {
         int i = tables.length;
-        if (i == 1) {
-            return allTables.put("joinedtemp", allTables.get(tables[0]));
-        } else {
-            while (i > 1) {
-                Table newTable = (Table) allTables.get(tables[0]);
-                allTables.put("joinedtemp", newTable.join(newTable, (Table) allTables.get(tables[1])));
-                tables[0] = "joinedtemp";
-                String[] copyTables = new String[tables.length - 1];
-                System.arraycopy(tables, 0, copyTables, 0, 1);
-                System.arraycopy(tables, 2, copyTables, 1, tables.length - 2);
-                tables = copyTables;
-                i--;
+       if (i == 2) {
+            allTables.put("joinedtemp", Table.join((Table) allTables.get(tables[0]),(Table) allTables.get(tables[1])));
+            return allTables.get("joinedtemp");
+       } else {
+            Table[] joinedTables = new Table[i-1];
+            joinedTables[0] = Table.join((Table) allTables.get(tables[0]),(Table) allTables.get(tables[1]));
+            for(int j = 1; j < joinedTables.length; j+= 1) {
+                joinedTables[j] = Table.join(joinedTables[j-1], allTables.get(tables[j+1]));
             }
-            return (Table) allTables.get("joinedtemp");
+            allTables.put("joinedtemp",joinedTables[joinedTables.length-1]);
+            return allTables.get("joinedtemp");
         }
     }
+
+
 
     public Table select(String[] columns, String[] tables, String operator) {
         try {
@@ -327,7 +326,7 @@ public class Database {
         } catch (Exception e) {
             System.out.println("Malformed query oops");
         }
-        Table table = (Table) allTables.get(tables[0]);
+        Table table = allTables.get(tables[0]);
         String[] newColumn = columns;
         String[] newType = new String[columns.length];
         for (int i = 0; i < columns.length; i++) {
@@ -527,11 +526,11 @@ public class Database {
         String[] conditionalPhrases = conditionals.split(AND);
         if (conditionals != null) {
             String[][] conditionalNames = new String[conditionalPhrases.length * 2][2];
-            String[] tempConditionaNames = new String[2];
+            String[] tempConditionalNames = new String[2];
             String[] comparisons = new String[conditionalPhrases.length];
             for (int i = 0; i < conditionalPhrases.length; i++) {
-                tempConditionaNames = conditionalPhrases[i].split(" > | < | == | != | >= | <= ");
-                conditionalNames[i] = tempConditionaNames;
+                tempConditionalNames = conditionalPhrases[i].split(" > | < | == | != | >= | <= ");
+                conditionalNames[i] = tempConditionalNames;
             }
             for (int i = 0; i < conditionalPhrases.length; i++) {
                 if (conditionalPhrases[i].contains(">=") || conditionalPhrases[i].contains("<=") || conditionalPhrases[i].contains("==") || conditionalPhrases[i].contains("!=")) {
