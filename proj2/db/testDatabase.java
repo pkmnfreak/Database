@@ -68,11 +68,12 @@ public class testDatabase {
         db.transact("select x,y from t3,t1 where x > y");
         db.transact("load records");
         db.transact("load teams");
-        db.transact("select * from teams,records");
+        db.transact("create table allTeamInfo as select * from teams,t3");
+        db.transact("print allTeamInfo");
         db.transact("load fans");
-        db.transact("select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'");
+        //db.transact("select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'");
         //db.transact("select * from t1");
-        db.transact("select * from t1 where y > 5 and x > 4");
+        //db.transact("select * from t1 where y > 5 and x > 4");
     }
 
     @Test
