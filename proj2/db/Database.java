@@ -159,6 +159,9 @@ public class Database {
         } catch (IOException e) {
             System.err.println("ERROR: Malformed Table" + e);
             return "ERROR: Malformed Table";
+        } catch (NullPointerException e) {
+            System.err.println("ERROR: Malformed Table" + e);
+            return "ERROR: Malformed Table";
         }
         return "";
     }
@@ -199,7 +202,7 @@ public class Database {
         Matcher m = INSERT_CLS.matcher(expr);
         if (!m.matches()) {
             System.err.printf("ERROR: Malformed insert: %s\n", expr);
-            return "";
+            return "ERROR: Malformed insert";
         }
         Table selectedTable = allTables.get(m.group(1));
         String[] rowArray = m.group(2).split(",");
@@ -215,11 +218,29 @@ public class Database {
                     System.err.printf("ERROR: Malformed insert: %s\n", e);
                     return "ERROR: Malformed insert";
                 }
+                catch (NullPointerException e) {
+                    System.err.printf("ERROR: Malformed insert: %s\n", e);
+                    return "ERROR: Malformed insert";
+                }
 
             } else if (selectedTable.columntypes[i] == "float") {
                 try {
                     Float.parseFloat(rowArray[i]);
                 } catch (NumberFormatException e) {
+                    System.err.printf("ERROR: Malformed insert: %s\n", e);
+                    return "ERROR: Malformed insert";
+                } catch (NullPointerException e) {
+                    System.err.printf("ERROR: Malformed insert: %s\n", e);
+                    return "ERROR: Malformed insert";
+                }
+            } else {
+                try {
+                    char[] test = new char[]{'a', 'b', 'c', 'd', 'e', 'f'};
+                    rowArray[i].getChars(0, 0, test, 0);
+                } catch (NumberFormatException e) {
+                    System.err.printf("ERROR: Malformed insert: %s\n", e);
+                    return "ERROR: Malformed insert";
+                } catch (NullPointerException e) {
                     System.err.printf("ERROR: Malformed insert: %s\n", e);
                     return "ERROR: Malformed insert";
                 }
