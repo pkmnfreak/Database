@@ -93,8 +93,9 @@ public class testDatabase {
     @Test
     public void testLoadMalformed() {
         Database db = new Database();
-        db.transact("load t1");
-        db.transact("select * from t1");
+        db.transact("load fans");
+        db.transact("print fans");
+        db.transact("select Lastname,Firstname from fans where Lastname > Firstname and Lastname > ");
     }
 
 

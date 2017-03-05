@@ -561,12 +561,7 @@ public class Database {
             String[] conditionalPhrases = conditionals.split(AND);
             Table[] conditionalTables = new Table[conditionalPhrases.length];
             for (int i = 0; i < conditionalPhrases.length; i++) {
-                String cond;
-                if (conditionalPhrases[i].contains(">") || conditionalPhrases[i].contains("<")) {
-                    cond = Character.toString(conditionalPhrases[i].charAt(2));
-                } else {
-                    cond = conditionalPhrases[i].substring(2, 4);
-                }
+                String cond = conditionalPhrases[i].split(" ")[1];
                 String[] conditionalNames = conditionalPhrases[i].split(" > | < | == | <= | >= | != ");
                 conditionalTables[i] = selectConditional(columnNames, tableNames, cond, conditionalNames);
             }
@@ -581,9 +576,7 @@ public class Database {
         }
         */
         if (columns.contains("+")) {
-            columns.replace("+", " +");
-            System.out.println(columns);
-            columnNames = columns.split(" +");
+            columnNames = columns.split("\\+");
             String[] afterOperator = columnNames[1].split(" as ");
             columnNames[1] = afterOperator[0];
             String[] copyTemp = new String[columnNames.length + 1];
@@ -603,8 +596,7 @@ public class Database {
             tableNames = tables.split(", ");
             return select(columnNames, tableNames, "-");
         } else if (columns.contains("*")) {
-            columns.replace("*", " *");
-            columnNames = columns.split(" *");
+            columnNames = columns.split("\\*");
             String[] afterOperator = columnNames[1].split(" as ");
             columnNames[1] = afterOperator[0];
             String[] copyTemp = new String[columnNames.length + 1];
