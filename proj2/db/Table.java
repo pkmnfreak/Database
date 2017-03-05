@@ -166,7 +166,7 @@ public class Table extends HashMap {
                 returnArray[i] = x.columnnames[i];
             }
             for(int j = 0; j < y.numColumns; j++) {
-                returnArray[j + x.numColumns - 1] = y.columnnames[j];
+                returnArray[j + x.numColumns] = y.columnnames[j];
             }
         } else {
 
@@ -174,14 +174,15 @@ public class Table extends HashMap {
 
             for (int i = 0; i < x.columnnames.length; i++) {
                 if (!simColumnNames.contains(x.columnnames[i])) {
+                    returnArray[xnotSim + simColumnNames.size()] = x.columnnames[i];
                     xnotSim += 1;
-                    returnArray[i + simColumnNames.size() - 1] = x.columnnames[i];
                 }
             }
+            int indextracker = 0;
             for (int j = 0; j < y.columnnames.length; j++) {
-
                 if (!simColumnNames.contains(y.columnnames[j])) {
-                    returnArray[j + simColumnNames.size() + xnotSim - 1] = y.columnnames[j];
+                    returnArray[indextracker + simColumnNames.size() + xnotSim] = y.columnnames[j];
+                    indextracker+= 1;
                 }
             }
         }
@@ -204,7 +205,7 @@ public class Table extends HashMap {
                 returnArray[i] = x.columntypes[i];
             }
             for(int j = 0; j < y.numColumns; j++) {
-                returnArray[j + x.numColumns - 1] = y.columntypes[j];
+                returnArray[j + x.numColumns] = y.columntypes[j];
             }
         } else {
 
@@ -212,13 +213,15 @@ public class Table extends HashMap {
 
             for (int i = 0; i < x.columnnames.length; i++) {
                 if (!simColumnNames.contains(x.columnnames[i])) {
+                    returnArray[xnotSim + simColumnNames.size()] = x.columntypes[i];
                     xnotSim += 1;
-                    returnArray[i + simColumnNames.size() - 1] = x.columntypes[i];
                 }
             }
+            int indextracker = 0;
             for (int j = 0; j < y.columnnames.length; j++) {
                 if (!simColumnNames.contains(y.columnnames[j])) {
-                    returnArray[j + simColumnNames.size() + xnotSim - 1] = y.columntypes[j];
+                    returnArray[indextracker + simColumnNames.size() + xnotSim] = y.columntypes[j];
+                    indextracker+= 1;
                 }
             }
         }
