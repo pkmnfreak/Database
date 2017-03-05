@@ -93,8 +93,8 @@ public class column<T> {
         } else if (x.value instanceof Float && y.value instanceof Float) {
             return (Float) x.value - (Float) y.value;
         } else if (x.value.getClass().getName() != y.value.getClass().getName()) {
-            System.out.print("You're comparing two different types!");
-            return (float) 1204;
+            System.out.print("ERROR: You're comparing two different types!");
+            return  Float.valueOf("ERROR: You're comparing two different types!");
         } else {
             return (float) ((x.toString()).charAt(1) - (y.toString()).charAt(1));
         }
@@ -128,7 +128,7 @@ public class column<T> {
             return new Value((Float) x.value - (Float) y.value);
         } else {
             System.out.print("Input error both aren't numbers");
-            return new Value();
+            return new Value("Error: Input error both aren't numbers");
         }
     }
 
@@ -143,7 +143,7 @@ public class column<T> {
             return new Value((Float) x.value * (Float) y.value);
         } else {
             System.out.print("Input error both aren't numbers");
-            return new Value();
+            return new Value("Error: Input error both aren't numbers");
         }
     }
 
@@ -158,7 +158,7 @@ public class column<T> {
             return new Value((Float) x.value / (Float) y.value);
         } else {
             System.out.print("Input error both aren't numbers");
-            return new Value();
+            return new Value("Error: Input error both aren't numbers");
         }
     }
 

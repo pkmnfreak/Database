@@ -143,8 +143,8 @@ public class Table extends HashMap {
          * Sets remove duplicates automatically which is why it's used here*
          * Orders stack so that the last similar db.column is on the bottom (the one that's supposed to be first is last)**/
         LinkedList<String> simColumnNameStack = new LinkedList<>();
-        for (int i = 0; i < x.numColumns; i++) {
-            for (int j = 0; j < y.numColumns; j++) {
+        for (int i = 0; i < y.numColumns; i++) {
+            for (int j = 0; j < x.numColumns; j++) {
                 if (y.columnnames[i].equals(x.columnnames[j])) {
                     simColumnNameStack.addLast(x.columnnames[j]);
                 }
