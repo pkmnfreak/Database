@@ -581,7 +581,7 @@ public class Database {
         }
         */
         if (columns.contains("+")) {
-            columnNames = columns.split(" \\+ ");
+            columnNames = columns.split(" + ");
             String[] afterOperator = columnNames[1].split(" as ");
             columnNames[1] = afterOperator[0];
             String[] copyTemp = new String[columnNames.length + 1];
@@ -591,7 +591,7 @@ public class Database {
             tableNames = tables.split(", ");
             return select(columnNames, tableNames, "+");
         } else if (columns.contains("-")) {
-            columnNames = columns.split(" \\- ");
+            columnNames = columns.split(" - ");
             String[] afterOperator = columnNames[1].split(" as ");
             columnNames[1] = afterOperator[0];
             String[] copyTemp = new String[columnNames.length + 1];
@@ -601,7 +601,7 @@ public class Database {
             tableNames = tables.split(", ");
             return select(columnNames, tableNames, "-");
         } else if (columns.contains("*")) {
-            columnNames = columns.split(" \\* ");
+            columnNames = columns.split(" * ");
             String[] afterOperator = columnNames[1].split(" as ");
             columnNames[1] = afterOperator[0];
             String[] copyTemp = new String[columnNames.length + 1];
@@ -611,7 +611,7 @@ public class Database {
             tableNames = tables.split(", ");
             return select(columnNames, tableNames, "*");
         } else if (columns.contains("/")) {
-            columnNames = columns.split(" \\/ ");
+            columnNames = columns.split(" / ");
             String[] afterOperator = columnNames[1].split(" as ");
             columnNames[1] = afterOperator[0];
             String[] copyTemp = new String[columnNames.length + 1];
