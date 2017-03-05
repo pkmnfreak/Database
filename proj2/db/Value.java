@@ -21,9 +21,9 @@ public class Value<Item>{
             if (((Float) x).isNaN()) {
                 this.label = "NaN";
             } else {
-                DecimalFormat df = new DecimalFormat("#.###");
-                this.label = df.format(x).toString();
-                this.value = df.format(x);
+                String df = String.format("%.3f", x);
+                this.label = df;
+                this.value = x;
             }
         } else {
             this.label = x.toString();

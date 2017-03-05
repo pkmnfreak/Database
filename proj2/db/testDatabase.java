@@ -68,14 +68,26 @@ public class testDatabase {
         db.transact("select * from t1,t3");
         db.transact("select * from t3,t1");
         db.transact("select x,y from t1,t3 where x > y");
+        //db.transact("select x,y from t3,t1 where x > y");
         db.transact("load records");
-        db.transact("load teams");
-        db.transact("select * from teams,records");
-        db.transact("load fans");
-        db.transact("select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'");
-        db.transact("select * from t1");
-        db.transact("select * from t1 where y > 5 and x > 4");
-        db.transact("print fans");
+        //db.transact("load teams");
+        //db.transact("create table allTeamInfo as select * from teams,t3");
+        //db.transact("print allTeamInfo");
+        //db.transact("load fans");
+        //db.transact("select TeamName,Season,Wins,Losses from records where Wins >= Losses and TeamName > 'Mets' ");
+        //db.transact("select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'");
+        //db.transact("select * from t1");
+        //db.transact("select * from t1 where y > 5 and x > 4");
+        //db.transact("load stringlist");
+        //db.transact("load intlist");
+        db.transact("create table joinCart1 as select * from stringlist,intlist");
+        db.transact("print joinCart1");
+        db.transact("create table selectString1 (a string, b string)");
+        db.transact("insert into selectString1 values 'a','b'");
+        db.transact("select b,a from selectString1");
+        db.transact("select TeamName, Ties from records");
+
+
     }
 
     @Test

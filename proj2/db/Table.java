@@ -118,19 +118,17 @@ public class Table extends HashMap {
         for(Object k: joinedTable.keySet()) {
             column newColumn = new column();
             if (x.containsKey(k)) {
-                column compList = (column) x.get(k);
-                for (int i = 0; i < x.numRows; i += 1) {
-                    int itemtoAdd = (int) compList.get(i);
-                    Value valAdd = new Value(itemtoAdd);
-                    for (int j =0; j < columnLen/x.numRows;j++)
-                    newColumn.add(valAdd);
+                column compList = (column) x.get(k); //grab column
+                for (int i = 0; i < columnLen; i += 1) {
+                    Value itemtoAdd = (Value) compList.get(i % x.numRows); //get individual value in column
+                    //for (int j =0; j < columnLen/x.numRows;j++)
+                    newColumn.add(itemtoAdd); // add to new column
                 }
             } else {
                 column compList = (column) y.get(k);
                 for (int i = 0; i < columnLen; i += 1) {
-                    int itemtoAdd = (int) compList.get(i % x.numRows);
-                    Value valAdd = new Value(itemtoAdd);
-                    newColumn.add(valAdd);
+                    Value itemtoAdd = (Value) compList.get(i % y.numRows);
+                    newColumn.add(itemtoAdd);
                 }
             }
             joinedTable.put(k,newColumn);
@@ -163,17 +161,28 @@ public class Table extends HashMap {
             returnArray[i] = simColumnNames.get(i);
         }
 
-        int xnotSim = 0; //keep track of number of names in x but not sim
-
-        for (int i = 0; i < x.columnnames.length; i++) {
-            if (!simColumnNames.contains(x.columnnames[i])) {
-                xnotSim += 1;
-                returnArray[i + simColumnNames.size() - 1] = x.columnnames[i];
+        if (simColumnNames.size() == 0) {
+            for(int i = 0; i < x.numColumns; i++) {
+                returnArray[i] = x.columnnames[i];
             }
-        }
-        for (int j = 0; j < y.columnnames.length; j++) {
-            if (!simColumnNames.contains(y.columnnames[j])) {
-                returnArray[j + simColumnNames.size() + xnotSim - 1] = y.columnnames[j];
+            for(int j = 0; j < y.numColumns; j++) {
+                returnArray[j + x.numColumns - 1] = y.columnnames[j];
+            }
+        } else {
+
+            int xnotSim = 0; //keep track of number of names in x but not sim
+
+            for (int i = 0; i < x.columnnames.length; i++) {
+                if (!simColumnNames.contains(x.columnnames[i])) {
+                    xnotSim += 1;
+                    returnArray[i + simColumnNames.size() - 1] = x.columnnames[i];
+                }
+            }
+            for (int j = 0; j < y.columnnames.length; j++) {
+
+                if (!simColumnNames.contains(y.columnnames[j])) {
+                    returnArray[j + simColumnNames.size() + xnotSim - 1] = y.columnnames[j];
+                }
             }
         }
         return returnArray;
@@ -190,18 +199,27 @@ public class Table extends HashMap {
             int index = Arrays.asList(x.columnnames).indexOf(temp);
             returnArray[i] = (String) x.columntypes[index];
         }
-
-        int xnotSim = 0; //keep track of number of names in x but not sim
-
-        for (int i = 0; i < x.columnnames.length; i++) {
-            if (!simColumnNames.contains(x.columnnames[i])) {
-                xnotSim += 1;
-                returnArray[i + simColumnNames.size() - 1] = x.columntypes[i];
+        if (simColumnNames.size() == 0) {
+            for(int i = 0; i < x.numColumns; i++) {
+                returnArray[i] = x.columntypes[i];
             }
-        }
-        for (int j = 0; j < y.columnnames.length; j++) {
-            if (!simColumnNames.contains(y.columnnames[j])) {
-                returnArray[j + simColumnNames.size() + xnotSim - 1] = y.columntypes[j];
+            for(int j = 0; j < y.numColumns; j++) {
+                returnArray[j + x.numColumns - 1] = y.columntypes[j];
+            }
+        } else {
+
+            int xnotSim = 0; //keep track of number of names in x but not sim
+
+            for (int i = 0; i < x.columnnames.length; i++) {
+                if (!simColumnNames.contains(x.columnnames[i])) {
+                    xnotSim += 1;
+                    returnArray[i + simColumnNames.size() - 1] = x.columntypes[i];
+                }
+            }
+            for (int j = 0; j < y.columnnames.length; j++) {
+                if (!simColumnNames.contains(y.columnnames[j])) {
+                    returnArray[j + simColumnNames.size() + xnotSim - 1] = y.columntypes[j];
+                }
             }
         }
         return returnArray;
