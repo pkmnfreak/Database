@@ -518,7 +518,7 @@ public class Database {
         }
         String[] columnNames = columns.split(",");
         for(int i = 0; i < columnNames.length; i++) {
-            columnNames[i].replaceAll(" ","");
+            columnNames[i].trim();
         }
         String[] tableNames = tables.split(",");
         if (conditionals != null) {

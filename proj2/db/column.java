@@ -96,7 +96,7 @@ public class column<T> {
             System.out.print("You're comparing two different types!");
             return (float) 1204;
         } else {
-            return (float) ((x.toString()).charAt(0) - (y.toString()).charAt(0));
+            return (float) ((x.toString()).charAt(1) - (y.toString()).charAt(1));
         }
     }
 

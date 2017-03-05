@@ -75,14 +75,18 @@ public class testDatabase {
         //db.transact("select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'");
         //db.transact("select * from t1");
         //db.transact("select * from t1 where y > 5 and x > 4");
-        //db.transact("load stringlist");
-        //db.transact("load intlist");
+        db.transact("load stringlist");
+        db.transact("load intlist");
+        db.transact("load floatlist");
         db.transact("create table joinCart1 as select * from stringlist,intlist");
+        db.transact("create table joinCart2 as select * from intlist,floatlist");
         db.transact("print joinCart1");
+        db.transact("print joinCart2");
+        db.transact("select * from joinCart1,joinCart2");
         db.transact("create table selectString1 (a string, b string)");
         db.transact("insert into selectString1 values 'a','b'");
         db.transact("select b,a from selectString1");
-        db.transact("select TeamName, Ties from records");
+        //db.transact("select TeamName, Ties from records");
 
 
     }
