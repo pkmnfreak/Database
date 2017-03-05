@@ -530,6 +530,14 @@ public class Database {
 
             return selectConditional(columnNames, tableNames, cond, conditionalNames);
         }
+        /* will we have multiple expression statments????
+        String[] expressionTables = new String[columnNames.length];
+        for (int i = 0; i < columnNames.length; i++) {
+            if (columnNames[i].contains("as")) {
+
+            }
+        }
+        */
         if (columns.contains("+")) {
             columnNames = columns.split(" \\+ ");
             String[] afterOperator = columnNames[1].split(" as ");

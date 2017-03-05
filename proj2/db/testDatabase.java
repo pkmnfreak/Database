@@ -79,7 +79,9 @@ public class testDatabase {
     @Test
     public void testLoadMalformed() {
         Database db = new Database();
-        db.transact("load apples");
+        db.transact("load t1");
+        db.transact("print t1");
+        db.transact("from t1");
     }
 
 
