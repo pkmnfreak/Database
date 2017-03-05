@@ -65,6 +65,9 @@ public class testDatabase {
         Database db = new Database();
         db.transact("load t3");
         db.transact("load t1");
+        db.transact("select * from t1,t3");
+        db.transact("select * from t3,t1");
+        db.transact("select x,y from t1,t3 where x > y");
         //db.transact("select x,y from t3,t1 where x > y");
         db.transact("load records");
         //db.transact("load teams");
@@ -94,9 +97,9 @@ public class testDatabase {
     @Test
     public void testLoadMalformed() {
         Database db = new Database();
-        db.transact("load t1");
-        db.transact("print t1");
-        db.transact("from t1");
+        db.transact("load fans");
+        db.transact("print fans");
+        db.transact("select Lastname,Firstname from fans where Lastname > Firstname and Lastname > ");
     }
 
 
