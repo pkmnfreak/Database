@@ -581,6 +581,9 @@ public class Database {
         }
         */
         if (columns.contains("+")) {
+            System.out.println(columns);
+            System.out.println(tables);
+            System.out.println(conditionals);
             columnNames = columns.split(" + ");
             String[] afterOperator = columnNames[1].split(" as ");
             columnNames[1] = afterOperator[0];
