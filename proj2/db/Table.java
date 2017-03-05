@@ -75,8 +75,7 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(0);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) x.get(k);
-                   Value valAdd = new Value(compList.get(itemtoAdd));
-                   newColumn.add(valAdd);
+                   newColumn.add(compList.get(itemtoAdd));
                }
                joinedTable.put(k,newColumn);
            } else if (x.containsKey(k)) {
@@ -84,8 +83,7 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(0);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) x.get(k);
-                   Value valAdd = new Value(compList.get(itemtoAdd));
-                   newColumn.add(valAdd);
+                   newColumn.add(compList.get(itemtoAdd));
                }
                joinedTable.put(k,newColumn);
            } else {
@@ -93,8 +91,7 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(1);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) y.get(k);
-                   Value valAdd = new Value(compList.get(itemtoAdd));
-                   newColumn.add(valAdd);
+                   newColumn.add(compList.get(itemtoAdd));
                }
                joinedTable.put(k,newColumn);
            }
