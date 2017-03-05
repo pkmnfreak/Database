@@ -94,8 +94,7 @@ public class testDatabase {
     public void testLoadMalformed() {
         Database db = new Database();
         db.transact("load t1");
-        db.transact("print t1");
-        db.transact("select x,y from t1 where x < y and x == 2");
+        db.transact("select * from t1");
     }
 
 

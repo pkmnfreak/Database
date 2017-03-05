@@ -259,7 +259,7 @@ public class Database {
                 newTable.put(columns[i], copyTable.get(columns[i]));
             }
         }
-
+        newTable.numRows = copyTable.numRows;
         return newTable;
     }
 
@@ -320,6 +320,7 @@ public class Database {
                 i--;
             }
         }
+        newTable.numRows = table.numRows;
         return newTable;
     }
 
