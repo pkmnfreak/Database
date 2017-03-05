@@ -71,9 +71,8 @@ public class testDatabase {
         db.transact("select * from teams,records");
         db.transact("load fans");
         db.transact("select Firstname,Lastname,TeamName from fans where Lastname >= 'Lee'");
-        db.transact("select * from t1");
+        //db.transact("select * from t1");
         db.transact("select * from t1 where y > 5 and x > 4");
-        db.transact("print fans");
     }
 
     @Test
