@@ -75,8 +75,7 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(0);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) x.get(k);
-                   Value valAdd = new Value(compList.get(itemtoAdd));
-                   newColumn.add(valAdd);
+                   newColumn.add(compList.get(itemtoAdd));
                }
                joinedTable.put(k,newColumn);
            } else if (x.containsKey(k)) {
@@ -84,8 +83,7 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(0);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) x.get(k);
-                   Value valAdd = new Value(compList.get(itemtoAdd));
-                   newColumn.add(valAdd);
+                   newColumn.add(compList.get(itemtoAdd));
                }
                joinedTable.put(k,newColumn);
            } else {
@@ -93,8 +91,7 @@ public class Table extends HashMap {
                    ArrayList wheretoJoin = (ArrayList) joinIndices.get(1);
                    int itemtoAdd = (int) wheretoJoin.get(i);
                    column compList = (column) y.get(k);
-                   Value valAdd = new Value(compList.get(itemtoAdd));
-                   newColumn.add(valAdd);
+                   newColumn.add(compList.get(itemtoAdd));
                }
                joinedTable.put(k,newColumn);
            }
@@ -148,8 +145,8 @@ public class Table extends HashMap {
          * Sets remove duplicates automatically which is why it's used here*
          * Orders stack so that the last similar db.column is on the bottom (the one that's supposed to be first is last)**/
         LinkedList<String> simColumnNameStack = new LinkedList<>();
-        for (int i = 0; i < y.numColumns; i++) {
-            for (int j = 0; j < x.numColumns; j++) {
+        for (int i = 0; i < x.numColumns; i++) {
+            for (int j = 0; j < y.numColumns; j++) {
                 if (y.columnnames[i].equals(x.columnnames[j])) {
                     simColumnNameStack.addLast(x.columnnames[j]);
                 }

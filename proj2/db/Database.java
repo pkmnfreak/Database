@@ -287,7 +287,44 @@ public class Database {
         }
     }
 
-
+    public Table joinMultipleTables(Table[] tables) {
+        int i = tables.length;
+        if (i ==1) {
+            return tables[0];
+        }
+        if (i == 2) {
+            return Table.join(tables[0], tables[1]);
+        } else {
+            Table[] joinedTables = new Table[i-1];
+            joinedTables[0] = Table.join(tables[0], tables[1]);
+            for(int j = 1; j < joinedTables.length; j+= 1) {
+                joinedTables[j] = Table.join(joinedTables[j-1], tables[j+1]);
+            }
+            allTables.put("joinedtempfromtables",joinedTables[joinedTables.length-1]);
+            return allTables.get("joinedtempfromtables");
+        }
+    }
+    public Table select(String[] columns, Table table) {
+        Table newTable = table;
+        for (int i = 0; i < newTable.size(); i++) {
+            if (!(Arrays.asList(columns).contains(newTable.columnnames[i]))) {
+                newTable.remove(newTable.columnnames[i]);
+                String[] newColumnNames = new String[newTable.columnnames.length - 1];
+                String[] newColumnTypes = new String[newTable.columntypes.length - 1];
+                System.arraycopy(newTable.columnnames, 0, newColumnNames, 0, i);
+                System.arraycopy(newTable.columnnames, i + 1, newColumnNames, i,
+                        newTable.columnnames.length - i - 1);
+                System.arraycopy(newTable.columntypes, 0, newColumnTypes, 0, i);
+                System.arraycopy(newTable.columntypes, i + 1, newColumnTypes, i,
+                        newTable.columntypes.length - i - 1);
+                newTable.columnnames = newColumnNames;
+                newTable.columntypes = newColumnTypes;
+                newTable.numColumns--;
+                i--;
+            }
+        }
+        return newTable;
+    }
 
     public Table select(String[] columns, String[] tables, String operator) {
         try {
@@ -346,7 +383,7 @@ public class Database {
     /*columns are the columns we want, tables are the tables we are selecting from, conditionals is an array of symbols, and comparisons is an array of
  String arrays of size 2, where the first String is the left side and the second is the right side
  */
-    private Table selectConditional(String[] columns, String[] tables, String conditionals, String[] comparisons) {
+    private Table selectConditional(String[] columns, String[] tables, String conditional, String[] comparisons) {
         try {
             if (tables.length > 1) {
                 joinMultipleTables(tables);
@@ -373,143 +410,141 @@ public class Database {
         }
         Table resultTable = new Table(newColumn, newType);
         Value[] tempForAddRow = new Value[newColumn.length];
-            if (conditionals.equals(">")) {
-                for (int j = 0; j < table.numRows; j++) {
-                    if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = (Value) (((column) table.get(comparisons[1])).get(j));
-                        if (((column) table.get(comparisons[0])).greaterThan(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
+        if (conditional.equals(">")) {
+            for (int j = 0; j < table.numRows; j++) {
+                if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = (Value) (((column) table.get(comparisons[1])).get(j));
+                    if (((column) table.get(comparisons[0])).greaterThan(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
                         }
-                    } else {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
-                        if (((column) table.get(comparisons[0])).greaterThan(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
+                        resultTable.addRow(tempForAddRow);
                     }
-                }
-            } else if (conditionals.equals("<")) {
-                for (int j = 0; j < table.numRows; j++) {
-                    if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = (Value) (((column) table.get(comparisons[1])).get(j));
-                        if (((column) table.get(comparisons[0])).lessThan(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
+                } else {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
+                    if (((column) table.get(comparisons[0])).greaterThan(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
                         }
-                    } else {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
-                        if (((column) table.get(comparisons[0])).lessThan(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
-                    }
-
-                }
-            }else if (conditionals.equals("==")) {
-                for (int j = 0; j < table.numRows; j++) {
-                    if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = (Value) (((column) table.get(comparisons[1])).get(j));
-                        if (((column) table.get(comparisons[0])).equalTo(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
-                    } else {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
-                        if (((column) table.get(comparisons[0])).equalTo(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
-                    }
-                }
-            } else if (conditionals.equals("!=")) {
-                for (int j = 0; j < table.numRows; j++) {
-                    if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = (Value) (((column) table.get(comparisons[1])).get(j));
-                        if (((column) table.get(comparisons[0])).notEqualTo(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
-                    } else {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
-                        if (((column) table.get(comparisons[0])).notEqualTo(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
-                    }
-                }
-            } else if (conditionals.equals(">=")) {
-                for (int j = 0; j < table.numRows; j++) {
-                    if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = (Value) (((column) table.get(comparisons[1])).get(j));
-                        if (((column) table.get(comparisons[0])).greaterThanOrEqualTo(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
-                    } else {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
-                        if (((column) table.get(comparisons[0])).greaterThanOrEqualTo(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
-                    }
-                }
-            } else if (conditionals.equals("<=")) {
-                for (int j = 0; j < table.numRows; j++) {
-                    if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = (Value) (((column) table.get(comparisons[1])).get(j));
-                        if (((column) table.get(comparisons[0])).lessThanOrEqualTo(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
-                    } else {
-                        Value x = (Value) (((column) table.get(comparisons[0])).get(j));
-                        Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
-                        if (((column) table.get(comparisons[0])).lessThanOrEqualTo(x, y)) {
-                            for (int k = 0; k < newColumn.length; k++) {
-                                tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
-                            }
-                            resultTable.addRow(tempForAddRow);
-                        }
+                        resultTable.addRow(tempForAddRow);
                     }
                 }
             }
-
+        } else if (conditional.equals("<")) {
+            for (int j = 0; j < table.numRows; j++) {
+                if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = (Value) (((column) table.get(comparisons[1])).get(j));
+                    if (((column) table.get(comparisons[0])).lessThan(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                } else {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
+                    if (((column) table.get(comparisons[0])).lessThan(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                }
+            }
+        } else if (conditional.equals("==")) {
+            for (int j = 0; j < table.numRows; j++) {
+                if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = (Value) (((column) table.get(comparisons[1])).get(j));
+                    if (((column) table.get(comparisons[0])).equalTo(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                } else {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
+                    if (((column) table.get(comparisons[0])).equalTo(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                }
+            }
+        } else if (conditional.equals("!=")) {
+            for (int j = 0; j < table.numRows; j++) {
+                if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = (Value) (((column) table.get(comparisons[1])).get(j));
+                    if (((column) table.get(comparisons[0])).notEqualTo(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                } else {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
+                    if (((column) table.get(comparisons[0])).notEqualTo(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                }
+            }
+        } else if (conditional.equals(">=")) {
+            for (int j = 0; j < table.numRows; j++) {
+                if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = (Value) (((column) table.get(comparisons[1])).get(j));
+                    if (((column) table.get(comparisons[0])).greaterThanOrEqualTo(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                } else {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
+                    if (((column) table.get(comparisons[0])).greaterThanOrEqualTo(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                }
+            }
+        } else if (conditional.equals("<=")) {
+            for (int j = 0; j < table.numRows; j++) {
+                if (Arrays.asList(table.columnnames).contains(comparisons[1])) {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = (Value) (((column) table.get(comparisons[1])).get(j));
+                    if (((column) table.get(comparisons[0])).lessThanOrEqualTo(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                } else {
+                    Value x = (Value) (((column) table.get(comparisons[0])).get(j));
+                    Value y = ((column) table.get(comparisons[0])).createValue(comparisons[1]);
+                    if (((column) table.get(comparisons[0])).lessThanOrEqualTo(x, y)) {
+                        for (int k = 0; k < newColumn.length; k++) {
+                            tempForAddRow[k] = (Value) ((column) table.get(newColumn[k])).get(j);
+                        }
+                        resultTable.addRow(tempForAddRow);
+                    }
+                }
+            }
+        }
         resultTable.numRows = ((column) resultTable.get(newColumn[0])).size();
-        allTables.put("newTableFromBinaryConditionalSelect", resultTable);
+        allTables.put("table" + tables[0] + conditional, resultTable);
         return resultTable;
     }
 
@@ -522,13 +557,19 @@ public class Database {
         String[] columnNames = columns.split(",");
         String[] tableNames = tables.split(",");
         if (conditionals != null) {
-            String[] conditionalPhrases = conditionals.split(" ");
-            String cond = conditionalPhrases[1];
-            String[] conditionalNames = new String[2];
-            conditionalNames[0]=conditionalPhrases[0];
-            conditionalNames[1]=conditionalPhrases[2];
-
-            return selectConditional(columnNames, tableNames, cond, conditionalNames);
+            String[] conditionalPhrases = conditionals.split(AND);
+            Table[] conditionalTables = new Table[conditionalPhrases.length];
+            for (int i = 0; i < conditionalPhrases.length; i++) {
+                String cond;
+                if (conditionalPhrases[i].contains(">") || conditionalPhrases[i].contains("<")) {
+                    cond = Character.toString(conditionalPhrases[i].charAt(2));
+                } else {
+                    cond = conditionalPhrases[i].substring(2, 4);
+                }
+                String[] conditionalNames = conditionalPhrases[i].split(" > | < | == | <= | >= | != ");
+                conditionalTables[i] = selectConditional(columnNames, tableNames, cond, conditionalNames);
+            }
+            return select(columnNames, joinMultipleTables(conditionalTables));
         }
         /* will we have multiple expression statments????
         String[] expressionTables = new String[columnNames.length];
