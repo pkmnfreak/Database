@@ -1,5 +1,8 @@
 package db;
 import org.junit.Test;
+
+import javax.xml.crypto.Data;
+
 import static org.junit.Assert.*;
 
 public class testDatabase {
@@ -150,8 +153,7 @@ public class testDatabase {
     @Test
     public void testMalformedTable() {
         Database db = new Database();
-        db.transact("load loadMalformed3");
-
+        db.transact("load loadMalformed1");
     }
 
     @Test
@@ -168,5 +170,18 @@ public class testDatabase {
         db.transact("select a-c as d, b+c as e from selectNoValue");
     }
 
+    @Test
+    public void testInsertWrongType() {
+        Database db = new Database();
+        db.transact("create table t (x string,y int,z float)");
+        db.transact("insert into t values 8,1293,-73.4");
+    }
+
+    @Test
+    public void testMultipleBinary() {
+        Database db = new Database();
+        db.transact("load teamRecords");
+        db.transact("select TeamName,Sport,Season,Wins,Losses from teamRecords where TeamName > Sport and Wins > Losses");
+    }
 
 }
