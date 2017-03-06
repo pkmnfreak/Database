@@ -96,7 +96,7 @@ public class column<T> {
             System.err.println("ERROR: Cannot compare bad types");
             throw new Error();
         } else {
-            return (float) ((x.toString()).charAt(1) - (y.toString()).charAt(1));
+            return (float) x.toString().compareTo(y.toString());
         }
     }
 
