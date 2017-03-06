@@ -115,7 +115,7 @@ public class Database {
     }
 
     private String createSelectedTable(String name, String exprs, String tables, String conds) {
-        Table newTable = select(exprs, tables, conds);
+        Table newTable = (Table) select(exprs, tables, conds);
         allTables.put(name, newTable);
         return "";
     }
@@ -352,7 +352,7 @@ public class Database {
         return newTable;
     }
 
-    public Table select(String[] columns, String[] tables, String operator) {
+    public Object select(String[] columns, String[] tables, String operator) {
         try {
             if (tables.length > 1) {
                 joinMultipleTables(tables);
@@ -388,6 +388,9 @@ public class Database {
             } else {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiply((column) table.get(columns[0]), tempVal));
+                if (table.multiply((column) table.get(columns[0]), tempVal) instanceof String) {
+                    return "Error: Invalid Operation";
+                }
             }
         } else if (operator.equals("-")) {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
@@ -585,7 +588,7 @@ public class Database {
         return resultTable;
     }
 
-    private Table select(String columns, String tables, String conditionals) {
+    private Object select(String columns, String tables, String conditionals) {
         /*Check if select statement contains operators */
         if (columns.toCharArray()[0] == '*' && conditionals == null) {
             String[] tableNames = tables.split(",");
@@ -626,7 +629,7 @@ public class Database {
                 columnNames = copyTemp;
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
-                combinedTables[i] = select(columnNames, tableNames, "+");
+                combinedTables[i] = (Table) select(columnNames, tableNames, "+");
             } else if (columnTitles[i].contains("-")) {
                 columnNames = columnTitles[i].replace(" - ", "-").split("-");
                 String[] afterOperator = columnNames[1].split(" as ");
@@ -636,7 +639,7 @@ public class Database {
                 columnNames = copyTemp;
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
-                combinedTables[i] = select(columnNames, tableNames, "-");
+                combinedTables[i] = (Table) select(columnNames, tableNames, "-");
             } else if (columnTitles[i].contains("*")) {
                 columnNames = columnTitles[i].replace(" * ", "*").split("\\*");
                 String[] afterOperator = columnNames[1].split(" as ");
@@ -646,7 +649,10 @@ public class Database {
                 columnNames = copyTemp;
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
-                combinedTables[i] = select(columnNames, tableNames, "*");
+                if (select(columnNames, tableNames, "*") instanceof String) {
+                    return "Error: Invalid Operation";
+                }
+                combinedTables[i] = (Table) select(columnNames, tableNames, "*");
             } else if (columnTitles[i].contains("/")) {
                 columnNames = columnTitles[i].replace(" / ", "/").split("/");
                 String[] afterOperator = columnNames[1].split(" as ");
@@ -656,7 +662,7 @@ public class Database {
                 columnNames = copyTemp;
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
-                combinedTables[i] = select(columnNames, tableNames, "/");
+                combinedTables[i] = (Table) select(columnNames, tableNames, "/");
             } else {
                 String[] tempColumnName = {columnTitles[i]};
                 combinedTables[i] = select(tempColumnName, tableNames);
