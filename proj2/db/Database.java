@@ -659,7 +659,7 @@ public class Database {
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
                 if (select(columnNames, tableNames, "*") instanceof String) {
-                    return "Error: Invalid Operation";
+                    return "ERROR: Invalid Operation";
                 }
                 combinedTables[i] = (Table) select(columnNames, tableNames, "*");
             } else if (columnTitles[i].contains("/")) {
