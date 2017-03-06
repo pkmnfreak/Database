@@ -361,6 +361,8 @@ public class Database {
         Table table = (Table) allTables.get(tables[0]);
         int index = Arrays.asList(table.columnnames).indexOf(columns[0]);
         System.out.print(columns[0]);
+        System.out.print(columns[1]);
+        System.out.print(columns[2]);
         String[] newColumn = {columns[2]};
         String[] newType = {table.columntypes[index]};
         Table resultTable = new Table(newColumn, newType);
