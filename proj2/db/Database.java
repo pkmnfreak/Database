@@ -361,16 +361,21 @@ public class Database {
             System.out.println("Malformed query" + e);
         }
         Table table = (Table) allTables.get(tables[0]);
-        int index;
-        if (columns[0].contains(",")) {
-            index = Arrays.asList(table.columnnames).indexOf(columns[0].split(", ")[0]);
-        } else {
-            index = Arrays.asList(table.columnnames).indexOf(columns[0]);
-        }
+        int index = Arrays.asList(table.columnnames).indexOf(columns[0]);
         String[] newColumn = {columns[2]};
         String[] newType = {table.columntypes[index]};
         Table resultTable = new Table(newColumn, newType);
         resultTable.numRows = table.numRows;
+        if (Arrays.asList(table.columnnames).contains(columns[1])) {
+            if (table.columntypes[index] == "float" || table.columntypes[Arrays.asList(table.columnnames).indexOf(columns[1])] == "float") {
+                newType[0] = "float";
+            }
+        } else {
+            Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
+            if (table.columntypes[index] == "float" || tempVal.value instanceof Float) {
+                newType[0] = "float";
+            }
+        }
         if (operator.equals("*")) {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
