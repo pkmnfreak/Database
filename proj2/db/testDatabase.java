@@ -127,4 +127,11 @@ public class testDatabase {
         db.transact("load intlist");
         db.transact("select b/0 as x from intlist");
     }
+
+    @Test
+    public void testBadTypes() {
+        Database db = new Database();
+        db.transact("load stringlist");
+        db.transact("select a*'brandon' as c from stringlist");
+    }
 }
