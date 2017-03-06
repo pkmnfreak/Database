@@ -145,6 +145,20 @@ public class Database {
                 String[] row = nextLine.split(",");
                 Value[] returnRow = new Value[row.length];
                 for (int i = 0; i < row.length; i++) {
+                    String quote = "'";
+                    String decimal = ".";
+                    if (newTable.columntypes[i].equals("int") && (row[i].contains(quote) || row[i].contains(decimal))) {
+                        System.err.println("ERROR: wrong type");
+                        return "ERROR: wrong type";
+                    }
+                    if (newTable.columntypes[i].equals("float") && (!(row[i].contains(decimal)))) {
+                        System.err.println("ERROR: wrong type");
+                        return "ERROR: wrong type";
+                    }
+                    if (newTable.columntypes[i].equals("string") && (!(row[i].contains(quote)))) {
+                        System.err.println("ERROR: wrong type");
+                        return "ERROR: wrong type";
+                    }
                     returnRow[i] = convertValue(row[i], newTable.columntypes[i]);
                 }
                 newTable.addRow(returnRow);
