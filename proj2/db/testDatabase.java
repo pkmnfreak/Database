@@ -141,6 +141,7 @@ public class testDatabase {
         db.transact("create table t as (x int,ystring)");
         db.transact("create table t as (x int,ystring)");
         db.transact("insert into t values a,b,");
+        db.transact("select x- as y from t");
 
     }
 
