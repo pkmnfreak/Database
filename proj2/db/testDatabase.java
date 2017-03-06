@@ -119,6 +119,8 @@ public class testDatabase {
         Database db = new Database();
         db.transact("load selectString");
         db.transact("select a*b as c from selectString");
+        db.transact("select a/b as c from selectString");
+
     }
 
     @Test
@@ -149,6 +151,14 @@ public class testDatabase {
     public void testMalformedTable() {
         Database db = new Database();
         db.transact("load loadMalformed3");
+
+    }
+
+    @Test
+    public void testForKevin() {
+        Database db = new Database();
+        db.transact("load multiColumnJoin1");
+        db.transact("select * from multiColumnJoin1,multiColumnJoin1");
     }
 
 
