@@ -359,6 +359,8 @@ public class Database {
             System.out.println("Malformed query" + e);
         }
         Table table = (Table) allTables.get(tables[0]);
+        System.out.println(tables[0]);
+        System.out.println(tables);
         int index;
         if (columns[0].contains(",")) {
             index = Arrays.asList(table.columnnames).indexOf(columns[0].split(", ")[0]);
