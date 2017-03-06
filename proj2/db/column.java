@@ -84,81 +84,82 @@ public class column<T> {
 
 
     public Float compare(Value x, Value y) {
-        if (x.value instanceof Integer && y.value instanceof Integer) {
-            return (float) ((Integer) x.value - (Integer) y.value);
-        } else if (x.value instanceof Integer && y.value instanceof Float) {
-            return (Integer) x.value - (Float) y.value;
-        } else if (x.value instanceof Float && y.value instanceof Integer) {
-            return (Float) x.value - (Integer) y.value;
-        } else if (x.value instanceof Float && y.value instanceof Float) {
-            return (Float) x.value - (Float) y.value;
-        } else if (x.value.getClass().getName() != y.value.getClass().getName()) {
-            System.out.print("ERROR: You're comparing two different types!");
-            return  Float.valueOf("ERROR: You're comparing two different types!");
+        if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
+            return (float) ((Integer) x.getValue() - (Integer) y.getValue());
+        } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
+            return (Integer) x.getValue() - (Float) y.getValue();
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Integer) {
+            return (Float) x.getValue() - (Integer) y.getValue();
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
+            return (Float) x.getValue() - (Float) y.getValue();
+        } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
+            throw new Error();
         } else {
             return (float) ((x.toString()).charAt(1) - (y.toString()).charAt(1));
         }
     }
 
     public Value addValue(Value x, Value y) {
-        if (x.value instanceof Integer && y.value instanceof Integer) {
-            return new Value(((Integer) x.value + (Integer) y.value));
-        } else if (x.value instanceof Integer && y.value instanceof Float) {
-            return new Value((Integer) x.value + (Float) y.value);
-        } else if (x.value instanceof Float && y.value instanceof Integer) {
-            return new Value((Float) x.value + (Integer) y.value);
-        } else if (x.value instanceof Float && y.value instanceof Float) {
-            return new Value((Float) x.value + (Float) y.value);
-        } else if (x.value.getClass().getName() != y.value.getClass().getName()) {
-            System.out.print("You're adding two different types!");
-            return new Value();
+        if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
+            return new Value(((Integer) x.getValue() + (Integer) y.getValue()));
+        } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
+            return new Value((Integer) x.getValue() + (Float) y.getValue());
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Integer) {
+            return new Value((Float) x.getValue() + (Integer) y.getValue());
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
+            return new Value((Float) x.getValue() + (Float) y.getValue());
+        } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
+            throw new Error();
+        } else if (x.getValue().getClass().getName() instanceof String && x.getClass().getName() instanceof String) {
+            Value tempVal = new Value(((String) x.getValue()) + ((String) y.getValue()));
+            tempVal.value = ((String) tempVal.getValue()).replaceAll("''", "");
+            tempVal.label = ((String) tempVal.getValue()).replaceAll("''", "");
+            return tempVal;
         } else {
-            return new Value(((String) x.value) + ((String) y.value));
+            return new Value(((String) x.getValue()) + ((String) y.getValue()));
         }
     }
 
     public Value minusValue(Value x, Value y) {
-        if (x.value instanceof Integer && y.value instanceof Integer) {
-            return new Value(((Integer) x.value - (Integer) y.value));
-        } else if (x.value instanceof Integer && y.value instanceof Float) {
-            return new Value((Integer) x.value - (Float) y.value);
-        } else if (x.value instanceof Float && y.value instanceof Integer) {
-            return new Value((Float) x.value - (Integer) y.value);
-        } else if (x.value instanceof Float && y.value instanceof Float) {
-            return new Value((Float) x.value - (Float) y.value);
+        if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
+            return new Value(((Integer) x.getValue() - (Integer) y.getValue()));
+        } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
+            return new Value((Integer) x.getValue() - (Float) y.getValue());
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Integer) {
+            return new Value((Float) x.getValue() - (Integer) y.getValue());
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
+            return new Value((Float) x.getValue() - (Float) y.getValue());
         } else {
-            System.out.print("Input error both aren't numbers");
-            return new Value("Error: Input error both aren't numbers");
+            throw new Error();
         }
     }
 
     public Value multiplyValue(Value x, Value y) {
-        if (x.value instanceof Integer && y.value instanceof Integer) {
-            return new Value(((Integer) x.value * (Integer) y.value));
-        } else if (x.value instanceof Integer && y.value instanceof Float) {
-            return new Value((Integer) x.value * (Float) y.value);
-        } else if (x.value instanceof Float && y.value instanceof Integer) {
-            return new Value((Float) x.value * (Integer) y.value);
-        } else if (x.value instanceof Float && y.value instanceof Float) {
-            return new Value((Float) x.value * (Float) y.value);
+        if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
+            return new Value(((Integer) x.getValue() * (Integer) y.getValue()));
+        } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
+            return new Value((Integer) x.getValue() * (Float) y.getValue());
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Integer) {
+            return new Value((Float) x.getValue() * (Integer) y.getValue());
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
+            return new Value((Float) x.getValue() * (Float) y.getValue());
         } else {
-            System.out.print("Input error both aren't numbers");
-            return new Value("Error: Input error both aren't numbers");
+            System.out.println("Error: invalid operation");
+            throw new Error();
         }
     }
 
     public Value divideValue(Value x, Value y) {
-        if (x.value instanceof Integer && y.value instanceof Integer) {
-            return new Value(((Integer) x.value / (Integer) y.value));
-        } else if (x.value instanceof Integer && y.value instanceof Float) {
-            return new Value((Integer) x.value / (Float) y.value);
-        } else if (x.value instanceof Float && y.value instanceof Integer) {
-            return new Value((Float) x.value / (Integer) y.value);
-        } else if (x.value instanceof Float && y.value instanceof Float) {
-            return new Value((Float) x.value / (Float) y.value);
+        if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
+            return new Value(((Integer) x.getValue() / (Integer) y.getValue()));
+        } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
+            return new Value((Integer) x.getValue() / (Float) y.getValue());
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Integer) {
+            return new Value((Float) x.getValue() / (Integer) y.getValue());
+        } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
+            return new Value((Float) x.getValue() / (Float) y.getValue());
         } else {
-            System.out.print("Input error both aren't numbers");
-            return new Value("Error: Input error both aren't numbers");
+            throw new Error();
         }
     }
 

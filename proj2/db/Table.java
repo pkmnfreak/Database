@@ -311,6 +311,8 @@ public class Table extends HashMap {
 
     public static column add(column column1, Value value1) {
         column newColumn = new column();
+        System.out.println(value1.value);
+        System.out.println(column1.size());
         for (int i = 0; i < column1.size(); i++) {
             Value newValue = column1.addValue(((Value) column1.get(i)), value1);
             newColumn.add(newValue);
