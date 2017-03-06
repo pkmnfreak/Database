@@ -14,6 +14,7 @@ public class Value<Item>{
 
     public Value() {
         this.label = "NOVALUE";
+
     }
 
     public Value(Item x) {

@@ -161,6 +161,12 @@ public class testDatabase {
         db.transact("select * from multiColumnJoin1,multiColumnJoin1");
     }
 
+    @Test
+    public void testSelectNoValue() {
+        Database db = new Database();
+        db.transact("load selectNoValue");
+        db.transact("select a-c as d, b+c as e from selectNoValue");
+    }
 
 
 }

@@ -187,7 +187,19 @@ public class Database {
     public static Value convertValue(String item, String type) {
         try {
             if (item.equals("NOVALUE")) {
-                return new Value();
+                if (type.equals("int")) {
+                    Value newValue = new Value();
+                    newValue.value = 0;
+                    return newValue;
+                } else if (type.equals("float")) {
+                    Value newValue = new Value();
+                    newValue.value = 0.0f;
+                    return newValue;
+                } else {
+                    Value newValue = new Value();
+                    newValue.value = "";
+                    return newValue;
+                }
             }
             if (type.equals("int")) {
                 return new Value(Integer.parseInt(item));
