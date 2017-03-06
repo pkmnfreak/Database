@@ -147,7 +147,7 @@ public class column<T> {
             return new Value((Float) x.getValue() * (Float) y.getValue());
         } else {
             System.err.println("ERROR: Invalid Operation");
-            throw new Error();
+            return "ERROR: Invalid Operation";
         }
     }
 
