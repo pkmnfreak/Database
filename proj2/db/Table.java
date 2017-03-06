@@ -146,7 +146,7 @@ public class Table extends HashMap {
         for (int i = 0; i < y.numColumns; i++) {
             for (int j = 0; j < x.numColumns; j++) {
                 if (y.columnnames[i].equals(x.columnnames[j])) {
-                    simColumnNameStack.addLast(x.columnnames[j]);
+                    simColumnNameStack.addFirst(x.columnnames[j]);
                 }
             }
         }
@@ -233,16 +233,17 @@ public class Table extends HashMap {
         LinkedList commonKeys = findSimColumnNames(x,y);
         ArrayList xindex = new ArrayList();
         ArrayList yindex = new ArrayList();
-        for (Object key: commonKeys) {
+        if (commonKeys.size() > 0) {
+            String key = (String) commonKeys.get(0);
             column xval = (column) x.get(key);
             column yval = (column) y.get(key);
-            for(int i = 0; i < xval.size(); i++) {
-                for (int j = 0; j <yval.size(); j++) {
-                    Value currX =  (Value) xval.get(i);
+            for (int i = 0; i < xval.size(); i++) {
+                for (int j = 0; j < yval.size(); j++) {
+                    Value currX = (Value) xval.get(i);
                     String xName = (String) currX.label;
-                    Value currY =  (Value) yval.get(j);
+                    Value currY = (Value) yval.get(j);
                     String yName = (String) currY.label;
-                    if(currX.equals(currY)) {
+                    if (currX.equals(currY)) {
                         xindex.add(i);
                         yindex.add(j);
                     }

@@ -90,7 +90,16 @@ public class testDatabase {
         db.transact("insert into selectString1 values 'a','b'");
         db.transact("select b,a from selectString1");
         //db.transact("select TeamName, Ties from records");
-
+        db.transact("create table T7 (x int, y int, z int, w int)");
+        db.transact("insert into T7 values 1,7,2,10");
+        db.transact("insert into T7 values 7,7,4,1");
+        db.transact("insert into T7 values 1,9,9,1");
+        db.transact("create table T8 (w int, b int, z int)");
+        db.transact("insert into T8 values 1,7,4");
+        db.transact("insert into T8 values 7,7,3");
+        db.transact("insert into T8 values 1,9,6");
+        db.transact("insert into T8 values 1,11,9");
+        db.transact("select * from T7,T8");
 
     }
 
