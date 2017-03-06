@@ -389,7 +389,7 @@ public class Database {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiply((column) table.get(columns[0]), tempVal));
                 if (table.multiply((column) table.get(columns[0]), tempVal) instanceof String) {
-                    return "Error: Invalid Operation";
+                    return "ERROR: Invalid Operation";
                 }
             }
         } else if (operator.equals("-")) {
@@ -409,7 +409,7 @@ public class Database {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.add((column) table.get(columns[0]), tempVal));
                 if (table.add((column) table.get(columns[0]), tempVal) instanceof String) {
-                    return "Error: Invalid Operation";
+                    return "ERROR: Invalid Operation";
                 }
             }
         } else if (operator.equals("/")) {
@@ -636,7 +636,7 @@ public class Database {
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
                 if (select(columnNames, tableNames, "+") instanceof String) {
-                    return "Error: Mixing unmatching types";
+                    return "ERROR: Mixing unmatching types";
                 }
                 combinedTables[i] = (Table) select(columnNames, tableNames, "+");
             } else if (columnTitles[i].contains("-")) {

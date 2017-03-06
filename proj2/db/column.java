@@ -93,7 +93,7 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return (Float) x.getValue() - (Float) y.getValue();
         } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
-            System.err.println("Error: Cannot compare bad types");
+            System.err.println("ERROR: Cannot compare bad types");
             throw new Error();
         } else {
             return (float) ((x.toString()).charAt(1) - (y.toString()).charAt(1));
@@ -110,7 +110,7 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() + (Float) y.getValue());
         } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
-            return "Error: Mixing unmatching types";
+            return "ERROR: Mixing unmatching types";
         } else if (x.getValue().getClass().getName() instanceof String && x.getClass().getName() instanceof String) {
             Value tempVal = new Value(((String) x.getValue()) + ((String) y.getValue()));
             tempVal.value = ((String) tempVal.getValue()).replaceAll("''", "");

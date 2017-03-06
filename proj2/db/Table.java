@@ -293,9 +293,9 @@ public class Table extends HashMap {
             out.println(this.toString());
             out.close();
         } catch (FileNotFoundException  e) {
-                System.out.println("error: couldn't make file" + e);
+                System.out.println("ERROR: couldn't make file" + e);
         } catch (IOException e) {
-                System.out.println("error: couldn't make file" + e);
+                System.out.println("ERROR: couldn't make file" + e);
        }
     }
 
@@ -319,7 +319,7 @@ public class Table extends HashMap {
         column newColumn = new column();
         for (int i = 0; i < column1.size(); i++) {
             if (column1.addValue(((Value) column1.get(i)), value1) instanceof String) {
-                return "Error: Mixing unmatching types";
+                return "ERROR: Mixing unmatching types";
             }
             Value newValue = (Value) column1.addValue(((Value) column1.get(i)), value1);
             newColumn.add(newValue);
