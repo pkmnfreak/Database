@@ -720,6 +720,9 @@ public class Database {
             System.err.printf("ERROR: Malformed select: %s\n", expr);
             return "ERROR: Malformed Select";
         }
+        if (select(m.group(1), m.group(2), m.group(3)) instanceof String) {
+            return (String) select(m.group(1), m.group(2), m.group(3));
+        }
         String returnString = select(m.group(1), m.group(2), m.group(3)).toString();
         System.out.println(returnString);
         return returnString;
