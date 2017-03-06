@@ -616,7 +616,6 @@ public class Database {
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
                 combinedTables[i] = select(columnNames, tableNames, "+");
-                break;
             } else if (columnTitles[i].contains("-")) {
                 columnNames = columnTitles[i].replace(" - ", "-").split("-");
                 String[] afterOperator = columnNames[1].split(" as ");
@@ -627,7 +626,6 @@ public class Database {
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
                 combinedTables[i] = select(columnNames, tableNames, "-");
-                break;
             } else if (columnTitles[i].contains("*")) {
                 columnNames = columnTitles[i].replace(" * ", "*").split("\\*");
                 String[] afterOperator = columnNames[1].split(" as ");
@@ -638,7 +636,6 @@ public class Database {
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
                 combinedTables[i] = select(columnNames, tableNames, "*");
-                break;
             } else if (columnTitles[i].contains("/")) {
                 columnNames = columnTitles[i].replace(" / ", "/").split("/");
                 String[] afterOperator = columnNames[1].split(" as ");
@@ -649,10 +646,10 @@ public class Database {
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
                 combinedTables[i] = select(columnNames, tableNames, "/");
-                break;
+            } else {
+                String[] tempColumnName = {columnTitles[i]};
+                combinedTables[i] = select(tempColumnName, tableNames);
             }
-            String[] tempColumnName = {columnTitles[i]};
-            combinedTables[i] = select(tempColumnName, tableNames);
         }
         return joinMultipleTables(combinedTables);
     }

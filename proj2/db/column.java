@@ -130,7 +130,8 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() - (Float) y.getValue());
         } else {
-            throw new Error();
+            System.out.println("Error: invalid operation");
+            return new Value();
         }
     }
 
@@ -145,7 +146,7 @@ public class column<T> {
             return new Value((Float) x.getValue() * (Float) y.getValue());
         } else {
             System.out.println("Error: invalid operation");
-            throw new Error();
+            return new Value();
         }
     }
 
@@ -159,7 +160,8 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() / (Float) y.getValue());
         } else {
-            throw new Error();
+            System.out.println("Error: invalid operation");
+            return new Value();
         }
     }
 

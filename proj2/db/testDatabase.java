@@ -101,5 +101,11 @@ public class testDatabase {
         db.transact("select TeamName, Wins + Losses as Games from records");
     }
 
+    @Test
+    public void testInvalidOperations() {
+        Database db = new Database();
+        db.transact("load stringlist");
+        db.transact("select a*'brandon' as c from stringlist");
+    }
 
 }
