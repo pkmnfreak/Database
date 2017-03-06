@@ -47,6 +47,7 @@ public class Database {
     //parses input
     public String transact(String query) {
         String newQuery = query.replaceAll("\\s+"," ");
+        System.out.println(query);
         return this.eval(newQuery);
     }
 

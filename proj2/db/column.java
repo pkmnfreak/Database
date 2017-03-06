@@ -144,7 +144,7 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() * (Float) y.getValue());
         } else {
-            System.out.println("error: invalid operation");
+            System.out.println("Error: invalid operation");
             throw new Error();
         }
     }
