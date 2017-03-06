@@ -70,7 +70,7 @@ public class testDatabase {
         db.transact("select x,y from t1,t3 where x > y");
         //db.transact("select x,y from t3,t1 where x > y");
         db.transact("load records");
-        //db.transact("load teams");
+        db.transact("load teams");
         //db.transact("create table allTeamInfo as select * from teams,t3");
         //db.transact("print allTeamInfo");
         //db.transact("load fans");
@@ -82,7 +82,7 @@ public class testDatabase {
         db.transact("load intlist");
         db.transact("load floatlist");
         db.transact("create table joinCart1 as select * from stringlist,intlist");
-        db.transact("create table joinCart2 as select * from intlist,floatlist");
+        db.transact("create table joinCart2 as select * from floatlist");
         db.transact("print joinCart1");
         db.transact("print joinCart2");
         db.transact("select * from joinCart1,joinCart2");
@@ -100,6 +100,10 @@ public class testDatabase {
         db.transact("insert into T8 values 1,9,6");
         db.transact("insert into T8 values 1,11,9");
         db.transact("select * from T7,T8");
+        db.transact("load multiColumnJoin1");
+        db.transact("load multiColumnJoin2");
+        db.transact("select * from multiColumnJoin1,multiColumnJoin2");
+        //db.transact("create table t0 as select City,Season,Wins/Losses as Ratio from teams,records where Ratio < 1");
 
     }
 

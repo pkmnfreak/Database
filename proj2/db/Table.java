@@ -97,6 +97,7 @@ public class Table extends HashMap {
            }
        }
         joinedTable.numRows = columnLen;
+        joinedTable.numColumns = joinedTable.size();
         return joinedTable;
     }
 
@@ -113,8 +114,12 @@ public class Table extends HashMap {
         System.arraycopy(y.columntypes, 0, jointcolumnTypes, xLen, yLen);
 
         Table joinedTable = new Table(jointcolumnNames, jointcolumnTypes);
-        int columnLen = x.numRows + y.numRows;
-
+        int columnLen;
+        if (x.numRows == y.numRows) {
+           columnLen = x.numRows;
+        } else {
+            columnLen = x.numRows + y.numRows;
+        }
         for(Object k: joinedTable.keySet()) {
             column newColumn = new column();
             if (x.containsKey(k)) {
@@ -157,9 +162,6 @@ public class Table extends HashMap {
     private static String[] jointColumnNames(Table x, Table y) {
         LinkedList<String>  simColumnNames = findSimColumnNames (x,y);
         String[] returnArray = new String[x.columnnames.length + y.columnnames.length - simColumnNames.size()];
-        for(int i = 0; i < simColumnNames.size(); i++) {
-            returnArray[i] = simColumnNames.get(i);
-        }
 
         if (simColumnNames.size() == 0) {
             for(int i = 0; i < x.numColumns; i++) {
@@ -169,6 +171,10 @@ public class Table extends HashMap {
                 returnArray[j + x.numColumns] = y.columnnames[j];
             }
         } else {
+
+            for(int i = 0; i < simColumnNames.size(); i++) {
+                returnArray[i] = simColumnNames.get(i);
+            }
 
             int xnotSim = 0; //keep track of number of names in x but not sim
 
@@ -280,7 +286,7 @@ public class Table extends HashMap {
         return returnString;
     }
 
-    // stores the string representation of file in a .tbl file
+    // stores the string representation of file in a multiColumnJoin2.tbl file
     public void Store(String name) {
        try {
             PrintWriter out = new PrintWriter( name + ".tbl" );
