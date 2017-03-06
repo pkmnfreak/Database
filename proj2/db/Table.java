@@ -151,7 +151,7 @@ public class Table extends HashMap {
         for (int i = 0; i < y.numColumns; i++) {
             for (int j = 0; j < x.numColumns; j++) {
                 if (y.columnnames[i].equals(x.columnnames[j])) {
-                    simColumnNameStack.addFirst(x.columnnames[j]);
+                    simColumnNameStack.addLast(x.columnnames[j]);
                 }
             }
         }
