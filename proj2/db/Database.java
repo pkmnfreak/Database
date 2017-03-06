@@ -366,6 +366,9 @@ public class Database {
             System.out.println("Malformed query" + e);
         }
         Table table = (Table) allTables.get(tables[0]);
+        if (table == null) {
+            return "ERROR: invalid input";
+        }
         int index = Arrays.asList(table.columnnames).indexOf(columns[0]);
         String[] newColumn = {columns[2]};
         String[] newType = {table.columntypes[index]};

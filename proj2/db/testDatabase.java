@@ -117,8 +117,8 @@ public class testDatabase {
     @Test
     public void testInvalidOperations() {
         Database db = new Database();
-        db.transact("load selectMixed");
-        db.transact("select x + y as a, y*z as b from selectMixed");
+        db.transact("load selectString");
+        db.transact("select a*b as c from selectString");
     }
 
     @Test
