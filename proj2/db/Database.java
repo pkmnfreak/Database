@@ -367,12 +367,13 @@ public class Database {
         Table resultTable = new Table(newColumn, newType);
         resultTable.numRows = table.numRows;
         if (Arrays.asList(table.columnnames).contains(columns[1])) {
-            if (table.columntypes[index] == "float" || table.columntypes[Arrays.asList(table.columnnames).indexOf(columns[1])] == "float") {
+            int indexOfColumn2 = Arrays.asList(table.columnnames).indexOf(columns[1]);
+            if (table.columntypes[index].equals("float")|| table.columntypes[indexOfColumn2].equals("float")) {
                 newType[0] = "float";
             }
         } else {
             Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
-            if (table.columntypes[index] == "float" || tempVal.value instanceof Float) {
+            if (table.columntypes[index].equals("float") || tempVal.value instanceof Float) {
                 newType[0] = "float";
             }
         }

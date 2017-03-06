@@ -318,7 +318,7 @@ public class Table extends HashMap {
     public static column add(column column1, Value value1) {
         column newColumn = new column();
         for (int i = 0; i < column1.size(); i++) {
-            Value newValue = column1.addValue(((Value) column1.get(i)), value1);
+            Value newValue = (Value) column1.addValue(((Value) column1.get(i)), value1);
             newColumn.add(newValue);
         }
         return newColumn;
@@ -327,7 +327,7 @@ public class Table extends HashMap {
     public static column minus(column column1, Value value1) {
         column newColumn = new column();
         for (int i = 0; i < column1.size(); i++) {
-            Value newValue = column1.minusValue(((Value) column1.get(i)), value1);
+            Value newValue = (Value) column1.minusValue(((Value) column1.get(i)), value1);
             newColumn.add(newValue);
         }
         return newColumn;
@@ -336,7 +336,7 @@ public class Table extends HashMap {
     public static column multiply(column column1, Value value1) {
         column newColumn = new column();
         for (int i = 0; i < column1.size(); i++) {
-            Value newValue = column1.multiplyValue(((Value) column1.get(i)), value1);
+            Value newValue = (Value) column1.multiplyValue(((Value) column1.get(i)), value1);
             newColumn.add(newValue);
         }
         return newColumn;
@@ -345,7 +345,7 @@ public class Table extends HashMap {
     public static column divide(column column1, Value value1) {
         column newColumn = new column();
         for (int i = 0; i < column1.size(); i++) {
-            Value newValue = column1.divideValue(((Value) column1.get(i)), value1);
+            Value newValue = (Value) column1.divideValue(((Value) column1.get(i)), value1);
             newColumn.add(newValue);
         }
         return newColumn;
@@ -354,7 +354,7 @@ public class Table extends HashMap {
     public static column addColumns(column column1, column column2) {
         column newColumn = new column();
         for (int i = 0; i < column2.size(); i++) {
-            Value newValue = column1.addValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            Value newValue = (Value) column1.addValue(((Value) column1.get(i)), ((Value) column2.get(i)));
             newColumn.add(newValue);
         }
         return newColumn;
@@ -363,7 +363,7 @@ public class Table extends HashMap {
     public static column minusColumns(column column1, column column2) {
         column newColumn = new column();
         for (int i = 0; i < column2.size(); i++) {
-            Value newValue = column1.minusValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            Value newValue = (Value) column1.minusValue(((Value) column1.get(i)), ((Value) column2.get(i)));
             newColumn.add(newValue);
         }
         return newColumn;
@@ -372,7 +372,7 @@ public class Table extends HashMap {
     public static column multiplyColumns(column column1, column column2) {
         column newColumn = new column();
         for (int i = 0; i < column2.size(); i++) {
-            Value newValue = column1.multiplyValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            Value newValue = (Value) column1.multiplyValue(((Value) column1.get(i)), ((Value) column2.get(i)));
             newColumn.add(newValue);
         }
         return newColumn;
@@ -381,7 +381,7 @@ public class Table extends HashMap {
     public static column divideColumns(column column1, column column2) {
         column newColumn = new column();
         for (int i = 0; i < column2.size(); i++) {
-            Value newValue = column1.divideValue(((Value) column1.get(i)), ((Value) column2.get(i)));
+            Value newValue = (Value) column1.divideValue(((Value) column1.get(i)), ((Value) column2.get(i)));
             newColumn.add(newValue);
         }
         return newColumn;
