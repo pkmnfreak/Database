@@ -614,8 +614,8 @@ public class Database {
             columnNames = copyTemp;
             columnNames[2] = afterOperator[1];
             tableNames = tables.split(", ");
-            System.out.println(tables);
-            System.out.println(columns);
+            System.out.println(columnNames);
+            System.out.println(tableNames);
             return select(columnNames, tableNames, "+");
         } else if (columns.contains("-")) {
             columnNames = columns.split("-");
