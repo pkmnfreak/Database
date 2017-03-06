@@ -37,15 +37,15 @@ public class Value<Item>{
         if (this.label.equals("NOVALUE")) {
             try {
                 Integer.parseInt(this.value.toString());
-            } catch (NumberFormatException e) {
                 return intNoValue;
+            } catch (NumberFormatException e) {
             }
             try {
                 Float.parseFloat(this.value.toString());
-            } catch(NumberFormatException e) {
                 return floatNoValue;
+            } catch(NumberFormatException e) {
+                return stringNoValue;
             }
-            return stringNoValue;
         }
         if (this.label.equals("NaN")) {
             return Float.NaN;
