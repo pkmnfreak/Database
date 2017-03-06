@@ -46,7 +46,7 @@ public class Database {
 
     //parses input
     public String transact(String query) {
-        String newQuery = query.replaceAll("\\s+"," ");
+        String newQuery = query.replaceAll("\\s+", " ");
         System.out.println(query);
         return this.eval(newQuery);
     }
@@ -54,7 +54,7 @@ public class Database {
     private String eval(String query) {
         Matcher m;
         if ((m = CREATE_CMD.matcher(query)).matches()) {
-             return createTable(m.group(1));
+            return createTable(m.group(1));
         } else if ((m = LOAD_CMD.matcher(query)).matches()) {
             return loadTable(m.group(1));
         } else if ((m = STORE_CMD.matcher(query)).matches()) {
@@ -101,8 +101,9 @@ public class Database {
         for (int i = 0; i < cols.length; i++) {
             String delims = "[ ,]";
             String[] splitColType = cols[i].split(delims);
-            if (!(splitColType[1].equals("int") ||
-                    splitColType[1].equals("string") || splitColType[1].equals("float"))) {
+            if (!(splitColType[1].equals("int")
+                    || splitColType[1].equals("string")
+                    || splitColType[1].equals("float"))) {
                 System.err.println("ERROR: This is an incorrect type.");
                 return "ERROR: This is an incorrect type.";
             }
@@ -144,20 +145,6 @@ public class Database {
                 String[] row = nextLine.split(",");
                 Value[] returnRow = new Value[row.length];
                 for (int i = 0; i < row.length; i++) {
-                        /*String decimal = ".";
-                        String quote = "'";
-                        if ((columntypes[i].equals("int")) && (row[i].contains(decimal)) || (row[i].contains(quote))) {
-                            System.err.println("ERROR: Malformed Table");
-                            return "ERROR: Malformed Table";
-                        }
-                        if (columntypes[i].equals("float") && (!(row[i].contains(decimal)))) {
-                            System.err.println("ERROR: Malformed Table");
-                            return "ERROR: Malformed Table";
-                        }
-                        if (columntypes[i].equals("string") && (!(row[i].contains(quote))) ) {
-                            System.err.println("ERROR: Malformed Table");
-                            return "ERROR: Malformed Table";
-                        }*/
                     returnRow[i] = convertValue(row[i], newTable.columntypes[i]);
                 }
                 newTable.addRow(returnRow);
@@ -202,7 +189,7 @@ public class Database {
     }
 
     private String storeTable(String name) {
-        if(allTables.containsKey(name)) {
+        if (allTables.containsKey(name)) {
             allTables.get(name).Store(name);
             return "";
         }
@@ -227,7 +214,7 @@ public class Database {
         }
         Table selectedTable = allTables.get(m.group(1));
         String[] rowArray = m.group(2).split(",");
-        for(int i = 0; i < rowArray.length; i++) {
+        for (int i = 0; i < rowArray.length; i++) {
             rowArray[i] = rowArray[i].trim();
         }
         Value[] returnArray = new Value[rowArray.length];
@@ -238,20 +225,6 @@ public class Database {
             return "ERROR: Malformed insert";
         }
         for (int i = 0; i < rowArray.length; i++) {
-            /*String decimal = ".";
-            String quote = "'";
-            if ((selectedTable.columntypes[i].equals("int")) && (rowArray[i].contains(decimal) || (rowArray[i].contains(quote)))) {
-                System.err.println("ERROR: Malformed Table");
-                return "ERROR: Malformed Table";
-            }
-            if (selectedTable.columntypes[i].equals("float") && (!(rowArray[i].contains(decimal)))) {
-                System.err.println("ERROR: Malformed Table");
-                return "ERROR: Malformed Table";
-            }
-            if (selectedTable.columntypes[i].equals("string") && (!(rowArray[i].contains(quote))) ) {
-                System.err.println("ERROR: Malformed Table");
-                return "ERROR: Malformed Table";
-            }*/
            returnArray[i] =  convertValue(rowArray[i], selectedTable.columntypes[i]);
         }
         selectedTable.addRow(returnArray);
@@ -262,7 +235,7 @@ public class Database {
     public Table select(String[] columns, String[] tables) {
         try {
             String i = tables[0];
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             System.out.println("No tables given" + e);
         }
         /*Identify types and store into newcolumntypes*/
@@ -276,13 +249,13 @@ public class Database {
         Table copyTable = (Table) allTables.get(tables[0]);
         column[] copyColumns = new column[columns.length];
         String[] newType = new String[columns.length];
-        for(int i = 0; i < columns.length; i++) {
+        for (int i = 0; i < columns.length; i++) {
            String[] colNam = copyTable.columnnames;
            int index = Arrays.asList(colNam).indexOf(columns[i]);
            newType[i] = copyTable.columntypes[index];
         }
         Table newTable = new Table(columns, newType);
-        for(int i = 0; i < columns.length;i++) {
+        for (int i = 0; i < columns.length;i++) {
             if(copyTable.containsKey(columns[i])) {
                 newTable.put(columns[i], copyTable.get(columns[i]));
             }
@@ -304,7 +277,7 @@ public class Database {
        } else {
             Table[] joinedTables = new Table[i-1];
             joinedTables[0] = Table.join((Table) allTables.get(tables[0]),(Table) allTables.get(tables[1]));
-            for(int j = 1; j < joinedTables.length; j+= 1) {
+            for (int j = 1; j < joinedTables.length; j+= 1) {
                 joinedTables[j] = Table.join(joinedTables[j-1], allTables.get(tables[j+1]));
             }
             allTables.put("joinedtemp",joinedTables[joinedTables.length-1]);
@@ -322,7 +295,7 @@ public class Database {
         } else {
             Table[] joinedTables = new Table[i-1];
             joinedTables[0] = Table.join(tables[0], tables[1]);
-            for(int j = 1; j < joinedTables.length; j+= 1) {
+            for (int j = 1; j < joinedTables.length; j+= 1) {
                 joinedTables[j] = Table.join(joinedTables[j-1], tables[j+1]);
             }
             allTables.put("joinedtempfromtables",joinedTables[joinedTables.length-1]);
@@ -360,10 +333,12 @@ public class Database {
                 System.arraycopy(tables, 0, copyTables, 1, tables.length);
                 copyTables[0] = "joinedtemp";
                 tables = copyTables;
+            } else {
+                Table table = (Table) allTables.get(tables[0]);
+                int index = Arrays.asList(table.columnnames).indexOf(columns[0]);
             }
-
-        } catch (Exception e) {
-            System.out.println("Malformed query" + e);
+        } catch (NullPointerException e) {
+            return "ERROR: " + e;
         }
         Table table = (Table) allTables.get(tables[0]);
         int index = Arrays.asList(table.columnnames).indexOf(columns[0]);
@@ -384,37 +359,45 @@ public class Database {
         }
         if (operator.equals("*")) {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                        table.multiplyColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
             } else {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.multiply((column) table.get(columns[0]), tempVal));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                        table.multiply((column) table.get(columns[0]), tempVal));
                 if (table.multiply((column) table.get(columns[0]), tempVal) instanceof String) {
                     return "Error: Invalid Operation";
                 }
             }
         } else if (operator.equals("-")) {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                        table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
             } else {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.minus((column) table.get(columns[0]), tempVal));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                        table.minus((column) table.get(columns[0]), tempVal));
             }
         } else if (operator.equals("+")) {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                        table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
             } else {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.add((column) table.get(columns[0]), tempVal));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                        table.add((column) table.get(columns[0]), tempVal));
                 if (table.add((column) table.get(columns[0]), tempVal) instanceof String) {
                     return "Error: Invalid Operation";
                 }
             }
         } else if (operator.equals("/")) {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                        table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
             } else {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.divide((column) table.get(columns[0]), tempVal));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
+                        table.divide((column) table.get(columns[0]), tempVal));
             }
         }
         allTables.put(columns[2], resultTable);
@@ -435,7 +418,7 @@ public class Database {
                 copyTables[0] = "joinedtemp";
                 tables = copyTables;
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             System.out.println("Malformed query oops");
         }
         Table table = allTables.get(tables[0]);
@@ -598,7 +581,7 @@ public class Database {
             return joinMultipleTables(tableNames);
         }
         String[] columnTitles = (columns.replaceAll(", ", ",")).split(",");
-        for(int i = 0; i < columnTitles.length; i++) {
+        for (int i = 0; i < columnTitles.length; i++) {
             columnTitles[i].trim();
         }
         String[] tableNames = tables.split(",");
@@ -633,7 +616,7 @@ public class Database {
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
                 if (select(columnNames, tableNames, "+") instanceof String) {
-                    return "Error: Mixing unmatching types";
+                    return "ERROR: Mixing unmatching types";
                 }
                 combinedTables[i] = (Table) select(columnNames, tableNames, "+");
             } else if (columnTitles[i].contains("-")) {
@@ -645,6 +628,9 @@ public class Database {
                 columnNames = copyTemp;
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
+                if (select(columnNames, tableNames, "+") instanceof String) {
+                    return "ERROR: Mixing unmatching types";
+                }
                 combinedTables[i] = (Table) select(columnNames, tableNames, "-");
             } else if (columnTitles[i].contains("*")) {
                 columnNames = columnTitles[i].replace(" * ", "*").split("\\*");
@@ -655,8 +641,8 @@ public class Database {
                 columnNames = copyTemp;
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
-                if (select(columnNames, tableNames, "*") instanceof String) {
-                    return "Error: Invalid Operation";
+                if (select(columnNames, tableNames, "+") instanceof String) {
+                    return "ERROR: Mixing unmatching types";
                 }
                 combinedTables[i] = (Table) select(columnNames, tableNames, "*");
             } else if (columnTitles[i].contains("/")) {
@@ -668,6 +654,9 @@ public class Database {
                 columnNames = copyTemp;
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
+                if (select(columnNames, tableNames, "+") instanceof String) {
+                    return "ERROR: Mixing unmatching types";
+                }
                 combinedTables[i] = (Table) select(columnNames, tableNames, "/");
             } else {
                 String[] tempColumnName = {columnTitles[i]};
