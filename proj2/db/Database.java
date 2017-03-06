@@ -392,14 +392,14 @@ public class Database {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
                         table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
-                if (table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])) instanceof String) {
+                if (table.minusColumns((column) table.get(columns[0]), (column) table.get(columns[1])) instanceof String) {
                     return "ERROR: Invalid Operation";
                 }
             } else {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
                         table.minus((column) table.get(columns[0]), tempVal));
-                if (table.add((column) table.get(columns[0]), tempVal) instanceof String) {
+                if (table.minus((column) table.get(columns[0]), tempVal) instanceof String) {
                     return "ERROR: Invalid Operation";
                 }
             }
@@ -421,14 +421,14 @@ public class Database {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
                         table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
-                if (table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])) instanceof String) {
+                if (table.divideColumns((column) table.get(columns[0]), (column) table.get(columns[1])) instanceof String) {
                     return "ERROR: Invalid Operation";
                 }
             } else {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
                         table.divide((column) table.get(columns[0]), tempVal));
-                if (table.add((column) table.get(columns[0]), tempVal) instanceof String) {
+                if (table.divide((column) table.get(columns[0]), tempVal) instanceof String) {
                     return "ERROR: Invalid Operation";
                 }
             }
