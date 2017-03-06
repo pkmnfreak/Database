@@ -317,14 +317,10 @@ public class Table extends HashMap {
 
     public static column add(column column1, Value value1) {
         column newColumn = new column();
-            try {
-                for (int i = 0; i < column1.size(); i++) {
-                    Value newValue = (Value) column1.addValue(((Value) column1.get(i)), value1);
-                    newColumn.add(newValue);
-                }
-            } catch (ClassCastException e) {
-                System.out.print("Error: Can't add bad types " + e);
-            }
+        for (int i = 0; i < column1.size(); i++) {
+            Value newValue = (Value) column1.addValue(((Value) column1.get(i)), value1);
+            newColumn.add(newValue);
+        }
         return newColumn;
     }
 
@@ -337,7 +333,7 @@ public class Table extends HashMap {
         return newColumn;
     }
 
-    public static column multiply(column column1, Value value1) {
+    public static Object multiply(column column1, Value value1) {
         column newColumn = new column();
         try {
             for (int i = 0; i < column1.size(); i++) {
@@ -345,7 +341,7 @@ public class Table extends HashMap {
                 newColumn.add(newValue);
             }
         } catch(ClassCastException e) {
-            System.out.print("Error: Can't multiply bad types" + e);
+            return "Error: Invalid Operation";
         }
         return newColumn;
     }
