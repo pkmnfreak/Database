@@ -117,6 +117,20 @@ public class testDatabase {
     @Test
     public void testInvalidOperations() {
         Database db = new Database();
+        db.transact("load selectMixed");
+        db.transact("select x + y as a, y*z as b from selectMixed");
+    }
+
+    @Test
+    public void testNaN() {
+        Database db = new Database();
+        db.transact("load intlist");
+        db.transact("select b/0 as x from intlist");
+    }
+
+    @Test
+    public void testBadTypes() {
+        Database db = new Database();
         db.transact("load stringlist");
         db.transact("select a*'brandon' as c from stringlist");
     }

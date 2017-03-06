@@ -93,13 +93,14 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return (Float) x.getValue() - (Float) y.getValue();
         } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
+            System.err.println("Error: Cannot compare bad types");
             throw new Error();
         } else {
             return (float) ((x.toString()).charAt(1) - (y.toString()).charAt(1));
         }
     }
 
-    public Value addValue(Value x, Value y) {
+    public Object addValue(Value x, Value y) {
         if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
             return new Value(((Integer) x.getValue() + (Integer) y.getValue()));
         } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
@@ -109,7 +110,8 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() + (Float) y.getValue());
         } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
-            throw new Error();
+            System.err.println("Error: Mixing unmatching types");
+            return "Error: Mixing unmatching types";
         } else if (x.getValue().getClass().getName() instanceof String && x.getClass().getName() instanceof String) {
             Value tempVal = new Value(((String) x.getValue()) + ((String) y.getValue()));
             tempVal.value = ((String) tempVal.getValue()).replaceAll("''", "");
@@ -120,7 +122,7 @@ public class column<T> {
         }
     }
 
-    public Value minusValue(Value x, Value y) {
+    public Object minusValue(Value x, Value y) {
         if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
             return new Value(((Integer) x.getValue() - (Integer) y.getValue()));
         } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
@@ -130,12 +132,12 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() - (Float) y.getValue());
         } else {
-            System.out.println("Error: invalid operation");
-            return new Value();
+            System.err.println("Error: Invalid Operation");
+            return "Error: Invalid Operation";
         }
     }
 
-    public Value multiplyValue(Value x, Value y) {
+    public Object multiplyValue(Value x, Value y) {
         if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
             return new Value(((Integer) x.getValue() * (Integer) y.getValue()));
         } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
@@ -145,23 +147,39 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() * (Float) y.getValue());
         } else {
-            System.out.println("Error: invalid operation");
-            return new Value();
+            System.err.println("Error: Invalid Operation");
+            return "Error: Invalid Operation";
         }
     }
 
-    public Value divideValue(Value x, Value y) {
+    public Object divideValue(Value x, Value y) {
         if (x.getValue() instanceof Integer && y.getValue() instanceof Integer) {
-            return new Value(((Integer) x.getValue() / (Integer) y.getValue()));
+            if ((Integer) y.getValue() == 0) {
+                return new Value("Infinity");
+            } else {
+                return new Value(((Integer) x.getValue() / (Integer) y.getValue()));
+            }
         } else if (x.getValue() instanceof Integer && y.getValue() instanceof Float) {
-            return new Value((Integer) x.getValue() / (Float) y.getValue());
+            if ((Float) y.getValue() == 0) {
+                return new Value("Infinity");
+            } else {
+                return new Value((Integer) x.getValue() / (Float) y.getValue());
+            }
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Integer) {
-            return new Value((Float) x.getValue() / (Integer) y.getValue());
+            if ((Integer) y.getValue() == 0) {
+                return new Value("Infinity");
+            } else {
+                return new Value((Float) x.getValue() / (Integer) y.getValue());
+            }
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
-            return new Value((Float) x.getValue() / (Float) y.getValue());
+            if ((Float) y.getValue() == 0) {
+                return new Value("Infinity");
+            } else {
+                return new Value((Float) x.getValue() / (Float) y.getValue());
+            }
         } else {
-            System.out.println("Error: invalid operation");
-            return new Value();
+            System.err.println("Error: Invalid Operation");
+            return "Error: Invalid Operation";
         }
     }
 
