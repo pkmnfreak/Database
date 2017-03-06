@@ -1,0 +1,4 @@
+x int,y float,z string
+1,2.000,'hi'
+-7,30.700,'bye'
+99,3.240,'cup'

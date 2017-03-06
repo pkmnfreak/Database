@@ -131,8 +131,8 @@ public class testDatabase {
     @Test
     public void testBadTypes() {
         Database db = new Database();
-        db.transact("load intlist");
-        db.transact("select b+'brandon' as c from intlist");
+        db.transact("load selectAllTypes");
+        db.transact("select x+z as a from selectAllTypes");
     }
 
     @Test

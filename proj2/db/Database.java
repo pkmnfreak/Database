@@ -366,7 +366,7 @@ public class Database {
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
                         table.multiply((column) table.get(columns[0]), tempVal));
                 if (table.multiply((column) table.get(columns[0]), tempVal) instanceof String) {
-                    return "Error: Invalid Operation";
+                    return "ERROR: Invalid Operation";
                 }
             }
         } else if (operator.equals("-")) {
@@ -380,14 +380,16 @@ public class Database {
             }
         } else if (operator.equals("+")) {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
-                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
-                        table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+                resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
+                if (table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])) instanceof String) {
+                    return "ERROR: Invalid Operation";
+                }
             } else {
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]),
                         table.add((column) table.get(columns[0]), tempVal));
                 if (table.add((column) table.get(columns[0]), tempVal) instanceof String) {
-                    return "Error: Invalid Operation";
+                    return "ERROR: Invalid Operation";
                 }
             }
         } else if (operator.equals("/")) {
