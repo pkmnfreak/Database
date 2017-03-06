@@ -662,7 +662,7 @@ public class Database {
                 columnNames = copyTemp;
                 columnNames[2] = afterOperator[1];
                 tableNames = tables.split(", ");
-                if (select(columnNames, tableNames, "+") instanceof String) {
+                if (select(columnNames, tableNames, "*") instanceof String) {
                     return "ERROR: Mixing unmatching types";
                 }
                 combinedTables[i] = (Table) select(columnNames, tableNames, "*");
