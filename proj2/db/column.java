@@ -94,7 +94,7 @@ public class column<T> {
             return (Float) x.getValue() - (Float) y.getValue();
         } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
             System.out.print("ERROR: You're comparing two different types!");
-            return  Float.valueOf("ERROR: You're comparing two different types!");
+            throw new Error();
         } else {
             return (float) ((x.toString()).charAt(1) - (y.toString()).charAt(1));
         }
@@ -111,7 +111,7 @@ public class column<T> {
             return new Value((Float) x.getValue() + (Float) y.getValue());
         } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
             System.out.print("You're adding two different types!");
-            return new Value();
+            throw new Error();
         } else if (x.getValue().getClass().getName() instanceof String && x.getClass().getName() instanceof String) {
             Value tempVal = new Value(((String) x.getValue()) + ((String) y.getValue()));
             tempVal.value = ((String) tempVal.getValue()).replaceAll("''", "");
@@ -133,7 +133,7 @@ public class column<T> {
             return new Value((Float) x.getValue() - (Float) y.getValue());
         } else {
             System.out.print("Input error both aren't numbers");
-            return new Value("Error: Input error both aren't numbers");
+            throw new Error();
         }
     }
 
@@ -148,7 +148,7 @@ public class column<T> {
             return new Value((Float) x.getValue() * (Float) y.getValue());
         } else {
             System.out.print("Input error both aren't numbers");
-            return new Value("Error: Input error both aren't numbers");
+            throw new Error();
         }
     }
 
@@ -163,7 +163,7 @@ public class column<T> {
             return new Value((Float) x.getValue() / (Float) y.getValue());
         } else {
             System.out.print("Input error both aren't numbers");
-            return new Value("Error: Input error both aren't numbers");
+            throw new Error();
         }
     }
 

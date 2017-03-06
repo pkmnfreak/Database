@@ -272,6 +272,9 @@ public class Database {
         for(int i = 0; i < columns.length; i++) {
            String[] colNam = copyTable.columnnames;
            int index = Arrays.asList(colNam).indexOf(columns[i]);
+           System.out.println(tables);
+            System.out.println(columns);
+            System.out.println(columns[i]);
            newType[i] = copyTable.columntypes[index];
         }
         Table newTable = new Table(columns, newType);

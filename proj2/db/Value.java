@@ -25,6 +25,8 @@ public class Value<Item>{
                 this.label = df;
                 this.value = x;
             }
+        } else if (x == "Infinity") {
+            this.label = "NaN";
         } else {
             this.label = x.toString();
             this.value = x;
