@@ -97,9 +97,9 @@ public class testDatabase {
     @Test
     public void testLoadMalformed() {
         Database db = new Database();
-        db.transact("load fans");
-        db.transact("print fans");
-        db.transact("select Lastname,Firstname from fans where Lastname > Firstname and Lastname > ");
+        db.transact("load stringlist");
+        db.transact("print stringlist");
+        db.transact("select a+'brandon' as c from stringlist");
     }
 
 
