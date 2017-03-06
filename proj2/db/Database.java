@@ -364,10 +364,8 @@ public class Database {
         Table table = (Table) allTables.get(tables[0]);
         int index;
         if (columns[0].contains(",")) {
-            System.out.println("Hallo");
             index = Arrays.asList(table.columnnames).indexOf(columns[0].split(", ")[0]);
         } else {
-            System.out.println("Hello");
             index = Arrays.asList(table.columnnames).indexOf(columns[0]);
         }
         String[] newColumn = {columns[2]};
