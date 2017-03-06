@@ -363,7 +363,6 @@ public class Database {
         }
         Table table = (Table) allTables.get(tables[0]);
         System.out.println(tables[0]);
-        System.out.println(tables);
         int index;
         if (columns[0].contains(",")) {
             index = Arrays.asList(table.columnnames).indexOf(columns[0].split(", ")[0]);
@@ -615,6 +614,8 @@ public class Database {
             columnNames = copyTemp;
             columnNames[2] = afterOperator[1];
             tableNames = tables.split(", ");
+            System.out.println(tables);
+            System.out.println(columns);
             return select(columnNames, tableNames, "+");
         } else if (columns.contains("-")) {
             columnNames = columns.split("-");
