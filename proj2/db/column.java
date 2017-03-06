@@ -110,7 +110,6 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() + (Float) y.getValue());
         } else if (x.getValue().getClass().getName() != y.getValue().getClass().getName()) {
-            System.err.println("Error: Mixing unmatching types");
             return "Error: Mixing unmatching types";
         } else if (x.getValue().getClass().getName() instanceof String && x.getClass().getName() instanceof String) {
             Value tempVal = new Value(((String) x.getValue()) + ((String) y.getValue()));
