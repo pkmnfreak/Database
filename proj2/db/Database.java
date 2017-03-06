@@ -364,8 +364,10 @@ public class Database {
         Table table = (Table) allTables.get(tables[0]);
         int index;
         if (columns[0].contains(",")) {
+            System.out.println("Hallo");
             index = Arrays.asList(table.columnnames).indexOf(columns[0].split(", ")[0]);
         } else {
+            System.out.println("Hello");
             index = Arrays.asList(table.columnnames).indexOf(columns[0]);
         }
         String[] newColumn = {columns[2]};
@@ -388,10 +390,8 @@ public class Database {
             }
         } else if (operator.equals("+")) {
             if (Arrays.asList(table.columnnames).contains(columns[1])) {
-                System.out.println("Hello");
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.addColumns((column) table.get(columns[0]), (column) table.get(columns[1])));
             } else {
-                System.out.println("Hallo");
                 Value tempVal = ((column) resultTable.get(newColumn[0])).createValue(columns[1]);
                 resultTable.replace(newColumn[0], resultTable.get(newColumn[0]), table.add((column) table.get(columns[0]), tempVal));
             }

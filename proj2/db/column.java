@@ -144,7 +144,8 @@ public class column<T> {
         } else if (x.getValue() instanceof Float && y.getValue() instanceof Float) {
             return new Value((Float) x.getValue() * (Float) y.getValue());
         } else {
-            throw new Error();
+            return new Value();
+            /*throw new Error();*/
         }
     }
 
