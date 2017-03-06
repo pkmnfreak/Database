@@ -121,4 +121,19 @@ public class testDatabase {
         db.transact("select a*'brandon' as c from stringlist");
     }
 
+    @Test
+    public void testMalformedCommands() {
+        Database db = new Database();
+        db.transact("create table t as (x int,ystring)");
+        db.transact("create table t as (x int,ystring)");
+        db.transact("insert into t values a,b,");
+
+    }
+
+    @Test
+    public void testMalformedTable() {
+        Database db = new Database();
+        db.transact("load loadMalformed3");
+    }
+
 }
