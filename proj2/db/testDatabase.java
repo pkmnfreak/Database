@@ -150,4 +150,12 @@ public class testDatabase {
         db.transact("load loadMalformed3");
     }
 
+    @Test
+    public void testInsertWrongType() {
+        Database db = new Database();
+        db.transact("create table t (x string,y int,z float)");
+        db.transact("insert into t values 8,1293,-73.4");
+        db.transact("insert into t values 'this one','string',12.000009");
+    }
+
 }

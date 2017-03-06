@@ -146,7 +146,7 @@ public class Database {
                 for (int i = 0; i < row.length; i++) {
                         String decimal = ".";
                         String quote = "'";
-                        if ((columntypes[i].equals("int")) && (row[i].contains(decimal))) {
+                        if ((columntypes[i].equals("int")) && (row[i].contains(decimal)) || (row[i].contains(quote))) {
                             System.err.println("ERROR: Malformed Table");
                             return "ERROR: Malformed Table";
                         }
@@ -184,15 +184,20 @@ public class Database {
 
         //helper method to convertTypes
     public static Value convertValue(String item, String type) {
-        if (item.equals("NOVALUE")) {
-            return new Value();
-        }
-        if (type.equals("int")) {
-            return new Value(Integer.parseInt(item));
-        } else if (type.equals("float")) {
-            return new Value(Float.parseFloat(item));
-        } else {
-            return new Value(item);
+        try {
+            if (item.equals("NOVALUE")) {
+                return new Value();
+            }
+            if (type.equals("int")) {
+                return new Value(Integer.parseInt(item));
+            } else if (type.equals("float")) {
+                return new Value(Float.parseFloat(item));
+            } else {
+                return new Value(item);
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("ERROR: Table does not exist");
+            return new Value("ERROR: Table does not exist");
         }
     }
 
@@ -235,7 +240,7 @@ public class Database {
         for (int i = 0; i < rowArray.length; i++) {
             String decimal = ".";
             String quote = "'";
-            if ((selectedTable.columntypes[i].equals("int")) && (rowArray[i].contains(decimal))) {
+            if ((selectedTable.columntypes[i].equals("int")) && (rowArray[i].contains(decimal) || (rowArray[i].contains(quote)))) {
                 System.err.println("ERROR: Malformed Table");
                 return "ERROR: Malformed Table";
             }
