@@ -379,9 +379,12 @@ public class Table extends HashMap {
         return newColumn;
     }
 
-    public static column multiplyColumns(column column1, column column2) {
+    public static Object multiplyColumns(column column1, column column2) {
         column newColumn = new column();
         for (int i = 0; i < column2.size(); i++) {
+            if (column1.multiplyValue(((Value) column1.get(i)), ((Value) column2.get(i))) instanceof String) {
+                return "ERROR: Invalid operations";
+            }
             Value newValue = (Value) column1.multiplyValue(((Value) column1.get(i)), ((Value) column2.get(i)));
             newColumn.add(newValue);
         }
