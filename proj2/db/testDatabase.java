@@ -97,9 +97,8 @@ public class testDatabase {
     @Test
     public void testLoadMalformed() {
         Database db = new Database();
-        db.transact("load stringlist");
-        db.transact("print stringlist");
-        db.transact("select a+'brandon' as c from stringlist");
+        db.transact("load records");
+        db.transact("select TeamName, Wins + Losses as Games from records");
     }
 
 

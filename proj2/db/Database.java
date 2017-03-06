@@ -150,6 +150,7 @@ public class Database {
                 nextLine = in.readLine();
             }
             in.close();
+            newTable.printTable();
             allTables.put(name, newTable);
         } catch (FileNotFoundException e) {
             System.err.println("ERROR: Malformed Table" + e);
@@ -273,9 +274,6 @@ public class Database {
         for(int i = 0; i < columns.length; i++) {
            String[] colNam = copyTable.columnnames;
            int index = Arrays.asList(colNam).indexOf(columns[i]);
-           System.out.println(tables);
-            System.out.println(columns);
-            System.out.println(columns[i]);
            newType[i] = copyTable.columntypes[index];
         }
         Table newTable = new Table(columns, newType);
@@ -582,9 +580,9 @@ public class Database {
             String[] tableNames = tables.split(",");
             return joinMultipleTables(tableNames);
         }
-        String[] columnNames = columns.split(",");
-        for(int i = 0; i < columnNames.length; i++) {
-            columnNames[i].trim();
+        String[] columnTitles = (columns.replaceAll(", ", ",")).split(",");
+        for(int i = 0; i < columnTitles.length; i++) {
+            columnTitles[i].trim();
         }
         String[] tableNames = tables.split(",");
         if (conditionals != null) {
@@ -593,9 +591,9 @@ public class Database {
             for (int i = 0; i < conditionalPhrases.length; i++) {
                 String cond = conditionalPhrases[i].split(" ")[1];
                 String[] conditionalNames = conditionalPhrases[i].split(" > | < | == | <= | >= | != ");
-                conditionalTables[i] = selectConditional(columnNames, tableNames, cond, conditionalNames);
+                conditionalTables[i] = selectConditional(columnTitles, tableNames, cond, conditionalNames);
             }
-            return select(columnNames, joinMultipleTables(conditionalTables));
+            return select(columnTitles, joinMultipleTables(conditionalTables));
         }
         /* will we have multiple expression statments????
         String[] expressionTables = new String[columnNames.length];
@@ -605,48 +603,58 @@ public class Database {
             }
         }
         */
-        if (columns.contains("+")) {
-            columnNames = columns.split("\\+");
-            String[] afterOperator = columnNames[1].split(" as ");
-            columnNames[1] = afterOperator[0];
-            String[] copyTemp = new String[columnNames.length + 1];
-            System.arraycopy(columnNames, 0, copyTemp, 0, 2);
-            columnNames = copyTemp;
-            columnNames[2] = afterOperator[1];
-            tableNames = tables.split(", ");
-            return select(columnNames, tableNames, "+");
-        } else if (columns.contains("-")) {
-            columnNames = columns.split("-");
-            String[] afterOperator = columnNames[1].split(" as ");
-            columnNames[1] = afterOperator[0];
-            String[] copyTemp = new String[columnNames.length + 1];
-            System.arraycopy(columnNames, 0, copyTemp, 0, 2);
-            columnNames = copyTemp;
-            columnNames[2] = afterOperator[1];
-            tableNames = tables.split(", ");
-            return select(columnNames, tableNames, "-");
-        } else if (columns.contains("*")) {
-            columnNames = columns.split("\\*");
-            String[] afterOperator = columnNames[1].split(" as ");
-            columnNames[1] = afterOperator[0];
-            String[] copyTemp = new String[columnNames.length + 1];
-            System.arraycopy(columnNames, 0, copyTemp, 0, 2);
-            columnNames = copyTemp;
-            columnNames[2] = afterOperator[1];
-            tableNames = tables.split(", ");
-            return select(columnNames, tableNames, "*");
-        } else if (columns.contains("/")) {
-            columnNames = columns.split("/");
-            String[] afterOperator = columnNames[1].split(" as ");
-            columnNames[1] = afterOperator[0];
-            String[] copyTemp = new String[columnNames.length + 1];
-            System.arraycopy(columnNames, 0, copyTemp, 0, 2);
-            columnNames = copyTemp;
-            columnNames[2] = afterOperator[1];
-            tableNames = tables.split(", ");
-            return select(columnNames, tableNames, "/");
+        Table[] combinedTables = new Table[columnTitles.length];
+        String[] columnNames;
+        for (int i = 0; i < columnTitles.length; i++) {
+            if (columnTitles[i].contains("+")) {
+                columnNames = columnTitles[i].replace(" + ", "+").split("\\+");
+                String[] afterOperator = columnNames[1].split(" as ");
+                columnNames[1] = afterOperator[0];
+                String[] copyTemp = new String[columnNames.length + 1];
+                System.arraycopy(columnNames, 0, copyTemp, 0, 2);
+                columnNames = copyTemp;
+                columnNames[2] = afterOperator[1];
+                tableNames = tables.split(", ");
+                combinedTables[i] = select(columnNames, tableNames, "+");
+                break;
+            } else if (columnTitles[i].contains("-")) {
+                columnNames = columnTitles[i].replace(" - ", "-").split("-");
+                String[] afterOperator = columnNames[1].split(" as ");
+                columnNames[1] = afterOperator[0];
+                String[] copyTemp = new String[columnNames.length + 1];
+                System.arraycopy(columnNames, 0, copyTemp, 0, 2);
+                columnNames = copyTemp;
+                columnNames[2] = afterOperator[1];
+                tableNames = tables.split(", ");
+                combinedTables[i] = select(columnNames, tableNames, "-");
+                break;
+            } else if (columnTitles[i].contains("*")) {
+                columnNames = columnTitles[i].replace(" * ", "*").split("\\*");
+                String[] afterOperator = columnNames[1].split(" as ");
+                columnNames[1] = afterOperator[0];
+                String[] copyTemp = new String[columnNames.length + 1];
+                System.arraycopy(columnNames, 0, copyTemp, 0, 2);
+                columnNames = copyTemp;
+                columnNames[2] = afterOperator[1];
+                tableNames = tables.split(", ");
+                combinedTables[i] = select(columnNames, tableNames, "*");
+                break;
+            } else if (columnTitles[i].contains("/")) {
+                columnNames = columnTitles[i].replace(" / ", "/").split("/");
+                String[] afterOperator = columnNames[1].split(" as ");
+                columnNames[1] = afterOperator[0];
+                String[] copyTemp = new String[columnNames.length + 1];
+                System.arraycopy(columnNames, 0, copyTemp, 0, 2);
+                columnNames = copyTemp;
+                columnNames[2] = afterOperator[1];
+                tableNames = tables.split(", ");
+                combinedTables[i] = select(columnNames, tableNames, "/");
+                break;
+            }
+            String[] tempColumnName = {columnTitles[i]};
+            combinedTables[i] = select(tempColumnName, tableNames);
         }
-        return select(columnNames, tableNames);
+        return joinMultipleTables(combinedTables);
     }
 
 
