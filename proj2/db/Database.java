@@ -144,6 +144,20 @@ public class Database {
                 String[] row = nextLine.split(",");
                 Value[] returnRow = new Value[row.length];
                 for (int i = 0; i < row.length; i++) {
+                        String decimal = ".";
+                        String quote = "'";
+                        if ((columntypes[i].equals("int")) && (row[i].contains(decimal))) {
+                            System.err.println("ERROR: Malformed Table");
+                            return "ERROR: Malformed Table";
+                        }
+                        if (columntypes[i].equals("float") && (!(row[i].contains(decimal)))) {
+                            System.err.println("ERROR: Malformed Table");
+                            return "ERROR: Malformed Table";
+                        }
+                        if (columntypes[i].equals("string") && (!(row[i].contains(quote))) ) {
+                            System.err.println("ERROR: Malformed Table");
+                            return "ERROR: Malformed Table";
+                        }
                     returnRow[i] = convertValue(row[i], newTable.columntypes[i]);
                 }
                 newTable.addRow(returnRow);
@@ -212,40 +226,26 @@ public class Database {
             rowArray[i] = rowArray[i].trim();
         }
         Value[] returnArray = new Value[rowArray.length];
+        try {
+            String temp = selectedTable.columntypes[0];
+        } catch (NullPointerException e) {
+            System.err.printf("ERROR: Malformed insert: %s\n", e);
+            return "ERROR: Malformed insert";
+        }
         for (int i = 0; i < rowArray.length; i++) {
-            if (selectedTable.columntypes[i] == "int") {
-                try {
-                    Integer.parseInt(rowArray[i]);
-                } catch (NumberFormatException e) {
-                    System.err.printf("ERROR: Malformed insert: %s\n", e);
-                    return "ERROR: Malformed insert";
-                }
-                catch (NullPointerException e) {
-                    System.err.printf("ERROR: Malformed insert: %s\n", e);
-                    return "ERROR: Malformed insert";
-                }
-
-            } else if (selectedTable.columntypes[i] == "float") {
-                try {
-                    Float.parseFloat(rowArray[i]);
-                } catch (NumberFormatException e) {
-                    System.err.printf("ERROR: Malformed insert: %s\n", e);
-                    return "ERROR: Malformed insert";
-                } catch (NullPointerException e) {
-                    System.err.printf("ERROR: Malformed insert: %s\n", e);
-                    return "ERROR: Malformed insert";
-                }
-            } else {
-                try {
-                    char[] test = new char[]{'a', 'b', 'c', 'd', 'e', 'f'};
-                    rowArray[i].getChars(0, 0, test, 0);
-                } catch (NumberFormatException e) {
-                    System.err.printf("ERROR: Malformed insert: %s\n", e);
-                    return "ERROR: Malformed insert";
-                } catch (NullPointerException e) {
-                    System.err.printf("ERROR: Malformed insert: %s\n", e);
-                    return "ERROR: Malformed insert";
-                }
+            String decimal = ".";
+            String quote = "'";
+            if ((selectedTable.columntypes[i].equals("int")) && (rowArray[i].contains(decimal))) {
+                System.err.println("ERROR: Malformed Table");
+                return "ERROR: Malformed Table";
+            }
+            if (selectedTable.columntypes[i].equals("float") && (!(rowArray[i].contains(decimal)))) {
+                System.err.println("ERROR: Malformed Table");
+                return "ERROR: Malformed Table";
+            }
+            if (selectedTable.columntypes[i].equals("string") && (!(rowArray[i].contains(quote))) ) {
+                System.err.println("ERROR: Malformed Table");
+                return "ERROR: Malformed Table";
             }
            returnArray[i] =  convertValue(rowArray[i], selectedTable.columntypes[i]);
         }
